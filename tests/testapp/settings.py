@@ -24,7 +24,7 @@ ROOT_URLCONF = 'testapp.urls'
 
 INSTALLED_APPS = (
     'testapp',
-    'insertblocks',
+    'sekizai',
 )
 
 TEMPLATE_LOADERS = (
@@ -32,4 +32,6 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.load_template_source',
 )
 
-
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'sekizai.context_processors.sekizai',
+)

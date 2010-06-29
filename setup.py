@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = __import__('insertblocks').__version__
+version = __import__('sekizai').__version__
 
 setup(
     name = 'django-sekizai',

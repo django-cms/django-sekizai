@@ -8,4 +8,4 @@ class BlockHolder(dict):
     def __getitem__(self, item):
         if item not in self:
             self[item] = UniqueList()
-        super(BlockHolder, self).__getitem__(item)
+        return super(BlockHolder, self).__getitem__(item)

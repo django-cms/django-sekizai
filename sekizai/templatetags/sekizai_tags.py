@@ -12,7 +12,8 @@ class RenderBlockNode(template.Node):
     def render(self, context):
         assert VARNAME in context, "You must enable the sekizai template processor"
         rendered_contents = self.nodelist.render(context)
-        data = '\n'.join(context[VARNAME][self.name])
+        name = self.name.resolve(context)
+        data = '\n'.join(context[VARNAME][name])
         return '%s\n%s' % (data, rendered_contents)
     
     
@@ -24,7 +25,8 @@ class AddToBlockNode(template.Node):
     def render(self, context):
         assert VARNAME in context, "You must enable the sekizai template processor"
         rendered_contents = self.nodelist.render(context)
-        context[VARNAME][self.name].append(rendered_contents)
+        name = self.name.resolve(context)
+        context[VARNAME][name].append(rendered_contents)
         return ""
 
 

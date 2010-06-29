@@ -1,0 +1,19 @@
+{% load sekizai_tags %}
+
+{% render_block "css" %}
+
+some content
+
+{% addtoblock "css" %}
+my css file
+{% endaddtoblock %}
+
+more content
+
+{% addtoblock "js" %}
+my js file
+{% endaddtoblock %}
+
+final content
+
+{% render_block "js" %}
