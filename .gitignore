@@ -1,0 +1,11 @@
+*.pyc
+*~
+.*
+dist
+*egg-info*
+tests/bin
+tests/parts
+tests/.installed.cfg
+tests/eggs
+tests/downloads
+tests/develop-eggs
