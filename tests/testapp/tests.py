@@ -13,3 +13,7 @@ class TestTestCase(TestCase):
         bits = ['my css file', 'some content', 'more content', 
             'final content', 'my js file']
         self._test('basic.html', bits)
+
+    def test_02_named_end(self):
+        bits = ["mycontent"]
+        self._test('named_end.html', bits)
