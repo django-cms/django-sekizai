@@ -17,3 +17,7 @@ class TestTestCase(TestCase):
     def test_02_named_end(self):
         bits = ["mycontent"]
         self._test('named_end.html', bits)
+
+    def test_03_eat(self):
+        bits = ["mycontent"]
+        self._test("eat.html", bits)
