@@ -9,9 +9,12 @@ Configuration
 In order to get started with django-sekizai, you'll need to do the following
 steps:
 
-* put 'sekizai' into your INSTALLED_APPS.
-* add the ``sekizai.context_processors.sekizai`` template context processor to
-  your TEMPLATE_CONTEXT_PROCESSORS
+* Put 'sekizai' into your ``INSTALLED_APPS`` setting.
+* Use one of the following:
+    * Put ``sekizai.context_processors.sekizai`` into your
+      ``TEMPLATE_CONTEXT_PROCESSORS`` setting and use
+      ``django.template.RequestContext`` when rendering your templates.
+    * Use ``sekizai.context.SekizaiContext`` when rendering your templates.
 
 ************
 In Templates
