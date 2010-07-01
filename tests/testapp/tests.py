@@ -2,7 +2,7 @@ from difflib import SequenceMatcher
 from django.template.loader import render_to_string
 from sekizai.context import SekizaiContext
 from unittest import TestCase
-
+from django import template
 
 class BitDiffResult(object):
     def __init__(self, status, message):
@@ -102,9 +102,15 @@ class TestTestCase(TestCase):
         self._test("inherit/extend.html", bits)
         
     def test_06_namespace_isolation(self):
+        """
+        Tests that namespace isolation works
+        """
         bits = ["the same file", "the same file"]
         self._test('namespaces.html', bits)
         
     def test_07_variable_namespaces(self):
+        """
+        Tests variables and filtered variables as block names.
+        """
         bits = ["file one", "file two"]
         self._test('variables.html', bits, {'blockname': 'one'})
