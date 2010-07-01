@@ -1,0 +1,16 @@
+{% load sekizai_tags %}
+
+{% addtoblock blockname %}
+file two
+{% endaddtoblock %}
+
+{% addtoblock "one" %}
+file two
+{% endaddtoblock %}
+
+{% addtoblock blockname|upper %}
+file one
+{% endaddtoblock %}
+
+{% render_block "ONE" %}
+{% render_block blockname %}

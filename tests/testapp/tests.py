@@ -100,3 +100,11 @@ class TestTestCase(TestCase):
                 "inc add js", "include end", "block main start", "extinc",
                 "block main end", "body pre-end", "inc js file", "body end"]
         self._test("inherit/extend.html", bits)
+        
+    def test_06_namespace_isolation(self):
+        bits = ["the same file", "the same file"]
+        self._test('namespaces.html', bits)
+        
+    def test_07_variable_namespaces(self):
+        bits = ["file one", "file two"]
+        self._test('variables.html', bits, {'blockname': 'one'})
