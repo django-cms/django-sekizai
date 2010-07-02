@@ -19,11 +19,10 @@ class SekizaiList(list):
         return data
 
 class SekizaiDictionary(dict):
-    def __init__(self, namespace):
-        self._namespace = namespace
+    def __init__(self):
         super(SekizaiDictionary, self).__init__()
 
     def __getitem__(self, item):
         if item not in self:
-            self[item] = SekizaiList(self._namespace)
+            self[item] = SekizaiList(item)
         return super(SekizaiDictionary, self).__getitem__(item)

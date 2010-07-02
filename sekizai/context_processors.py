@@ -1,5 +1,5 @@
-from sekizai.utils import BlockHolder
+from sekizai.data import SekizaiDictionary
 from sekizai.settings import VARNAME
 
 def sekizai(request=None):
-    return {VARNAME: BlockHolder()}
+    return {VARNAME: SekizaiDictionary()}
