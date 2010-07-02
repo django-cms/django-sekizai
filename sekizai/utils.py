@@ -15,3 +15,6 @@ class BlockHolder(dict):
         if item not in self:
             self[item] = UniqueList()
         return super(BlockHolder, self).__getitem__(item)
+
+def load_filter(name):
+    pass
