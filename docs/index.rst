@@ -13,6 +13,7 @@ Contents:
 
     usage
     restrictions
+    example
 
 Sekizai means "blocks" in Japanese, and that's what this app provides. A fresh
 look at blocks. With django-sekizai you can define placeholders where your
