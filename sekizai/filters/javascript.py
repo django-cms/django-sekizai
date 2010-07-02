@@ -2,6 +2,7 @@ from sekizai.filters.base import BaseFilter
 from BeautifulSoup import BeautifulSoup
 from django.conf import settings
 from subprocess import Popen, PIPE
+import sys
 
 COMMAND = getattr(settings, 'SEKIZAI_JAVASCRIPT_MINIFIER_COMMAND', None)
 
@@ -11,9 +12,10 @@ class Minifier(object):
         self.command = command.split(' ')
         
     def __call__(self, data):
-        p = Popen(self.command, stdout=PIPE, stdin=PIPE)
-        stdout = p.communicate(data)[0]
+        p = Popen(self.command, stdout=PIPE, stdin=PIPE, stderr=PIPE)
+        stdout, stderr = p.communicate(data)
         if p.returncode != 0:
+            print >>sys.stderr, stderr
             return data
         return stdout
     

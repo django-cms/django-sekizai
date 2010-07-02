@@ -13,7 +13,7 @@ class RenderBlockNode(template.Node):
         assert VARNAME in context, "You must enable the sekizai template processor"
         rendered_contents = self.nodelist.render(context)
         name = self.name.resolve(context)
-        data = '\n'.join(context[VARNAME][name])
+        data = context[VARNAME][name].render()
         return '%s\n%s' % (data, rendered_contents)
     
     

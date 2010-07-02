@@ -15,7 +15,7 @@ class BaseFilter(object):
 class Namespace(object):
     def __init__(self, run_defaults, *filters):
         self.run_defaults = run_defaults
-        self.filters = [load_filter(f)() if isinstance(f, basestring) else f for f  in filters]
+        self.filters = [load_filter(f)() if isinstance(f, basestring) else f() for f  in filters]
         
     def add(self, filter):
         if isinstance(filter, basestring):
@@ -24,7 +24,7 @@ class Namespace(object):
         
     def __iter__(self):
         if self.run_defaults:
-            for f in registry.get('__default__'):
+            for f in registry.get_filters('__default__'):
                 yield f
         for f in self.filters:
             yield f
