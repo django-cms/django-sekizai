@@ -2,7 +2,10 @@ from difflib import SequenceMatcher
 from django.template.loader import render_to_string
 from sekizai.context import SekizaiContext
 from unittest import TestCase
-from django import template
+import subprocess
+
+def _is_installed(command):
+    return subprocess.call(['which', command]) == 0
 
 class BitDiffResult(object):
     def __init__(self, status, message):
@@ -114,3 +117,18 @@ class TestTestCase(TestCase):
         """
         bits = ["file one", "file two"]
         self._test('variables.html', bits, {'blockname': 'one'})
+        
+    def test_08_yui(self):
+        if not _is_installed('yui-compressor'):
+            return
+        from sekizai.filters.base import Namespace, registry
+        from sekizai.utils import load_filter
+        filter = load_filter('sekizai.filters.javascript.JavascriptMinfier')
+        registry.namespaces['js'] = Namespace(True, filter)
+        self.assertEqual(len(list(registry.get_filters('js'))), 2)
+        js = """<script type='text/javascript'>var a = 1;
+
+        var b = a + 2;</script>"""
+        self.assertNotEqual(js, filter().postprocess(js, 'js'))
+        bits = ['<script type="text/javascript">var a=1;var b=a+2;</script>', '<script type="text/javascript" src="somefile.js"></script>']
+        self._test('yui.html', bits)

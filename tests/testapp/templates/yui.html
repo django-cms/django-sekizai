@@ -1,0 +1,15 @@
+{% load sekizai_tags %}
+
+{% addtoblock "js" %}
+<script type="text/javascript">
+var a = 1;
+
+var b = a + 2;
+</script>
+{% endaddtoblock %}
+
+{% addtoblock "js" %}
+<script type="text/javascript" src="somefile.js"></script>
+{% endaddtoblock %}
+
+{% render_block "js" %}

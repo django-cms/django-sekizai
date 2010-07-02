@@ -35,3 +35,5 @@ TEMPLATE_LOADERS = (
 TEMPLATE_CONTEXT_PROCESSORS = (
     'sekizai.context_processors.sekizai',
 )
+
+SEKIZAI_JAVASCRIPT_MINIFIER_COMMAND = 'yui-compressor --type=js'
