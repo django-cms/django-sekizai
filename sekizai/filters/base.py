@@ -1,5 +1,7 @@
 from sekizai.utils import load_filter
 
+DEFAULT_FILTERS = ['sekizai.filters.defaults.UniqueFilter']
+
 class BaseFilter(object):
     def append(self, stack, new, namespace):
         """
@@ -41,12 +43,16 @@ class Registry(object):
             self._init(filters)
             
     def _init_default(self):
-        self.namespaces['__default__'] = Namespace(False, 'sekizai.filters.defaults.UniqueFilter')
+        if '__default__' in self.namespaces:
+            for filter_class in DEFAULT_FILTERS:
+                self.namespaces['__default__'].add(filter_class)
+        else:
+            self.namespaces['__default__'] = Namespace(False, *DEFAULT_FILTERS)
         
     def _init(self, settings):
-        self._init_default()
         for namespace, config in settings.items():
             self.namespaces[namespace] = Namespace(config.get('run_defaults', True), *config.get('filters', []))
+        self._init_default()
             
     def get_filters(self, namespace):
         return self.namespaces.get(namespace, self.namespaces['__default__'])
