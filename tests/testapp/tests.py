@@ -1,4 +1,6 @@
 from difflib import SequenceMatcher
+from django import template
+from django.conf import settings
 from django.template.loader import render_to_string
 from sekizai.context import SekizaiContext
 from unittest import TestCase
@@ -55,16 +57,26 @@ class BitDiff(object):
 
 
 class TestTestCase(TestCase):
+    def _render(self, tpl, ctx={}, ctxinstance=SekizaiContext):
+        return render_to_string(tpl, ctxinstance(ctx))
+        
     def _test(self, tpl, res, ctx={}):
         """
         Helper method to render template and compare it's bits
         """
-        rendered = render_to_string(tpl, SekizaiContext(ctx))
+        rendered = self._render(tpl, ctx)
         bits = [bit for bit in [bit.strip('\n') for bit in rendered.split('\n')] if bit]
         differ = BitDiff(res)
         result = differ.test(bits)
         self.assertTrue(result.status, result.message)
         return rendered
+    
+    def _load_filter(self, import_path, namespace):
+        from sekizai.filters.base import Namespace, registry
+        from sekizai.utils import load_filter
+        filter_instance = load_filter(import_path)
+        registry.namespaces[namespace] = Namespace(True, filter_instance)
+        return registry, filter_instance
         
     def test_01_basic(self):
         """
@@ -93,7 +105,7 @@ class TestTestCase(TestCase):
         Test that the template tags properly fail if not used with either 
         SekizaiContext or the context processor.
         """
-        self.assertRaises(AssertionError, render_to_string, 'basic.html', {})
+        self.assertRaises(AssertionError, self._render, 'basic.html', {}, template.Context)
         
     def test_05_template_inheritance(self):
         """
@@ -121,14 +133,35 @@ class TestTestCase(TestCase):
     def test_08_yui(self):
         if not _is_installed('yui-compressor'):
             return
-        from sekizai.filters.base import Namespace, registry
-        from sekizai.utils import load_filter
-        filter = load_filter('sekizai.filters.javascript.JavascriptMinfier')
-        registry.namespaces['js'] = Namespace(True, filter)
+        registry, filter_instance = self._load_filter('sekizai.filters.javascript.JavascriptMinfier', 'js')
         self.assertEqual(len(list(registry.get_filters('js'))), 2)
         js = """<script type='text/javascript'>var a = 1;
 
         var b = a + 2;</script>"""
-        self.assertNotEqual(js, filter().postprocess(js, 'js'))
-        bits = ['<script type="text/javascript">var a=1;var b=a+2;</script>', '<script type="text/javascript" src="somefile.js"></script>']
+        self.assertNotEqual(js, filter_instance().postprocess(js, 'js'))
+        bits = ['<script type="text/javascript">var a=1;var b=a+2;</script>',
+                '<script type="text/javascript" src="somefile.js"></script>']
         self._test('yui.html', bits)
+
+    def test_09_template_errors(self):
+        """
+        Tests that template syntax errors are raised properly in templates
+        rendered by sekizai tags
+        """
+        self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failinc.html')
+        self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failbase.html')
+        self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failbase2.html')
+
+    def test_10_css_to_file(self):
+        import hashlib
+        from sekizai.filters.css import DIR
+        import os
+        filename = '%s.css' % hashlib.sha1('body { color: red; }').hexdigest()
+        filepath = os.path.join(DIR, filename)
+        fileurl = os.path.relpath(filepath, settings.MEDIA_ROOT)
+        link = u'<link rel="stylesheet" href="%s%s" />' % (settings.MEDIA_URL, fileurl)
+        registry, filter_instance = self._load_filter('sekizai.filters.css.CSSInlineToFileFilter', 'css-to-file')
+        self.assertEqual(len(list(registry.get_filters('css-to-file'))), 2)
+        css = '<style type="text/css">body { color: red; }</style>'
+        self.assertNotEqual(css, filter_instance().postprocess(css, 'css-to-file'))
+        self._test('css.html', [link])

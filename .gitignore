@@ -1,4 +1,5 @@
 *.pyc
+sekizai_css_minifier
 *~
 .*
 dist

@@ -8,6 +8,9 @@ General
 
 Any django-sekizai template tag will fail if the context processor is not used.
 
+Currently django-sekizai will silently ignore errors in included templates. This
+is clearly a bug and fixing it has highest priority.
+
 ************
 render_block
 ************
