@@ -74,9 +74,9 @@ class TestTestCase(TestCase):
     def _load_filter(self, import_path, namespace):
         from sekizai.filters.base import Namespace, registry
         from sekizai.utils import load_filter
-        filter_instance = load_filter(import_path)
-        registry.namespaces[namespace] = Namespace(True, filter_instance)
-        return registry, filter_instance
+        filter_class = load_filter(import_path)
+        registry.namespaces[namespace] = Namespace(True, filter_class)
+        return registry, filter_class
         
     def test_01_basic(self):
         """
@@ -133,12 +133,12 @@ class TestTestCase(TestCase):
     def test_08_yui(self):
         if not _is_installed('yui-compressor'):
             return
-        registry, filter_instance = self._load_filter('sekizai.filters.javascript.JavascriptMinfier', 'js')
+        registry, filter_class = self._load_filter('sekizai.filters.javascript.JavascriptMinfier', 'js')
         self.assertEqual(len(list(registry.get_filters('js'))), 2)
         js = """<script type='text/javascript'>var a = 1;
 
         var b = a + 2;</script>"""
-        self.assertNotEqual(js, filter_instance().postprocess(js, 'js'))
+        self.assertNotEqual(js, filter_class().postprocess(js, 'js'))
         bits = ['<script type="text/javascript">var a=1;var b=a+2;</script>',
                 '<script type="text/javascript" src="somefile.js"></script>']
         self._test('yui.html', bits)
@@ -156,12 +156,40 @@ class TestTestCase(TestCase):
         import hashlib
         from sekizai.filters.css import DIR
         import os
-        filename = '%s.css' % hashlib.sha1('body { color: red; }').hexdigest()
+        raw_css = 'body { color: red; }'
+        filename = '%s.css' % hashlib.sha1(raw_css).hexdigest()
         filepath = os.path.join(DIR, filename)
         fileurl = os.path.relpath(filepath, settings.MEDIA_ROOT)
         link = u'<link rel="stylesheet" href="%s%s" />' % (settings.MEDIA_URL, fileurl)
-        registry, filter_instance = self._load_filter('sekizai.filters.css.CSSInlineToFileFilter', 'css-to-file')
+        registry, filter_class = self._load_filter('sekizai.filters.css.CSSInlineToFileFilter', 'css-to-file')
         self.assertEqual(len(list(registry.get_filters('css-to-file'))), 2)
         css = '<style type="text/css">body { color: red; }</style>'
-        self.assertNotEqual(css, filter_instance().postprocess(css, 'css-to-file'))
+        self.assertNotEqual(css, filter_class().postprocess(css, 'css-to-file'))
         self._test('css.html', [link])
+        # check file contents
+        f = open(filepath, 'r')
+        data = f.read()
+        f.close()
+        self.assertEqual(data, raw_css)
+        
+    def test_11_css_onefile(self):
+        import hashlib
+        import os
+        from sekizai.filters.css import DIR
+        raw_css = """body { background: red; }
+div { color: red; }"""
+        registry, filter_class = self._load_filter('sekizai.filters.css.CSSSingleFileFilter', 'css-onefile')
+        self.assertEqual(len(list(registry.get_filters('css-onefile'))), 2)
+        css = """<link rel="stylesheet" href="/media/css/one.css" /> 
+<link rel="stylesheet" href="/media/css/two.css" />"""
+        self.assertNotEqual(css, filter_class().postprocess(css, 'css-onefile'))
+        filename = '%s.css' % hashlib.sha1('/media/css/one.css/media/css/two.css').hexdigest()
+        filepath = os.path.join(DIR, filename)
+        fileurl = os.path.relpath(filepath, settings.MEDIA_ROOT)
+        link = u'<link rel="stylesheet" href="%s%s" />' % (settings.MEDIA_URL, fileurl)
+        self._test('css2.html', [link])
+        # check file contents
+        f = open(filepath, 'r')
+        data = f.read()
+        f.close()
+        self.assertEqual(data, raw_css)
