@@ -52,11 +52,14 @@ class BitDiff(object):
 
 
 class TestTestCase(TestCase):
+    def _render(self, tpl, ctx={}, ctxinstance=SekizaiContext):
+        return render_to_string(tpl, ctxinstance(ctx))
+        
     def _test(self, tpl, res, ctx={}):
         """
         Helper method to render template and compare it's bits
         """
-        rendered = render_to_string(tpl, SekizaiContext(ctx))
+        rendered = self._render(tpl, ctx)
         bits = [bit for bit in [bit.strip('\n') for bit in rendered.split('\n')] if bit]
         differ = BitDiff(res)
         result = differ.test(bits)
@@ -90,7 +93,7 @@ class TestTestCase(TestCase):
         Test that the template tags properly fail if not used with either 
         SekizaiContext or the context processor.
         """
-        self.assertRaises(AssertionError, render_to_string, 'basic.html', {})
+        self.assertRaises(AssertionError, self._render, 'basic.html', {}, template.Context)
         
     def test_05_template_inheritance(self):
         """
@@ -114,3 +117,12 @@ class TestTestCase(TestCase):
         """
         bits = ["file one", "file two"]
         self._test('variables.html', bits, {'blockname': 'one'})
+        
+    def test_08_template_errors(self):
+        """
+        Tests that template syntax errors are raised properly in templates
+        rendered by sekizai tags
+        """
+        self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failinc.html')
+        self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failbase.html')
+        self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failbase2.html')
