@@ -58,7 +58,7 @@ class CSSSingleFileFilter(BaseMinifierFilter):
         hashbase = ''.join(files)
         filename = '%s.css' % hashlib.sha1(hashbase).hexdigest()
         filepath = os.path.join(DIR, filename)
-        if not os.path.exists(filepath):
+        if not os.path.exists(filepath) or self._check_dates(filepath, files):
             self._build(files, filepath)
         fileurl = os.path.relpath(filepath, settings.MEDIA_ROOT)
         link = u'<link rel="stylesheet" href="%s%s" />' % (settings.MEDIA_URL, fileurl)
@@ -83,3 +83,9 @@ class CSSSingleFileFilter(BaseMinifierFilter):
         f.write('\n'.join(data))
         f.close()
             
+    def _check_dates(self, master, files):
+        mtime = os.path.getmtime(master)
+        for f in files:
+            if os.path.getmtime(f) > mtime:
+                return True
+        return False
