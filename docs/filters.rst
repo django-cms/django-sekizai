@@ -20,6 +20,7 @@ An example would be::
     SEKIZAI_FILTERS = {
         'external-css': {
             'filters': ['sekizai.filters.css.CSSSingleFileFilter'],
+            'configs': {'skip_on_debug': True},
         },
         'inline-css': {
             'filters': ['sekizai.filters.css.CSSInlineToFileFilter'],
@@ -36,6 +37,10 @@ that namespace.
 
 The ``filters`` of a namespace is a list of import paths to a filter class which
 should be a subclass of ``sekizai.filters.base.BaseFilter``.
+
+The optional ``configs`` dictionary are configuration values passed to the
+specified filters. All minifier filters respec the ``skip_on_debug`` setting
+which will turn the filter no-op when ``settings.DEBUG`` is True.
 
 To add more default filters to *all* namespaces, use the ``__default__``
 namespace in your settings dictionary.
@@ -71,6 +76,10 @@ Builtin Filters
 
     Filters out all duplicate content from a block. This filter is active by
     default.
+    
+.. class:: sekizai.filters.django_filters.SpacelessFilter
+
+    Removes spaces between html tags.
 
 .. class:: sekizai.filters.js.JavascriptMinifier
 
@@ -84,8 +93,9 @@ Writing your own Filters
 ************************
 
 You may write your own filters by sub-classing
-``sekizai.filters.base.BaseFilter``. Your class may implement two methods
-``append`` and ``postprocess``.
+``sekizai.filters.base.BaseFilter``. Your class will be initialized with all
+configurations in your settings for the current namespace as keyword arguments.
+Your class may implement two methods ``append`` and ``postprocess``.
 
 .. classmethod:: append(self, stack, new, namespace)
 
