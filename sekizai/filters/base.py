@@ -40,7 +40,8 @@ class Namespace(object):
                 filter_class = load_filter(filter_class)
             if inspect.isclass(filter_class):
                 return filter_class(**self.configs)
-            return filter_class
+            else: # pragma: no cover
+                return filter_class
         self.filters = [_load(filter_class) for filter_class in filters]
         
     def add(self, finstance):
