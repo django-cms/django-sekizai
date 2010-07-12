@@ -2,6 +2,8 @@ import os
 ADMINS = (
 )
 
+TEMPLATE_DEBUG = True
+
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'sqlite3'

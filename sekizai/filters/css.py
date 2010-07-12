@@ -1,4 +1,3 @@
-from BeautifulSoup import BeautifulSoup
 from django.conf import settings
 from sekizai.filters.utils.minifiers import BaseMinifierFilter, Minifier, \
     NullMinifier
@@ -7,16 +6,25 @@ import os
 
 
 COMMAND = getattr(settings, 'SEKIZAI_CSS_MINIFIER_COMMAND', None)
-DIR = getattr(settings, 'SEKIZAI_CSS_MINIFIER_DIR', os.path.join(settings.MEDIA_ROOT, 'sekizai_css_minifier/'))
+DEFAULT_DIR = os.path.join(settings.MEDIA_ROOT, 'sekizai_css_minifier/')
+DIR = getattr(settings, 'SEKIZAI_CSS_MINIFIER_DIR', DEFAULT_DIR)
 
 if not os.path.exists(DIR): # pragma: no cover 
     os.makedirs(DIR)
     
 def media_url_to_filepath(url):
+    """
+    Convert a media url to a (absolute) file path
+    """
     rel_path = url.lstrip('/')
-    return os.path.abspath(os.path.join(os.path.join(settings.MEDIA_ROOT, '../'), rel_path))
+    project_dir = os.path.join(settings.MEDIA_ROOT, '../')
+    return os.path.abspath(os.path.join(project_dir, rel_path))
 
 class CSSInlineToFileFilter(BaseMinifierFilter):
+    """
+    Filter which turns inline CSS into an external css file and optionally 
+    minifies that CSS.
+    """
     tag = 'style'
     minifier = Minifier(COMMAND) if COMMAND else NullMinifier()
     restrictions = {
@@ -24,6 +32,9 @@ class CSSInlineToFileFilter(BaseMinifierFilter):
     }
     
     def _minify(self, data, this):
+        """
+        Make sure we actually have to do anything by checking sha1 hashes.
+        """
         this[self] = []
         result = super(CSSInlineToFileFilter, self)._minify(data, this)
         # create the css file
@@ -31,11 +42,12 @@ class CSSInlineToFileFilter(BaseMinifierFilter):
         filename = '%s.css' % hashlib.sha1(new).hexdigest()
         filepath = os.path.join(DIR, filename)
         if not os.path.exists(filepath):
-            f = open(filepath, 'w')
-            f.write(new)
-            f.close()
+            fhandler = open(filepath, 'w')
+            fhandler.write(new)
+            fhandler.close()
         fileurl = os.path.relpath(filepath, settings.MEDIA_ROOT)
-        link = u'<link rel="stylesheet" href="%s%s" />' % (settings.MEDIA_URL, fileurl)
+        data = (settings.MEDIA_URL, fileurl)
+        link = u'<link rel="stylesheet" href="%s%s" />' % data
         return u'%s\n%s' % (link, result)
         
     def _handle_minified_data(self, tag, minified, this):
@@ -47,11 +59,14 @@ class CSSInlineToFileFilter(BaseMinifierFilter):
         
         
 class CSSSingleFileFilter(BaseMinifierFilter):
+    """
+    Compress multiple external CSS files into a single one
+    """
     tag = 'link'
     minifier = NullMinifier()
     restrictions = {
         'rel': lambda x: x == 'stylesheet',
-        'href': lambda x: bool(x),
+        'href': bool,
     }
     
     def _minify(self, data, this):
@@ -65,32 +80,38 @@ class CSSSingleFileFilter(BaseMinifierFilter):
         if (not os.path.exists(filepath)) or self._check_dates(filepath, files):
             self._build(files, filepath)
         fileurl = os.path.relpath(filepath, settings.MEDIA_ROOT)
-        link = u'<link rel="stylesheet" href="%s%s" />' % (settings.MEDIA_URL, fileurl)
+        data = (settings.MEDIA_URL, fileurl)
+        link = u'<link rel="stylesheet" href="%s%s" />' % data
         return u'%s\n%s' % (link, result)
     
     def _handle_tag(self, tag, this):
         for attr, checker in self.restrictions.items():
             if not checker(tag.get(attr)): # pragma: no cover 
-                continue
+                return
         href = tag.get('href')
         this[self].append(href)
         tag.extract()
         
     def _build(self, files, filepath):
         data = []
-        for file in files:
-            fpath = os.path.join(settings.MEDIA_ROOT, os.path.relpath(file, settings.MEDIA_URL))
-            f = open(fpath, 'r')
-            data.append(f.read())
-            f.close()
-        f = open(filepath, 'w')
-        f.write('\n'.join(data))
-        f.close()
+        for filename in files:
+            relfile = os.path.relpath(filename, settings.MEDIA_URL)
+            fpath = os.path.join(settings.MEDIA_ROOT, relfile)
+            fhandler = open(fpath, 'r')
+            data.append(fhandler.read())
+            fhandler.close()
+        fhandler = open(filepath, 'w')
+        fhandler.write('\n'.join(data))
+        fhandler.close()
             
     def _check_dates(self, master, files):
+        """
+        Check modification times of files involved here and make sure the master
+        file get's rebuilt if any other file is newer.
+        """
         mtime = os.path.getmtime(master)
-        for f in files:
-            fpath = media_url_to_filepath(f)
+        for fname in files:
+            fpath = media_url_to_filepath(fname)
             if os.path.getmtime(fpath) >= mtime:
                 return True
         return False

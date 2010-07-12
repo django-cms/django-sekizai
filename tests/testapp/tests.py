@@ -67,7 +67,7 @@ class BitDiff(object):
             return BitDiffResult(False, msg)
 
 
-class TestTestCase(TestCase):
+class SekizaiTestCase(TestCase):
     def _render(self, tpl, ctx={}, ctxinstance=SekizaiContext):
         return render_to_string(tpl, ctxinstance(ctx))
         
@@ -82,11 +82,11 @@ class TestTestCase(TestCase):
         self.assertTrue(result.status, result.message)
         return rendered
     
-    def _load_filter(self, import_path, namespace):
+    def _load_filter(self, import_path, namespace, configs={}):
         from sekizai.filters.base import Namespace, registry
         from sekizai.utils import load_filter
         filter_class = load_filter(import_path)
-        registry.namespaces[namespace] = Namespace(True, filter_class)
+        registry.namespaces[namespace] = Namespace(True, [filter_class], configs)
         return registry, filter_class
         
     def test_01_basic(self):
@@ -116,7 +116,7 @@ class TestTestCase(TestCase):
         Test that the template tags properly fail if not used with either 
         SekizaiContext or the context processor.
         """
-        self.assertRaises(AssertionError, self._render, 'basic.html', {}, template.Context)
+        self.assertRaises(template.TemplateSyntaxError, self._render, 'basic.html', {}, template.Context)
         
     def test_05_template_inheritance(self):
         """

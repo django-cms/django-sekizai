@@ -3,6 +3,10 @@ from sekizai.settings import VARNAME
 
 register = template.Library()
 
+CONTEXT_PROCESSOR_ERROR_MESSAGE = (
+    "You must enable the 'sekizai.context_processor.sekizai' template context "
+    "processor or 'sekizai.context.SekizaiContext' to render your templates.")
+
 
 class RenderBlockNode(template.Node):
     def __init__(self, nodelist, name):
@@ -10,7 +14,7 @@ class RenderBlockNode(template.Node):
         self.name = name
         
     def render(self, context):
-        assert VARNAME in context, "You must enable the sekizai template processor"
+        assert VARNAME in context, CONTEXT_PROCESSOR_ERROR_MESSAGE
         rendered_contents = self.nodelist.render(context)
         name = self.name.resolve(context)
         data = context[VARNAME][name].render()
@@ -23,7 +27,7 @@ class AddToBlockNode(template.Node):
         self.name = name
         
     def render(self, context):
-        assert VARNAME in context, "You must enable the sekizai template processor"
+        assert VARNAME in context, CONTEXT_PROCESSOR_ERROR_MESSAGE
         rendered_contents = self.nodelist.render(context)
         name = self.name.resolve(context)
         context[VARNAME][name].append(rendered_contents)

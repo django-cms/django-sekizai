@@ -4,6 +4,9 @@ from django.conf import settings
 COMMAND = getattr(settings, 'SEKIZAI_JAVASCRIPT_MINIFIER_COMMAND', None)
 
 class JavascriptMinfier(BaseMinifierFilter):
+    """
+    Inline javascript minfier filter.
+    """
     tag = 'script'
     restrictions = {
         'type': lambda x: x == 'text/javascript',
