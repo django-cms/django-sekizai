@@ -9,8 +9,12 @@ import os
 COMMAND = getattr(settings, 'SEKIZAI_CSS_MINIFIER_COMMAND', None)
 DIR = getattr(settings, 'SEKIZAI_CSS_MINIFIER_DIR', os.path.join(settings.MEDIA_ROOT, 'sekizai_css_minifier/'))
 
-if not os.path.exists(DIR):
+if not os.path.exists(DIR): # pragma: no cover 
     os.makedirs(DIR)
+    
+def media_url_to_filepath(url):
+    rel_path = url.lstrip('/')
+    return os.path.abspath(os.path.join(os.path.join(settings.MEDIA_ROOT, '../'), rel_path))
 
 class CSSInlineToFileFilter(BaseMinifierFilter):
     tag = 'style'
@@ -58,7 +62,7 @@ class CSSSingleFileFilter(BaseMinifierFilter):
         hashbase = ''.join(files)
         filename = '%s.css' % hashlib.sha1(hashbase).hexdigest()
         filepath = os.path.join(DIR, filename)
-        if not os.path.exists(filepath) or self._check_dates(filepath, files):
+        if (not os.path.exists(filepath)) or self._check_dates(filepath, files):
             self._build(files, filepath)
         fileurl = os.path.relpath(filepath, settings.MEDIA_ROOT)
         link = u'<link rel="stylesheet" href="%s%s" />' % (settings.MEDIA_URL, fileurl)
@@ -66,7 +70,7 @@ class CSSSingleFileFilter(BaseMinifierFilter):
     
     def _handle_tag(self, tag, this):
         for attr, checker in self.restrictions.items():
-            if not checker(tag.get(attr)):
+            if not checker(tag.get(attr)): # pragma: no cover 
                 continue
         href = tag.get('href')
         this[self].append(href)
@@ -86,6 +90,7 @@ class CSSSingleFileFilter(BaseMinifierFilter):
     def _check_dates(self, master, files):
         mtime = os.path.getmtime(master)
         for f in files:
-            if os.path.getmtime(f) > mtime:
+            fpath = media_url_to_filepath(f)
+            if os.path.getmtime(fpath) > mtime:
                 return True
         return False

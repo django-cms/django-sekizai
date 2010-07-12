@@ -43,7 +43,7 @@ class Registry(object):
             self._init(filters)
             
     def _init_default(self):
-        if '__default__' in self.namespaces:
+        if '__default__' in self.namespaces: # pragma: no cover
             for filter_class in DEFAULT_FILTERS:
                 self.namespaces['__default__'].add(filter_class)
         else:

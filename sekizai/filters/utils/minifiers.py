@@ -11,7 +11,7 @@ class Minifier(object):
     def __call__(self, data):
         p = Popen(self.command, stdout=PIPE, stdin=PIPE, stderr=PIPE)
         stdout = p.communicate(data)[0]
-        if p.returncode != 0:
+        if p.returncode != 0: # pragma: no cover 
             return data
         return stdout
     
@@ -29,7 +29,7 @@ class BaseMinifierFilter(BaseFilter):
     skip_in_debug = True
     
     def __init__(self):
-        if self.tag is None:
+        if self.tag is None: # pragma: no cover 
             raise ImproperlyConfigured(
                 "BaseMinifierFilters require the 'tag' property to be set"
             )
@@ -38,9 +38,9 @@ class BaseMinifierFilter(BaseFilter):
         """
         Minfiy the 
         """
-        if self.minifier is None:
+        if self.minifier is None: # pragma: no cover 
             return data
-        if self.skip_in_debug and settings.DEBUG:
+        if self.skip_in_debug and settings.DEBUG: # pragma: no cover 
             return data
         this = {}
         return self._minify(data, this)
@@ -48,7 +48,7 @@ class BaseMinifierFilter(BaseFilter):
     def _minify(self, data, this):
         try:
             soup = BeautifulSoup(data)
-        except: 
+        except: # pragma: no cover 
             return data
         for tag in soup.findAll(self.tag):
             self._handle_tag(tag, this)
@@ -61,7 +61,7 @@ class BaseMinifierFilter(BaseFilter):
         data = u''.join(tag.contents)
         try:
             minified = self.minifier(data)
-        except:
+        except: # pragma: no cover 
             return data
         self._handle_minified_data(tag, minified, this)
         
