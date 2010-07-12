@@ -2,11 +2,11 @@ from difflib import SequenceMatcher
 from django import template
 from django.conf import settings
 from django.template.loader import render_to_string
-from sekizai.context import SekizaiContext
-from sekizai.filters.css import DIR
 from unittest import TestCase
 import os
 import subprocess
+from sekizai.context import SekizaiContext
+from sekizai.filters.css import DIR
 
 def _is_installed(command):
     return subprocess.call(['which', command]) == 0
@@ -161,18 +161,13 @@ class TestTestCase(TestCase):
         """
         self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failadd.html')
         self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failrender.html')
-        if True:
-            return
-        else: # pragma: no cover 
-            self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failinc.html')
-            self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failbase.html')
-            self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failbase2.html')
+        self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failinc.html')
+        self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failbase.html')
+        self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failbase2.html')
 
     @clean_css
     def test_10_css_to_file(self):
         import hashlib
-        from sekizai.filters.css import DIR
-        import os
         raw_css = 'body { color: red; }'
         filename = '%s.css' % hashlib.sha1(raw_css).hexdigest()
         filepath = os.path.join(DIR, filename)
@@ -192,8 +187,6 @@ class TestTestCase(TestCase):
     @clean_css
     def test_11_css_onefile(self):
         import hashlib
-        import os
-        from sekizai.filters.css import DIR
         raw_css = """body { background: red; }
 div { color: red; }"""
         registry, filter_class = self._load_filter('sekizai.filters.css.CSSSingleFileFilter', 'css-onefile')
@@ -230,3 +223,24 @@ div { color: red; }"""
             f = open(fpath, 'w')
             f.write(old)
             f.close()
+            
+    def test_12_registry(self):
+        SEKIZAI_FILTERS = {
+            'css-onefile': {
+                'filters': ['sekizai.filters.css.CSSSingleFileFilter'],
+            },
+        }
+        from sekizai.filters.base import Registry
+        r = Registry()
+        r.init(SEKIZAI_FILTERS)
+        self.assertEqual(len(list(r.get_filters('css-onefile'))), 2)
+        r.add('css-onefile', 'sekizai.filters.django_filters.SpacelessFilter')
+        self.assertEqual(len(list(r.get_filters('css-onefile'))), 3)
+        
+    def test_13_spaceless(self):
+        registry, filter_class = self._load_filter('sekizai.filters.django_filters.SpacelessFilter', 'spaceless')
+        self.assertEqual(len(list(registry.get_filters('spaceless'))), 2)
+        bits = ["<strong>Strong</strong>", "<i>oblique</i>"]
+        html = "\n".join(bits)
+        self.assertNotEqual(html, filter_class().postprocess(html, 'spaceless'))
+        self._test('spaceless.html', [''.join(bits)])

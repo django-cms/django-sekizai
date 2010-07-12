@@ -37,9 +37,8 @@ class Registry(object):
         self.namespaces = {}
         
     def init(self, filters):
-        if filters is None:
-            self._init_default()
-        else:
+        self._init_default()
+        if filters is not None:
             self._init(filters)
             
     def _init_default(self):
@@ -52,7 +51,9 @@ class Registry(object):
     def _init(self, settings):
         for namespace, config in settings.items():
             self.namespaces[namespace] = Namespace(config.get('run_defaults', True), *config.get('filters', []))
-        self._init_default()
+            
+    def add(self, namespace, filter):
+        self.namespaces[namespace].add(filter)
             
     def get_filters(self, namespace):
         return self.namespaces.get(namespace, self.namespaces['__default__'])

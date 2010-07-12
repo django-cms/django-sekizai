@@ -91,6 +91,6 @@ class CSSSingleFileFilter(BaseMinifierFilter):
         mtime = os.path.getmtime(master)
         for f in files:
             fpath = media_url_to_filepath(f)
-            if os.path.getmtime(fpath) > mtime:
+            if os.path.getmtime(fpath) >= mtime:
                 return True
         return False
