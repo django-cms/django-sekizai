@@ -39,3 +39,14 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 SEKIZAI_JAVASCRIPT_MINIFIER_COMMAND = 'yui-compressor --type=js'
+
+# set xmlrunner as test runner if available
+try:
+    import xmlrunner
+except ImportError:
+    xmlrunner = None
+    
+if xmlrunner:
+    TEST_RUNNER = 'testapp.testrunner.DjangoXMLTestRunner'
+else:
+    TEST_RUNNER = 'django.test.simple.DjangoTestSuiteRunner'
