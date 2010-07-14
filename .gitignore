@@ -11,3 +11,4 @@ tests/eggs
 tests/downloads
 tests/develop-eggs
 docs/_build
+*.xml
