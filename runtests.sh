@@ -7,6 +7,7 @@ if [ "`python -c 'import django; print django.get_version()' 2>/dev/null`" == "1
         coverage run manage.py test testapp
         retcode=$?
         coverage xml
+        mv *.xml ..
     else
         python manage.py test testapp
         retcode=$?
@@ -16,7 +17,7 @@ if [ "`python -c 'import django; print django.get_version()' 2>/dev/null`" == "1
     echo "setting up test environment (this might take a while)..."
     python bootstrap.py >/dev/null 2>&1
     ./bin/buildout >/dev/null 2>&1
-    ./bin/coverage testapp/manage.py test testapp
+    ./bin/coverage run ./testapp/manage.py test testapp
     ./bin/coverage xml
     retcode=$?
 fi
