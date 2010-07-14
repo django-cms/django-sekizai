@@ -17,6 +17,7 @@ if [ "`python -c 'import django; print django.get_version()' 2>/dev/null`" == "1
     python bootstrap.py >/dev/null 2>&1
     ./bin/buildout >/dev/null 2>&1
     ./bin/coverage testapp/manage.py test testapp
+    ./bin/coverage xml
     retcode=$?
 fi
 cd ..
