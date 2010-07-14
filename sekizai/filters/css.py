@@ -4,6 +4,23 @@ from sekizai.filters.utils.minifiers import BaseMinifierFilter, Minifier, \
 import hashlib
 import os
 
+try:
+    relpath = os.path.relpath
+except:
+    from posixpath import curdir, sep, pardir, join
+    def relpath(path, start=curdir):
+        """Return a relative version of a path"""
+        if not path:
+            raise ValueError("no path specified")
+        start_list = posixpath.abspath(start).split(sep)
+        path_list = posixpath.abspath(path).split(sep)
+        # Work out how much of the filepath is shared by start and path.
+        i = len(posixpath.commonprefix([start_list, path_list]))
+        rel_list = [pardir] * (len(start_list)-i) + path_list[i:]
+        if not rel_list:
+            return curdir
+        return join(*rel_list)
+
 
 COMMAND = getattr(settings, 'SEKIZAI_CSS_MINIFIER_COMMAND', None)
 DEFAULT_DIR = os.path.join(settings.MEDIA_ROOT, 'sekizai_css_minifier/')
@@ -45,7 +62,7 @@ class CSSInlineToFileFilter(BaseMinifierFilter):
             fhandler = open(filepath, 'w')
             fhandler.write(new)
             fhandler.close()
-        fileurl = os.path.relpath(filepath, settings.MEDIA_ROOT)
+        fileurl = relpath(filepath, settings.MEDIA_ROOT)
         data = (settings.MEDIA_URL, fileurl)
         link = u'<link rel="stylesheet" href="%s%s" />' % data
         return u'%s\n%s' % (link, result)
@@ -79,7 +96,7 @@ class CSSSingleFileFilter(BaseMinifierFilter):
         filepath = os.path.join(DIR, filename)
         if (not os.path.exists(filepath)) or self._check_dates(filepath, files):
             self._build(files, filepath)
-        fileurl = os.path.relpath(filepath, settings.MEDIA_ROOT)
+        fileurl = relpath(filepath, settings.MEDIA_ROOT)
         data = (settings.MEDIA_URL, fileurl)
         link = u'<link rel="stylesheet" href="%s%s" />' % data
         return u'%s\n%s' % (link, result)
@@ -95,7 +112,7 @@ class CSSSingleFileFilter(BaseMinifierFilter):
     def _build(self, files, filepath):
         data = []
         for filename in files:
-            relfile = os.path.relpath(filename, settings.MEDIA_URL)
+            relfile = relpath(filename, settings.MEDIA_URL)
             fpath = os.path.join(settings.MEDIA_ROOT, relfile)
             fhandler = open(fpath, 'r')
             data.append(fhandler.read())
