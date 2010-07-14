@@ -7,6 +7,7 @@ import os
 import subprocess
 from sekizai.context import SekizaiContext
 from sekizai.filters.css import DIR
+from sekizai.utils import relpath
 
 def _is_installed(command):
     return subprocess.call(['which', command]) == 0
@@ -171,7 +172,7 @@ class SekizaiTestCase(TestCase):
         raw_css = 'body { color: red; }'
         filename = '%s.css' % hashlib.sha1(raw_css).hexdigest()
         filepath = os.path.join(DIR, filename)
-        fileurl = os.path.relpath(filepath, settings.MEDIA_ROOT)
+        fileurl = relpath(filepath, settings.MEDIA_ROOT)
         link = u'<link rel="stylesheet" href="%s%s" />' % (settings.MEDIA_URL, fileurl)
         registry, filter_class = self._load_filter('sekizai.filters.css.CSSInlineToFileFilter', 'css-to-file')
         self.assertEqual(len(list(registry.get_filters('css-to-file'))), 2)
@@ -196,7 +197,7 @@ div { color: red; }"""
         self.assertNotEqual(css, filter_class().postprocess(css, 'css-onefile'))
         filename = '%s.css' % hashlib.sha1('/media/css/one.css/media/css/two.css').hexdigest()
         filepath = os.path.join(DIR, filename)
-        fileurl = os.path.relpath(filepath, settings.MEDIA_ROOT)
+        fileurl = relpath(filepath, settings.MEDIA_ROOT)
         link = u'<link rel="stylesheet" href="%s%s" />' % (settings.MEDIA_URL, fileurl)
         self._test('css2.html', [link])
         # check file contents
