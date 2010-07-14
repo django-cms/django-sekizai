@@ -6,7 +6,7 @@ if [ "`python -c 'import django; print django.get_version()' 2>/dev/null`" == "1
     if which coverage &> /dev/null; then
         coverage run manage.py test testapp
         retcode=$?
-        coverage xml
+        coverage xml --omit=parts,/usr/,eggs
         mv *.xml ..
     else
         python manage.py test testapp
@@ -19,7 +19,7 @@ if [ "`python -c 'import django; print django.get_version()' 2>/dev/null`" == "1
     ./bin/buildout >/dev/null 2>&1
     ./bin/coverage run ./testapp/manage.py test testapp
     retcode=$?
-    ./bin/coverage xml
+    ./bin/coverage xml --omit=parts,/usr/,eggs
 fi
 cd ..
 exit $retcode
