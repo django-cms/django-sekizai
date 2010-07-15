@@ -9,6 +9,25 @@ from sekizai.context import SekizaiContext
 from sekizai.filters.css import DIR
 from sekizai.utils import relpath
 
+class Match(tuple): # pragma: no cover
+    @property
+    def a(self):
+        return self[0]
+    
+    @property
+    def b(self):
+        return self[1]
+    
+    @property
+    def size(self):
+        return self[2]
+
+
+def _backwards_compat_match(thing): # pragma: no cover
+    if isinstance(thing, tuple):
+        return Match(thing)
+    return thing
+
 def _is_installed(command):
     return subprocess.call(['which', command]) == 0
 
@@ -41,7 +60,7 @@ class BitDiff(object):
             lasta = 0
             lastb = 0
             data = []
-            for match in matches:
+            for match in [_backwards_compat_match(match) for match in matches]:
                 unmatcheda = self.expected[lasta:match.a]
                 unmatchedb = result[lastb:match.b]
                 unmatchedlen = max([len(unmatcheda), len(unmatchedb)])
