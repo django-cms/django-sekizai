@@ -169,7 +169,9 @@ class SekizaiTestCase(TestCase):
         js = """<script type='text/javascript'>var a = 1;
 
         var b = a + 2;</script>"""
+        outjs = '<script type="text/javascript">var a=1;var b=a+2;</script>'
         self.assertNotEqual(js, filter_class().postprocess(js, 'js'))
+        self.assertEqual(outjs, filter_class().postprocess(js, 'js'))
         bits = ['<script type="text/javascript">var a=1;var b=a+2;</script>',
                 '<script type="text/javascript" src="somefile.js"></script>']
         self._test('yui.html', bits)
