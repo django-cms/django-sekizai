@@ -3,6 +3,14 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from sekizai.filters.base import BaseFilter
 from subprocess import Popen, PIPE
+import warnings
+
+
+class MinifierWarning(Warning):
+    """
+    Warning which gets raised if the minifier subprocess fails.
+    """
+
 
 class Minifier(object):
     """
@@ -17,8 +25,12 @@ class Minifier(object):
         successful. Otherwise return the input data.
         """
         process = Popen(self.command, stdout=PIPE, stdin=PIPE, stderr=PIPE)
-        stdout = process.communicate(data)[0]
-        if process.returncode != 0: # pragma: no cover 
+        stdout, stderr = process.communicate(data)
+        if process.returncode != 0: # pragma: no cover
+            warnings.warn(
+                "Could not minify '%s' using '%s', subprocess failed with "
+                "'%s'." % (data, ' '.join(self.command), stderr),
+                MinifierWarning) 
             return data
         return stdout
     
