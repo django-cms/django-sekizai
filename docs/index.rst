@@ -12,7 +12,7 @@ Contents:
     :maxdepth: 2
 
     usage
-    filters
+    data
     restrictions
     example
 

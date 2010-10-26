@@ -10,5 +10,6 @@ tests/.installed.cfg
 tests/eggs
 tests/downloads
 tests/develop-eggs
+tests/htmlcov
 docs/_build
 *.xml

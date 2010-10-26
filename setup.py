@@ -11,4 +11,7 @@ setup(
     url = 'http://github.com/ojii/django-sekizai',
     packages = find_packages(),
     zip_safe=False,
+    install_requires = [
+        'django-classy-tags>=0.2.2',
+    ],
 )

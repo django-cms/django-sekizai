@@ -1,3 +1,6 @@
+from classytags.arguments import Argument
+from classytags.core import Tag, Options
+from classytags.parser import Parser
 from django import template
 from sekizai.settings import VARNAME
 
@@ -8,18 +11,64 @@ CONTEXT_PROCESSOR_ERROR_MESSAGE = (
     "processor or 'sekizai.context.SekizaiContext' to render your templates.")
 
 
-class RenderBlockNode(template.Node):
-    def __init__(self, nodelist, name):
-        self.nodelist = nodelist
-        self.name = name
-        
-    def render(self, context):
+class EndlessParser(Parser):
+    def parse_blocks(self):
+        super(EndlessParser, self).parse_blocks()
+        nodelist = self.parser.parse()
+        self.blocks['endless_nodelist'] = nodelist
+
+
+class EndlessParseOptions(Options):
+    def get_parser_class(self):
+        return EndlessParser
+    
+    
+class AddData(Tag):
+    options = Options(
+        Argument('key'),
+        Argument('value'),
+    )
+    
+    def render_tag(self, context, key, value):
         assert VARNAME in context, CONTEXT_PROCESSOR_ERROR_MESSAGE
-        rendered_contents = self.nodelist.render(context)
-        name = self.name.resolve(context)
+        context[VARNAME][key].append(value)
+        return ''
+register.tag(AddData)
+
+class WithData(Tag):
+    options = EndlessParseOptions(
+        Argument('name'),
+        'as', 
+        Argument('varname', resolve=False),
+        blocks=[
+            ('end_with_data', 'inner_nodelist'),
+        ]
+    )
+    
+    def render_tag(self, context, name, varname, inner_nodelist, endless_nodelist):
+        assert VARNAME in context, CONTEXT_PROCESSOR_ERROR_MESSAGE
+        rendered_contents = endless_nodelist.render(context)
+        data = context[VARNAME][name]
+        context.push()
+        context[varname] = data
+        inner_contents = inner_nodelist.render(context)
+        context.pop()
+        return '%s\n%s' % (inner_contents, rendered_contents)
+register.tag(WithData)
+
+
+class RenderBlock(Tag):
+    options = EndlessParseOptions(
+        Argument('name'),
+    )
+        
+    def render_tag(self, context, name, endless_nodelist):
+        assert VARNAME in context, CONTEXT_PROCESSOR_ERROR_MESSAGE
+        rendered_contents = endless_nodelist.render(context)
         data = context[VARNAME][name].render()
         return '%s\n%s' % (data, rendered_contents)
-    
+register.tag(RenderBlock)
+
     
 class AddToBlockNode(template.Node):
     def __init__(self, nodelist, name):
@@ -33,20 +82,6 @@ class AddToBlockNode(template.Node):
         context[VARNAME][name].append(rendered_contents)
         return ""
 
-
-@register.tag
-def render_block(parser, token):
-    """
-    {% render_block <name> %}
-    """
-    bits = token.split_contents()
-    if len(bits) != 2:
-        raise template.TemplateSyntaxError(
-            "The 'render_block' tag requires one argument"
-        )
-    name = parser.compile_filter(bits[1])
-    nodelist = parser.parse()
-    return RenderBlockNode(nodelist, name)
 
 @register.tag
 def addtoblock(parser, token):
