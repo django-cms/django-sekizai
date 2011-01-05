@@ -11,19 +11,35 @@ CONTEXT_PROCESSOR_ERROR_MESSAGE = (
     "processor or 'sekizai.context.SekizaiContext' to render your templates.")
 
 
-class EndlessParser(Parser):
+class SekizaiParser(Parser):
     def parse_blocks(self):
-        super(EndlessParser, self).parse_blocks()
-        nodelist = self.parser.parse()
-        self.blocks['endless_nodelist'] = nodelist
+        super(SekizaiParser, self).parse_blocks()
+        self.blocks['nodelist'] = self.parser.parse()
 
 
-class EndlessParseOptions(Options):
-    def get_parser_class(self):
-        return EndlessParser
+class RenderBlock(Tag):
+    name = 'render_block'
     
-    
+    options = Options(
+        Argument('name'),
+        parser_class=SekizaiParser,
+    )
+
+    @property
+    def nodelist(self):
+        return self.blocks['nodelist']
+        
+    def render_tag(self, context, name, nodelist):
+        assert VARNAME in context, CONTEXT_PROCESSOR_ERROR_MESSAGE
+        rendered_contents = nodelist.render(context)
+        data = context[VARNAME][name].render()
+        return '%s\n%s' % (data, rendered_contents)
+register.tag(RenderBlock)
+
+
 class AddData(Tag):
+    name = 'add_data'
+    
     options = Options(
         Argument('key'),
         Argument('value'),
@@ -35,19 +51,23 @@ class AddData(Tag):
         return ''
 register.tag(AddData)
 
+
 class WithData(Tag):
-    options = EndlessParseOptions(
+    name = 'with_data'
+    
+    options = Options(
         Argument('name'),
         'as', 
         Argument('varname', resolve=False),
         blocks=[
             ('end_with_data', 'inner_nodelist'),
-        ]
+        ],
+        parser_class=SekizaiParser,
     )
     
-    def render_tag(self, context, name, varname, inner_nodelist, endless_nodelist):
+    def render_tag(self, context, name, varname, inner_nodelist, nodelist):
         assert VARNAME in context, CONTEXT_PROCESSOR_ERROR_MESSAGE
-        rendered_contents = endless_nodelist.render(context)
+        rendered_contents = nodelist.render(context)
         data = context[VARNAME][name]
         context.push()
         context[varname] = data
@@ -57,20 +77,7 @@ class WithData(Tag):
 register.tag(WithData)
 
 
-class RenderBlock(Tag):
-    options = EndlessParseOptions(
-        Argument('name'),
-    )
-        
-    def render_tag(self, context, name, endless_nodelist):
-        assert VARNAME in context, CONTEXT_PROCESSOR_ERROR_MESSAGE
-        rendered_contents = endless_nodelist.render(context)
-        data = context[VARNAME][name].render()
-        return '%s\n%s' % (data, rendered_contents)
-register.tag(RenderBlock)
-
-    
-class AddToBlockNode(template.Node):
+class AddToBlockNode(template.Node):    
     def __init__(self, nodelist, name):
         self.nodelist = nodelist
         self.name = name
@@ -81,7 +88,6 @@ class AddToBlockNode(template.Node):
         name = self.name.resolve(context)
         context[VARNAME][name].append(rendered_contents)
         return ""
-
 
 @register.tag
 def addtoblock(parser, token):

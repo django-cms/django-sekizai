@@ -3,7 +3,6 @@ from django import template
 from django.template.loader import render_to_string
 from sekizai.context import SekizaiContext
 from unittest import TestCase
-import subprocess
 
 class Match(tuple): # pragma: no cover
     @property
@@ -24,9 +23,6 @@ def _backwards_compat_match(thing): # pragma: no cover
         return Match(thing)
     return thing
 
-def _is_installed(command):
-    return subprocess.call(['which', command]) == 0
-
 class BitDiffResult(object):
     def __init__(self, status, message):
         self.status = status
@@ -34,10 +30,14 @@ class BitDiffResult(object):
 
 
 class BitDiff(object):
+    """
+    Visual aid for failing tests
+    """
     def __init__(self, expected):
-        self.expected = [unicode(bit) for bit in expected]
+        self.expected = [repr(unicode(bit)) for bit in expected]
         
     def test(self, result):
+        result = [repr(unicode(bit)) for bit in result]
         if self.expected == result:
             return BitDiffResult(True, "success")
         else: # pragma: no cover
@@ -127,10 +127,41 @@ class SekizaiTestCase(TestCase):
         """
         Test that (complex) template inheritances work properly
         """
-        bits = ["head start", "some css file", "head end", "include start",
-                "inc add js", "include end", "block main start", "extinc",
-                "block main end", "body pre-end", "inc js file", "body end"]
+        bits = [
+            "head start",
+            "some css file",
+            "head end",
+            "include start",
+            "inc add js",
+            "include end",
+            "block main start",
+            "extinc",
+            "block main end",
+            "body pre-end",
+            "inc js file",
+            "body end"
+        ]
         self._test("inherit/extend.html", bits)
+        """
+        Test that blocks (and block.super) work properly with sekizai
+        """
+        bits = [
+            "head start",
+            "visible css file",
+            "some css file",
+            "head end",
+            "include start",
+            "inc add js",
+            "include end",
+            "block main start",
+            "block main base contents",
+            "more contents",
+            "block main end",
+            "body pre-end",
+            "inc js file",
+            "body end"
+        ]
+        self._test("inherit/super_blocks.html", bits)
         
     def test_06_namespace_isolation(self):
         """
@@ -163,3 +194,6 @@ class SekizaiTestCase(TestCase):
         """
         bits = ["1", "2"]
         self._test('with_data.html', bits)
+        
+    def test_11_easy_inherit(self):
+        self.assertEqual('content', self._render("easy_inherit.html").strip())

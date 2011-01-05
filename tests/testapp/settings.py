@@ -44,7 +44,7 @@ try:
 except ImportError:
     xmlrunner = None
     
-if xmlrunner:
+if False:#xmlrunner:
     TEST_RUNNER = 'testapp.testrunner.DjangoXMLTestRunner'
 else:
     TEST_RUNNER = 'django.test.simple.DjangoTestSuiteRunner'

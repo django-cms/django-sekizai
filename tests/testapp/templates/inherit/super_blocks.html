@@ -1,0 +1,15 @@
+{% extends "inherit/base.html" %}
+
+{% load sekizai_tags %}
+
+{% addtoblock "css" %}
+invisible css file
+{% endaddtoblock %}
+
+{% block "main" %}
+{{ block.super }}
+{% addtoblock "css" %}
+visible css file
+{% endaddtoblock %}
+more contents
+{% endblock %}
