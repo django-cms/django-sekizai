@@ -1,3 +1,4 @@
+from __future__ import with_statement
 from difflib import SequenceMatcher
 from django import template
 from django.conf import settings
