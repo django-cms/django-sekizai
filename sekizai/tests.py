@@ -1,8 +1,35 @@
 from difflib import SequenceMatcher
 from django import template
+from django.conf import settings
 from django.template.loader import render_to_string
 from sekizai.context import SekizaiContext
+from sekizai.templatetags.sekizai_tags import validate_context
 from unittest import TestCase
+
+
+class SettingsOverride(object):
+    """
+    Overrides Django settings within a context and resets them to their inital
+    values on exit.
+    
+    Example:
+    
+        with SettingsOverride(DEBUG=True):
+            # do something
+    """
+    def __init__(self, **overrides):
+        self.overrides = overrides
+        
+    def __enter__(self):
+        self.old = {}
+        for key, value in self.overrides.items():
+            self.old[key] = getattr(settings, key)
+            setattr(settings, key, value)
+        
+    def __exit__(self, type, value, traceback):
+        for key, value in self.old.items():
+            setattr(settings, key, value)
+
 
 class Match(tuple): # pragma: no cover
     @property
@@ -84,11 +111,11 @@ class SekizaiTestCase(TestCase):
         bits = [bit for bit in [bit.strip('\n') for bit in rendered.split('\n')] if bit]
         return bits, rendered
         
-    def _test(self, tpl, res, ctx={}):
+    def _test(self, tpl, res, ctx={}, ctxclass=SekizaiContext):
         """
         Helper method to render template and compare it's bits
         """
-        bits, rendered = self._get_bits(tpl, ctx)
+        bits, rendered = self._get_bits(tpl, ctx, ctxclass)
         differ = BitDiff(res)
         result = differ.test(bits)
         self.assertTrue(result.status, result.message)
@@ -197,3 +224,14 @@ class SekizaiTestCase(TestCase):
         
     def test_11_easy_inherit(self):
         self.assertEqual('content', self._render("easy_inherit.html").strip())
+        
+    def test_12_validate_context(self):
+        sekizai_ctx = SekizaiContext()
+        django_ctx = template.Context()
+        self.assertRaises(template.TemplateSyntaxError, validate_context, django_ctx)
+        self.assertEqual(validate_context(sekizai_ctx), True)
+        with SettingsOverride(TEMPLATE_DEBUG=False):
+            self.assertEqual(validate_context(django_ctx), False)
+            self.assertEqual(validate_context(sekizai_ctx), True)
+            bits = ['some content', 'more content', 'final content']
+            self._test('basic.html', bits, ctxclass=template.Context)

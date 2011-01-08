@@ -2,19 +2,54 @@ from classytags.arguments import Argument
 from classytags.core import Tag, Options
 from classytags.parser import Parser
 from django import template
+from django.conf import settings
 from sekizai.settings import VARNAME
 
 register = template.Library()
 
-CONTEXT_PROCESSOR_ERROR_MESSAGE = (
-    "You must enable the 'sekizai.context_processor.sekizai' template context "
-    "processor or 'sekizai.context.SekizaiContext' to render your templates.")
+def validate_context(context):
+    """
+    Validates a given context.
+    
+    Returns True if the context is valid.
+    
+    Returns False if the context is invalid but the error should be silently
+    ignored.
+    
+    Raises a TemplateSyntaxError if the context is invalid and we're in debug
+    mode.
+    """
+    if VARNAME in context:
+        return True
+    if not settings.TEMPLATE_DEBUG:
+        return False
+    raise template.TemplateSyntaxError(
+        "You must enable the 'sekizai.context_processor.sekizai' template "
+        "context processor or use 'sekizai.context.SekizaiContext' to "
+        "render your templates."
+    )
 
 
 class SekizaiParser(Parser):
     def parse_blocks(self):
         super(SekizaiParser, self).parse_blocks()
         self.blocks['nodelist'] = self.parser.parse()
+
+
+class AddtoblockParser(Parser):
+    def parse_blocks(self):
+        name = self.kwargs['name'].var.token
+        self.blocks['nodelist'] = self.parser.parse(
+            ('endaddtoblock', 'endaddtoblock %s' % name)
+        )
+        self.parser.delete_first_token()
+
+
+class SekizaiTag(Tag):
+    def render(self, context):
+        if validate_context(context):
+            return super(SekizaiTag, self).render(context)
+        return ''
 
 
 class RenderBlock(Tag):
@@ -30,14 +65,15 @@ class RenderBlock(Tag):
         return self.blocks['nodelist']
         
     def render_tag(self, context, name, nodelist):
-        assert VARNAME in context, CONTEXT_PROCESSOR_ERROR_MESSAGE
+        if not validate_context(context):
+            return nodelist.render(context)
         rendered_contents = nodelist.render(context)
         data = context[VARNAME][name].render()
         return '%s\n%s' % (data, rendered_contents)
 register.tag(RenderBlock)
 
 
-class AddData(Tag):
+class AddData(SekizaiTag):
     name = 'add_data'
     
     options = Options(
@@ -46,13 +82,12 @@ class AddData(Tag):
     )
     
     def render_tag(self, context, key, value):
-        assert VARNAME in context, CONTEXT_PROCESSOR_ERROR_MESSAGE
         context[VARNAME][key].append(value)
         return ''
 register.tag(AddData)
 
 
-class WithData(Tag):
+class WithData(SekizaiTag):
     name = 'with_data'
     
     options = Options(
@@ -66,7 +101,6 @@ class WithData(Tag):
     )
     
     def render_tag(self, context, name, varname, inner_nodelist, nodelist):
-        assert VARNAME in context, CONTEXT_PROCESSOR_ERROR_MESSAGE
         rendered_contents = nodelist.render(context)
         data = context[VARNAME][name]
         context.push()
@@ -77,29 +111,16 @@ class WithData(Tag):
 register.tag(WithData)
 
 
-class AddToBlockNode(template.Node):    
-    def __init__(self, nodelist, name):
-        self.nodelist = nodelist
-        self.name = name
-        
-    def render(self, context):
-        assert VARNAME in context, CONTEXT_PROCESSOR_ERROR_MESSAGE
-        rendered_contents = self.nodelist.render(context)
-        name = self.name.resolve(context)
+class Addtoblock(SekizaiTag):
+    name = 'addtoblock'
+    
+    options = Options(
+        Argument('name'),
+        parser_class=AddtoblockParser,
+    )
+    
+    def render_tag(self, context, name, nodelist):
+        rendered_contents = nodelist.render(context)
         context[VARNAME][name].append(rendered_contents)
         return ""
-
-@register.tag
-def addtoblock(parser, token):
-    """
-    {% addtoblock <name> %}
-    """
-    bits = token.split_contents()
-    if len(bits) != 2:
-        raise template.TemplateSyntaxError(
-            "The 'addtoblock' tag requires one argument"
-        )
-    name = parser.compile_filter(bits[1])
-    nodelist = parser.parse(('endaddtoblock', 'endaddtoblock %s' % name))
-    parser.delete_first_token()
-    return AddToBlockNode(nodelist, name)
+register.tag(Addtoblock)

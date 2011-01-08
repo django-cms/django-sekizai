@@ -8,6 +8,7 @@ index=0
 reuse_env=true
 disable_coverage=true
 suite="sekizai"
+python="/bin/python"
 
 while [ "$index" -lt "$num_args" ]
 do
@@ -33,7 +34,8 @@ do
             echo "flags:"
             echo "    --failfast - abort at first failing test"
             echo "    --with-coverage - enables coverage"
-            echo "    --rebuild-env - run buildout before the tests" 
+            echo "    --rebuild-env - run buildout before the tests"
+            echo "    --python /path/to/python - set python to use"
             exit 1
             ;;
 

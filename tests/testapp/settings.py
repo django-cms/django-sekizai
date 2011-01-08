@@ -37,14 +37,5 @@ TEMPLATE_LOADERS = (
 TEMPLATE_CONTEXT_PROCESSORS = (
     'sekizai.context_processors.sekizai',
 )
-
-# set xmlrunner as test runner if available
-try:
-    import xmlrunner
-except ImportError:
-    xmlrunner = None
     
-if False:#xmlrunner:
-    TEST_RUNNER = 'testapp.testrunner.DjangoXMLTestRunner'
-else:
-    TEST_RUNNER = 'django.test.simple.DjangoTestSuiteRunner'
+TEST_RUNNER = 'testapp.testrunner.TestSuiteRunner'
