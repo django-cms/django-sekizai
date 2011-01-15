@@ -8,7 +8,7 @@ index=0
 reuse_env=true
 disable_coverage=true
 suite="sekizai"
-python="/bin/python"
+python="python"
 
 while [ "$index" -lt "$num_args" ]
 do
