@@ -47,7 +47,7 @@ done
 
 if [ $reuse_env == false ]; then
     echo "setting up test environment (this might take a while)..."
-    python bootstrap.py
+    $python bootstrap.py
     if [ $? != 0 ]; then
         echo "bootstrap.py failed"
         exit 1
