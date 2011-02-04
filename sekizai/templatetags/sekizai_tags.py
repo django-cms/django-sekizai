@@ -24,7 +24,7 @@ def validate_context(context):
     if not settings.TEMPLATE_DEBUG:
         return False
     raise template.TemplateSyntaxError(
-        "You must enable the 'sekizai.context_processor.sekizai' template "
+        "You must enable the 'sekizai.context_processors.sekizai' template "
         "context processor or use 'sekizai.context.SekizaiContext' to "
         "render your templates."
     )
