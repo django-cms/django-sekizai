@@ -3,31 +3,9 @@ from classytags.core import Tag, Options
 from classytags.parser import Parser
 from django import template
 from django.conf import settings
-from sekizai.settings import VARNAME
+from sekizai.data import get_content_holder
 
 register = template.Library()
-
-def validate_context(context):
-    """
-    Validates a given context.
-    
-    Returns True if the context is valid.
-    
-    Returns False if the context is invalid but the error should be silently
-    ignored.
-    
-    Raises a TemplateSyntaxError if the context is invalid and we're in debug
-    mode.
-    """
-    if VARNAME in context:
-        return True
-    if not settings.TEMPLATE_DEBUG:
-        return False
-    raise template.TemplateSyntaxError(
-        "You must enable the 'sekizai.context_processors.sekizai' template "
-        "context processor or use 'sekizai.context.SekizaiContext' to "
-        "render your templates."
-    )
 
 
 class SekizaiParser(Parser):
@@ -45,13 +23,6 @@ class AddtoblockParser(Parser):
         self.parser.delete_first_token()
 
 
-class SekizaiTag(Tag):
-    def render(self, context):
-        if validate_context(context):
-            return super(SekizaiTag, self).render(context)
-        return ''
-
-
 class RenderBlock(Tag):
     name = 'render_block'
     
@@ -65,15 +36,13 @@ class RenderBlock(Tag):
         return self.blocks['nodelist']
         
     def render_tag(self, context, name, nodelist):
-        if not validate_context(context):
-            return nodelist.render(context)
         rendered_contents = nodelist.render(context)
-        data = context[VARNAME][name].render()
+        data = get_content_holder()[name].render()
         return '%s\n%s' % (data, rendered_contents)
 register.tag(RenderBlock)
 
 
-class AddData(SekizaiTag):
+class AddData(Tag):
     name = 'add_data'
     
     options = Options(
@@ -82,12 +51,13 @@ class AddData(SekizaiTag):
     )
     
     def render_tag(self, context, key, value):
-        context[VARNAME][key].append(value)
+        content_holder = get_content_holder()
+        content_holder[key].append(value)
         return ''
 register.tag(AddData)
 
 
-class WithData(SekizaiTag):
+class WithData(Tag):
     name = 'with_data'
     
     options = Options(
@@ -102,7 +72,7 @@ class WithData(SekizaiTag):
     
     def render_tag(self, context, name, varname, inner_nodelist, nodelist):
         rendered_contents = nodelist.render(context)
-        data = context[VARNAME][name]
+        data = get_content_holder()[name]
         context.push()
         context[varname] = data
         inner_contents = inner_nodelist.render(context)
@@ -111,9 +81,9 @@ class WithData(SekizaiTag):
 register.tag(WithData)
 
 
-class Addtoblock(SekizaiTag):
+class Addtoblock(Tag):
     name = 'addtoblock'
-    
+
     options = Options(
         Argument('name'),
         parser_class=AddtoblockParser,
@@ -121,6 +91,7 @@ class Addtoblock(SekizaiTag):
     
     def render_tag(self, context, name, nodelist):
         rendered_contents = nodelist.render(context)
-        context[VARNAME][name].append(rendered_contents)
+        content_holder = get_content_holder()
+        content_holder[name].append(rendered_contents)
         return ""
 register.tag(Addtoblock)

@@ -1,3 +1,15 @@
+from threading import local
+
+
+_content_holder = local()
+
+def get_content_holder():
+    global _content_holder
+    if not hasattr(_content_holder, 'data'):
+        _content_holder.data = SekizaiDictionary()
+    return _content_holder.data
+
+
 class SekizaiList(list):
     """
     A sekizai namespace in a template.
