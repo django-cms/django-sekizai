@@ -4,6 +4,7 @@ from django import template
 from django.conf import settings
 from django.template.loader import render_to_string
 from sekizai.context import SekizaiContext
+from sekizai.helpers import validate_template, get_namespaces
 from sekizai.templatetags.sekizai_tags import validate_context
 from unittest import TestCase
 
@@ -236,3 +237,20 @@ class SekizaiTestCase(TestCase):
             self.assertEqual(validate_context(sekizai_ctx), True)
             bits = ['some content', 'more content', 'final content']
             self._test('basic.html', bits, ctxclass=template.Context)
+
+
+class HelperTests(TestCase):
+    def test_validate_template(self):
+        self.assertTrue(validate_template('basic.html', ['js', 'css']))
+        self.assertTrue(validate_template('basic.html', ['js']))
+        self.assertTrue(validate_template('basic.html', ['css']))
+        self.assertTrue(validate_template('basic.html', []))
+        self.assertFalse(validate_template('basic.html', ['notfound']))
+
+    def test_get_namespaces(self):
+        self.assertEqual(get_namespaces('easy_inherit.html'), ['css'])
+        self.assertEqual(get_namespaces('inherit/chain.html'), ['css', 'js'])
+        self.assertEqual(get_namespaces('inherit/spacechain.html'), ['css', 'js'])
+        self.assertEqual(get_namespaces('inherit/varchain.html'), [])
+        self.assertEqual(get_namespaces('inherit/subvarchain.html'), [])
+        self.assertEqual(get_namespaces('inherit/nullext.html'), [])
