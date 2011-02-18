@@ -13,6 +13,7 @@ Contents:
 
     usage
     restrictions
+    helpers
     example
 
 Sekizai means "blocks" in Japanese, and that's what this app provides. A fresh
