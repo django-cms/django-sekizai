@@ -59,10 +59,6 @@ class RenderBlock(Tag):
         Argument('name'),
         parser_class=SekizaiParser,
     )
-
-    @property
-    def nodelist(self):
-        return self.blocks['nodelist']
         
     def render_tag(self, context, name, nodelist):
         if not validate_context(context):

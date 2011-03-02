@@ -12,6 +12,6 @@ setup(
     packages = find_packages(),
     zip_safe=False,
     install_requires = [
-        'django-classy-tags>=0.3.0',
+        'django-classy-tags>=0.3.1',
     ],
 )
