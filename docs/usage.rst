@@ -34,7 +34,7 @@ block using ``{% addtoblock <name> %}...{% endaddotblock %}``.
 
 Example Template::
 
-    {% load sekizai %}
+    {% load sekizai_tags %}
     
     <html>
     <head>
@@ -85,7 +85,7 @@ a list. For this purpose there are the
 
 Example::
 
-    {% load sekizai %}
+    {% load sekizai_tags %}
     
     <html>
     <head>
