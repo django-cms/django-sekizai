@@ -121,7 +121,7 @@ Above example would roughly render like this::
 Sekizai data is unique
 ======================
 
-All data in sekizai is enforced to be unique within it's block namespace. This
+All data in sekizai is enforced to be unique within its block namespace. This
 is because the main purpose of sekizai is to handle javascript and css
 dependencies in templates. 
 
