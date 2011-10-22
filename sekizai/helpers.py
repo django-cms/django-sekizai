@@ -54,6 +54,7 @@ def _scan_namespaces(nodelist, current_block=None, ignore_blocks=[]):
         # check if this is RenderBlock node
         if isinstance(node, RenderBlock):
             # resolve it's name against a dummy context
+            # print node
             found.append(node.kwargs['name'].resolve({}))
             found += _scan_namespaces(node.blocks['nodelist'], node)
         # handle {% extends ... %} tags if check_inheritance is True
@@ -64,6 +65,8 @@ def _scan_namespaces(nodelist, current_block=None, ignore_blocks=[]):
             if node.filter_expression.token == 'block.super':
                 if hasattr(current_block.super, 'nodelist'):
                     found += _scan_namespaces(current_block.super.nodelist, current_block.super)
+        elif hasattr(node, 'nodelist'):
+            found += _scan_namespaces(node.nodelist, node)
     return found
 
 def get_namespaces(template):

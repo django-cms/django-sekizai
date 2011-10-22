@@ -10,14 +10,14 @@ register = template.Library()
 def validate_context(context):
     """
     Validates a given context.
-    
+
     Returns True if the context is valid.
-    
+
     Returns False if the context is invalid but the error should be silently
     ignored.
-    
+
     Raises a TemplateSyntaxError if the context is invalid and we're in debug
-    mode.
+     mode.
     """
     if VARNAME in context:
         return True
@@ -52,31 +52,42 @@ class SekizaiTag(Tag):
         return ''
 
 
+class RenderBlockParser(Parser):
+    def parse_blocks(self):
+        super(RenderBlockParser, self).parse_blocks()
+        self.blocks['nodelist'] = template.NodeList([])
+
+
 class RenderBlock(Tag):
     name = 'render_block'
-    
+
     options = Options(
         Argument('name'),
-        parser_class=SekizaiParser,
+        parser_class=RenderBlockParser,
     )
-        
+
     def render_tag(self, context, name, nodelist):
         if not validate_context(context):
             return nodelist.render(context)
         rendered_contents = nodelist.render(context)
-        data = context[VARNAME][name].render()
-        return '%s\n%s' % (data, rendered_contents)
+        self.name = name
+        self.context = context
+        return self  # Lazy rendering
+
+    def __unicode__(self):
+        return self.context[VARNAME][self.name].render()
+
 register.tag(RenderBlock)
 
 
 class AddData(SekizaiTag):
     name = 'add_data'
-    
+
     options = Options(
         Argument('key'),
         Argument('value'),
     )
-    
+
     def render_tag(self, context, key, value):
         context[VARNAME][key].append(value)
         return ''
@@ -85,17 +96,17 @@ register.tag(AddData)
 
 class WithData(SekizaiTag):
     name = 'with_data'
-    
+
     options = Options(
         Argument('name'),
-        'as', 
+        'as',
         Argument('varname', resolve=False),
         blocks=[
             ('end_with_data', 'inner_nodelist'),
         ],
         parser_class=SekizaiParser,
     )
-    
+
     def render_tag(self, context, name, varname, inner_nodelist, nodelist):
         rendered_contents = nodelist.render(context)
         data = context[VARNAME][name]
@@ -109,12 +120,12 @@ register.tag(WithData)
 
 class Addtoblock(SekizaiTag):
     name = 'addtoblock'
-    
+
     options = Options(
         Argument('name'),
         parser_class=AddtoblockParser,
     )
-    
+
     def render_tag(self, context, name, nodelist):
         rendered_contents = nodelist.render(context)
         context[VARNAME][name].append(rendered_contents)
