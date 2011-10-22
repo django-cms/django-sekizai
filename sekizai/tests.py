@@ -19,18 +19,23 @@ class SettingsOverride(object):
         with SettingsOverride(DEBUG=True):
             # do something
     """
+    class NULL: pass
+    
     def __init__(self, **overrides):
         self.overrides = overrides
         
     def __enter__(self):
         self.old = {}
         for key, value in self.overrides.items():
-            self.old[key] = getattr(settings, key)
+            self.old[key] = getattr(settings, key, self.NULL)
             setattr(settings, key, value)
         
     def __exit__(self, type, value, traceback):
         for key, value in self.old.items():
-            setattr(settings, key, value)
+            if value is self.NULL:
+                delattr(settings, key)
+            else:
+                setattr(settings, key, value)
 
 
 class Match(tuple): # pragma: no cover
@@ -123,7 +128,7 @@ class SekizaiTestCase(TestCase):
         self.assertTrue(result.status, result.message)
         return rendered
         
-    def test_01_basic(self):
+    def test_basic_dual_block(self):
         """
         Basic dual block testing
         """
@@ -131,28 +136,28 @@ class SekizaiTestCase(TestCase):
             'final content', 'my js file']
         self._test('basic.html', bits)
 
-    def test_02_named_end(self):
+    def test_named_endaddtoblock(self):
         """
         Testing with named endaddblock
         """
         bits = ["mycontent"]
         self._test('named_end.html', bits)
 
-    def test_03_eat(self):
+    def test_eat_content_before_render_block(self):
         """
         Testing that content get's eaten if no render_blocks is available
         """
         bits = ["mycontent"]
         self._test("eat.html", bits)
         
-    def test_04_fail(self):
+    def test_sekizai_context_required(self):
         """
         Test that the template tags properly fail if not used with either 
         SekizaiContext or the context processor.
         """
         self.assertRaises(template.TemplateSyntaxError, self._render, 'basic.html', {}, template.Context)
         
-    def test_05_template_inheritance(self):
+    def test_complex_template_inheritance(self):
         """
         Test that (complex) template inheritances work properly
         """
@@ -192,42 +197,50 @@ class SekizaiTestCase(TestCase):
         ]
         self._test("inherit/super_blocks.html", bits)
         
-    def test_06_namespace_isolation(self):
+    def test_namespace_isolation(self):
         """
         Tests that namespace isolation works
         """
         bits = ["the same file", "the same file"]
         self._test('namespaces.html', bits)
         
-    def test_07_variable_namespaces(self):
+    def test_variable_namespaces(self):
         """
         Tests variables and filtered variables as block names.
         """
         bits = ["file one", "file two"]
         self._test('variables.html', bits, {'blockname': 'one'})
 
-    def test_09_template_errors(self):
+    def test_invalid_addtoblock(self):
         """
         Tests that template syntax errors are raised properly in templates
         rendered by sekizai tags
         """
         self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failadd.html')
+    
+    def test_invalid_renderblock(self):
         self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failrender.html')
+    
+    def test_invalid_include(self):
         self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failinc.html')
+        
+    def test_invalid_basetemplate(self):
         self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failbase.html')
+        
+    def test_invalid_basetemplate_two(self):
         self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failbase2.html')
         
-    def test_10_with_data(self):
+    def test_with_data(self):
         """
         Tests the with_data/add_data tags.
         """
         bits = ["1", "2"]
         self._test('with_data.html', bits)
         
-    def test_11_easy_inherit(self):
+    def test_easy_inheritance(self):
         self.assertEqual('content', self._render("easy_inherit.html").strip())
         
-    def test_12_validate_context(self):
+    def test_validate_context(self):
         sekizai_ctx = SekizaiContext()
         django_ctx = template.Context()
         self.assertRaises(template.TemplateSyntaxError, validate_context, django_ctx)
@@ -254,3 +267,11 @@ class HelperTests(TestCase):
         self.assertEqual(get_namespaces('inherit/varchain.html'), [])
         self.assertEqual(get_namespaces('inherit/subvarchain.html'), [])
         self.assertEqual(get_namespaces('inherit/nullext.html'), [])
+        
+    def test_deactivate_validate_template(self):
+        with SettingsOverride(SEKIZAI_IGNORE_VALIDATION=True):
+            self.assertTrue(validate_template('basic.html', ['js', 'css']))
+            self.assertTrue(validate_template('basic.html', ['js']))
+            self.assertTrue(validate_template('basic.html', ['css']))
+            self.assertTrue(validate_template('basic.html', []))
+            self.assertTrue(validate_template('basic.html', ['notfound']))

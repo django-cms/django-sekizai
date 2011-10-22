@@ -29,7 +29,7 @@ TEMPLATE_CONTEXT_PROCESSORS = [
 
 ROOT_URLCONF = 'runtests'
 
-def run_tests():
+def runtests():
     from django.conf import settings
     settings.configure(
         INSTALLED_APPS = INSTALLED_APPS,
@@ -51,6 +51,6 @@ def run_tests():
 
 
 if __name__ == "__main__":
-    failures = run_tests()
+    failures = runtests()
     if failures:
         sys.exit(bool(failures))

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.conf import settings
 from django.template import TextNode, VariableNode, NodeList
 from django.template.loader import get_template
 from django.template.loader_tags import BlockNode, ExtendsNode
@@ -18,11 +19,16 @@ def _extend_blocks(extend_node, blocks):
             blocks[node.name] = node
         else:
             # set this node as the super node (for {{ block.super }})
-            blocks[node.name].super = node
+            block = blocks[node.name]
+            seen_supers = []
+            while hasattr(block.super, 'nodelist') and block.super not in seen_supers:
+                seen_supers.append(block.super)
+                block = block.super
+            block.super = node
     # search for further ExtendsNodes
-    for node in parent.nodelist:
-        if isinstance(node, ExtendsNode):
-            _extend_blocks(node, blocks)
+    for node in parent.nodelist.get_nodes_by_type(ExtendsNode):
+        _extend_blocks(node, blocks)
+        break
 
 def _extend_nodelist(extend_node):
     """
@@ -75,6 +81,8 @@ def validate_template(template, namespaces):
     Validates that a template (or it's parents if check_inheritance is True)
     contain all given namespaces
     """
+    if getattr(settings, 'SEKIZAI_IGNORE_VALIDATION', False):
+        return True
     found = get_namespaces(template)
     for namespace in namespaces:
         if namespace not in found:
