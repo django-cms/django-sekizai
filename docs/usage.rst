@@ -160,3 +160,36 @@ Above template would roughly render to::
     <script type="text/javascript">
         $('secondelement').set('class', 'active');
     </script>
+
+
+.. versionadded:: 0.5
+
+Processing sekizai data
+=======================
+
+Because of the :ref:`render-block-restrictions` restrictions it is not possible
+to use sekizai with libraries such as django-compressor directly. For that
+reason, sekizai added postprocessing capabilities to ``render_block`` in
+version 0.5.
+
+Postprocessors are callable Python objects (usually functions) that get the
+data in a sekizai namespace and the name of the namespace passed as arguments
+and should return a string.
+
+An example for a processor that uses the Django builtin spaceless functionality
+would be:
+
+.. code-block:: python
+
+    def spaceless_post_processor(data, namespace):
+        from django.utils.html import strip_spaces_between_tags
+        return strip_spaces_between_tags(data)
+
+
+To use this post processor you have to tell ``render_block`` where it's
+located. If above code sample lives in the Python module
+``myapp.sekizai_processors`` you could use it like this::
+
+    ...
+    {% render_block "js" postprocessor "myapp.sekizai_processors.spaceless_post_processor" %}
+    ...

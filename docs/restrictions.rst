@@ -10,6 +10,9 @@ If ``TEMPLATE_DEBUG`` is True and you do not use either ``SekizaiContext`` or
 ``RequestContext`` and the ``sekizai`` context processor, a
 ``TemplateSyntaxError`` will be raised in any template using a sekizai tag.
 
+
+.. _render-block-restrictions:
+
 ************
 render_block
 ************
