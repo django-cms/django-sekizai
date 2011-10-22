@@ -5,8 +5,16 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from sekizai.context import SekizaiContext
 from sekizai.helpers import validate_template, get_namespaces
-from sekizai.templatetags.sekizai_tags import validate_context
+from sekizai.templatetags.sekizai_tags import (validate_context, 
+    import_processor)
 from unittest import TestCase
+
+
+def null_processor(data, namespace):
+    return ''
+
+def namespace_processor(data, namespace):
+    return namespace
 
 
 class SettingsOverride(object):
@@ -250,6 +258,17 @@ class SekizaiTestCase(TestCase):
             self.assertEqual(validate_context(sekizai_ctx), True)
             bits = ['some content', 'more content', 'final content']
             self._test('basic.html', bits, ctxclass=template.Context)
+            
+    def test_post_processor_null(self):
+        bits = ['header', 'footer']
+        self._test('processors/null.html', bits)
+            
+    def test_post_processor_namespace(self):
+        bits = ['header', 'footer', 'js']
+        self._test('processors/namespace.html', bits)
+        
+    def test_import_processor_failfast(self):
+        self.assertRaises(TypeError, import_processor, 'invalidpath')
 
 
 class HelperTests(TestCase):
