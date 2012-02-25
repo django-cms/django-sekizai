@@ -77,7 +77,7 @@ class RenderBlock(Tag):
         data = context[varname][name].render()
         if postprocessor:
             func = import_processor(postprocessor)
-            data = func(data, name)
+            data = func(context, data, name)
         return '%s\n%s' % (data, rendered_contents)
 register.tag(RenderBlock)
 
