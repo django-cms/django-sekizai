@@ -2,6 +2,7 @@
 *~
 .*
 !.gitignore
+!.travis.yml
 /dist/
 *egg-info*
 /htmlcov/
