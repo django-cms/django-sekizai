@@ -9,3 +9,5 @@ install:
  - pip install django==$DJANGO --use-mirrors 
  - pip install django-classy-tags --use-mirrors
 script: python runtests.py
+notifications:
+  email: false
