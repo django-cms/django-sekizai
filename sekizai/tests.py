@@ -10,10 +10,10 @@ from sekizai.templatetags.sekizai_tags import (validate_context,
 from unittest import TestCase
 
 
-def null_processor(data, namespace):
+def null_processor(context, data, namespace):
     return ''
 
-def namespace_processor(data, namespace):
+def namespace_processor(context, data, namespace):
     return namespace
 
 

@@ -173,15 +173,15 @@ reason, sekizai added postprocessing capabilities to ``render_block`` in
 version 0.5.
 
 Postprocessors are callable Python objects (usually functions) that get the
-data in a sekizai namespace and the name of the namespace passed as arguments
-and should return a string.
+render context, the data in a sekizai namespace and the name of the namespace
+passed as arguments and should return a string.
 
 An example for a processor that uses the Django builtin spaceless functionality
 would be:
 
 .. code-block:: python
 
-    def spaceless_post_processor(data, namespace):
+    def spaceless_post_processor(context, data, namespace):
         from django.utils.html import strip_spaces_between_tags
         return strip_spaces_between_tags(data)
 
