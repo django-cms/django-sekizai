@@ -10,11 +10,8 @@ def _extend_blocks(extend_node, blocks):
     Extends the dictionary `blocks` with *new* blocks in the parent node (recursive)
     """
     # we don't support variable extensions
-    try:
-        if extend_node.parent_name_expr:
-            return
-    except AttributeError:
-        pass
+    if extend_node.parent_name_expr:
+        return
     parent = extend_node.get_parent(None)
     # Search for new blocks
     for node in parent.nodelist.get_nodes_by_type(BlockNode):
@@ -39,11 +36,8 @@ def _extend_nodelist(extend_node):
     ExtendsNode
     """
     # we don't support variable extensions
-    try:
-        if extend_node.parent_name_expr:
-            return []
-    except AttributeError:
-        pass
+    if extend_node.parent_name_expr:
+        return []
     blocks = extend_node.blocks
     _extend_blocks(extend_node, blocks)
     found = []
