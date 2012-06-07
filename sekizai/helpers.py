@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
 from django.template import TextNode, VariableNode, NodeList
+from django.template.base import Variable
 from django.template.loader import get_template
 from django.template.loader_tags import BlockNode, ExtendsNode
 from sekizai.templatetags.sekizai_tags import RenderBlock
@@ -35,9 +36,12 @@ def _extend_nodelist(extend_node):
     Returns a list of namespaces found in the parent template(s) of this
     ExtendsNode
     """
-    # we don't support variable extensions
+    # we don't support variable extensions (1.3 way)
     if hasattr(extend_node, 'parent_name_expr') and extend_node.parent_name_expr:
         return []
+    if hasattr(extend_node, 'parent_name') and hasattr(extend_node.parent_name, 'filters'):
+        if extend_node.parent_name.filters or isinstance(extend_node.parent_name.var, Variable):
+            return []
     blocks = extend_node.blocks
     _extend_blocks(extend_node, blocks)
     found = []
