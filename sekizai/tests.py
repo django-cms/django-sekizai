@@ -272,19 +272,37 @@ class SekizaiTestCase(TestCase):
 
 
 class HelperTests(TestCase):
-    def test_validate_template(self):
+    def test_validate_template_js_css(self):
         self.assertTrue(validate_template('basic.html', ['js', 'css']))
+    
+    def test_validate_template_js(self):
         self.assertTrue(validate_template('basic.html', ['js']))
+        
+    def test_validate_template_css(self):
         self.assertTrue(validate_template('basic.html', ['css']))
+        
+    def test_validate_template_empty(self):
         self.assertTrue(validate_template('basic.html', []))
+        
+    def test_validate_template_notfound(self):
         self.assertFalse(validate_template('basic.html', ['notfound']))
 
-    def test_get_namespaces(self):
+    def test_get_namespaces_easy_inherit(self):
         self.assertEqual(get_namespaces('easy_inherit.html'), ['css'])
+
+    def test_get_namespaces_chain_inherit(self):
         self.assertEqual(get_namespaces('inherit/chain.html'), ['css', 'js'])
+
+    def test_get_namespaces_space_chain_inherit(self):
         self.assertEqual(get_namespaces('inherit/spacechain.html'), ['css', 'js'])
+
+    def test_get_namespaces_var_inherit(self):
         self.assertEqual(get_namespaces('inherit/varchain.html'), [])
+
+    def test_get_namespaces_sub_var_inherit(self):
         self.assertEqual(get_namespaces('inherit/subvarchain.html'), [])
+
+    def test_get_namespaces_null_ext(self):
         self.assertEqual(get_namespaces('inherit/nullext.html'), [])
         
     def test_deactivate_validate_template(self):

@@ -1,17 +1,25 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
-from django.template import TextNode, VariableNode, NodeList
-from django.template.base import Variable
+from django.template import TextNode, VariableNode, NodeList, Variable
 from django.template.loader import get_template
 from django.template.loader_tags import BlockNode, ExtendsNode
 from sekizai.templatetags.sekizai_tags import RenderBlock
+
+
+def is_variable_extend_node(node):
+    if hasattr(node, 'parent_name_expr') and node.parent_name_expr:
+        return True
+    if hasattr(node, 'parent_name') and hasattr(node.parent_name, 'filters'):
+        if node.parent_name.filters or isinstance(node.parent_name.var, Variable):
+            return True
+    return False
 
 def _extend_blocks(extend_node, blocks):
     """
     Extends the dictionary `blocks` with *new* blocks in the parent node (recursive)
     """
     # we don't support variable extensions
-    if hasattr(extend_node, 'parent_name_expr') and extend_node.parent_name_expr:
+    if is_variable_extend_node(extend_node):
         return
     parent = extend_node.get_parent(None)
     # Search for new blocks
@@ -37,11 +45,8 @@ def _extend_nodelist(extend_node):
     ExtendsNode
     """
     # we don't support variable extensions (1.3 way)
-    if hasattr(extend_node, 'parent_name_expr') and extend_node.parent_name_expr:
+    if is_variable_extend_node(extend_node):
         return []
-    if hasattr(extend_node, 'parent_name') and hasattr(extend_node.parent_name, 'filters'):
-        if extend_node.parent_name.filters or isinstance(extend_node.parent_name.var, Variable):
-            return []
     blocks = extend_node.blocks
     _extend_blocks(extend_node, blocks)
     found = []

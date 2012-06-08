@@ -7,4 +7,4 @@
 *egg-info*
 /htmlcov/
 docs/_build
-/env/
+/*env*/
