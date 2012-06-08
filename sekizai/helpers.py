@@ -62,7 +62,9 @@ def _extend_nodelist(extend_node):
         found += _scan_namespaces(parent_template.nodelist, extend_node, blocks.keys())
     return found
 
-def _scan_namespaces(nodelist, current_block=None, ignore_blocks=[]):
+def _scan_namespaces(nodelist, current_block=None, ignore_blocks=None):
+    if ignore_blocks is None:
+        ignore_blocks = []
     found = []
 
     for node in nodelist:
@@ -97,3 +99,4 @@ def validate_template(template, namespaces):
         if namespace not in found:
             return False
     return True
+
