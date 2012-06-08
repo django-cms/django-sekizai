@@ -6,11 +6,10 @@
 Welcome to django-sekizai's documentation!
 ==========================================
 
-Contents:
-
 .. toctree::
     :maxdepth: 2
-
+    
+    installation
     usage
     restrictions
     helpers
