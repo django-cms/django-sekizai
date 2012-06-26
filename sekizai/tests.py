@@ -269,6 +269,10 @@ class SekizaiTestCase(TestCase):
         
     def test_import_processor_failfast(self):
         self.assertRaises(TypeError, import_processor, 'invalidpath')
+        
+    def test_unique(self):
+        bits = ['unique data']
+        self._test('unique.html', bits)
 
 
 class HelperTests(TestCase):

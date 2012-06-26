@@ -4,7 +4,8 @@
 !.gitignore
 !.travis.yml
 /dist/
-*egg-info*
+/*.egg-info/
+/*.egg/
 /htmlcov/
 docs/_build
 /*env*/
