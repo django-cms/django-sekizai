@@ -9,6 +9,11 @@ from sekizai.templatetags.sekizai_tags import (validate_context,
     import_processor)
 from unittest import TestCase
 
+try:
+    unicode_compat = unicode
+except NameError:
+    unicode_compat = str
+
 
 def null_processor(context, data, namespace):
     return ''
@@ -76,10 +81,10 @@ class BitDiff(object):
     Visual aid for failing tests
     """
     def __init__(self, expected):
-        self.expected = [repr(unicode(bit)) for bit in expected]
+        self.expected = [repr(unicode_compat(bit)) for bit in expected]
         
     def test(self, result):
-        result = [repr(unicode(bit)) for bit in result]
+        result = [repr(unicode_compat(bit)) for bit in result]
         if self.expected == result:
             return BitDiffResult(True, "success")
         else: # pragma: no cover
