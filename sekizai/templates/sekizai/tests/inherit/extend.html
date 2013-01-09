@@ -1,0 +1,11 @@
+{% extends "sekizai/tests/inherit/base.html" %}
+
+{% load sekizai_tags %}
+
+{% addtoblock "css" %}
+invisible css file 
+{% endaddtoblock %}
+
+{% block "main" %}
+{% include "sekizai/tests/inherit/extinc.html" %}
+{% endblock %}
