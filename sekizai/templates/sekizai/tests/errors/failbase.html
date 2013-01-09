@@ -1,9 +1,9 @@
 {% load sekizai_tags %}
 
-{% include "errors/failinc.html" %}
+{% render_block "js" %}
+
+{% include "sekizai/tests/errors/failinc.html" %}
 
 {% addtoblock "js" %}
 file one
 {% endaddtoblock %}
-
-{% render_block "js" %}
