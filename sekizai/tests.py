@@ -18,7 +18,6 @@ try:
 except ImportError:
   from django.utils.unittest.case import skipUnless
 
-
 try:
     unicode_compat = unicode
 except NameError:
@@ -39,7 +38,10 @@ except TemplateDoesNotExist:
 
 def test_template_exists(func):
     def wrap(template_file, *args, **kwargs):
-        return skipUnless(test_templates_exists, "No test templates found %s" % template_file)(func)(template_file, *args, **kwargs)
+        return skipUnless(
+            test_templates_exists,
+            "No test templates found {0}".format(template_file)
+        )(func)(template_file, *args, **kwargs)
     return wrap
 
 @test_template_exists
@@ -139,14 +141,14 @@ class BitDiff(object):
             padding = ' ' * padlen
             line1 = '-' * padlen
             line2 = '-' * (longest - len('Result'))
-            msg = '\nExpected%s |   | Result' % padding
-            msg += '\n--------%s-|---|-------%s' % (line1, line2)
+            msg = '\nExpected{0} |   | Result'.format(padding)
+            msg += '\n--------{0}-|---|-------{1}'.format(line1, line2)
             for success, a, b in data:
                 pad = ' ' * (longest - len(a))
                 if success:
-                    msg += '\n%s%s |   | %s' % (a, pad, b)
+                    msg += '\n{0}{1} |   | {2}'.format(a, pad, b)
                 else:
-                    msg += '\n%s%s | ! | %s' % (a, pad, b)
+                    msg += '\n{0}{1} | ! | {2}'.format(a, pad, b)
             return BitDiffResult(False, msg)
 
 
