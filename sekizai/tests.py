@@ -11,7 +11,13 @@ from sekizai.helpers import validate_template, get_namespaces
 from sekizai.templatetags.sekizai_tags import (validate_context, 
     import_processor)
 
-from unittest import TestCase, skipIf
+from unittest import TestCase
+
+try:
+  from unittest import skipUnless
+except ImportError:
+  from django.utils.unittest.case import skipUnless
+
 
 try:
     unicode_compat = unicode
@@ -25,18 +31,16 @@ def null_processor(context, data, namespace):
 def namespace_processor(context, data, namespace):
     return namespace
 
+try:
+    get_template("sekizai/tests/basic.html")
+    test_templates_exists = True
+except TemplateDoesNotExist:
+    test_templates_exists = False
+
 def test_template_exists(func):
     def wrap(template_file, *args, **kwargs):
-        try:
-            get_template(template_file)
-            template_exists = True
-        except TemplateDoesNotExist:
-            template_exists = False
-        return skipIf(not template_exists, "No test templates found %s" % template_file)(func)(template_file, *args, **kwargs)
-    
+        return skipUnless(test_templates_exists, "No test templates found %s" % template_file)(func)(template_file, *args, **kwargs)
     return wrap
-    
-# Redefine validate_template to check if the template exists first...
 
 @test_template_exists
 def validate_test_template(*args, **kwargs):
