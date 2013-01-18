@@ -16,7 +16,6 @@ extend them.
 
 There are some issue/restrictions with this implementation due to how the
 django template language works, but if used properly it can be very useful and
-there are plans to make it the default media framework for plugins in the
-django-cms by version 2.2.
+it is the media handling framework for the django CMS (since version 2.2).
 
 .. image:: https://secure.travis-ci.org/ojii/django-sekizai.png?branch=master
