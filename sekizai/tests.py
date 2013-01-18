@@ -279,6 +279,16 @@ class SekizaiTestCase(TestCase):
         bits = ['unique data']
         self._test('unique.html', bits)
 
+    def test_strip(self):
+        tpl = template.Template("""
+            {% load sekizai_tags %}
+            {% addtoblock 'a' strip %} test{% endaddtoblock %}
+            {% addtoblock 'a' strip %}test {% endaddtoblock %}
+            {% render_block 'a' %}""")
+        context = SekizaiContext()
+        output = tpl.render(context)
+        self.assertEqual(output.count('test'), 1, output)
+
 
 class HelperTests(TestCase):
     def test_validate_template_js_css(self):

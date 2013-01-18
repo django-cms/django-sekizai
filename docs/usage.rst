@@ -28,9 +28,13 @@ Template Tag Reference
 Handling code snippets
 ======================
 
+.. versionadded:: 0.7
+    The ``strip`` flag was added.
+
 Sekizai uses ``render_block`` and ``addtoblock`` to handle unique code snippets.
 Define your blocks using ``{% render_block <name> %}`` and add data to that
-block using ``{% addtoblock <name> %}...{% endaddotblock %}``.
+block using ``{% addtoblock <name> [strip] %}...{% endaddotblock %}``. If the
+strip flag is set, leading and trailing whitespace will be removed.
 
 Example Template::
 

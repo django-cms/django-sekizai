@@ -1,4 +1,4 @@
-from classytags.arguments import Argument
+from classytags.arguments import Argument, Flag
 from classytags.core import Tag, Options
 from classytags.parser import Parser
 from django import template
@@ -128,11 +128,14 @@ class Addtoblock(SekizaiTag):
     
     options = Options(
         Argument('name'),
+        Flag('strip', default=False, true_values=['strip']),
         parser_class=AddtoblockParser,
     )
     
-    def render_tag(self, context, name, nodelist):
+    def render_tag(self, context, name, strip, nodelist):
         rendered_contents = nodelist.render(context)
+        if strip:
+            rendered_contents = rendered_contents.strip()
         varname = get_varname()
         context[varname][name].append(rendered_contents)
         return ""
