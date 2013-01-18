@@ -19,6 +19,7 @@ class SekizaiList(list):
         """
         return between.join(self)
 
+
 class SekizaiDictionary(dict):
     """
     A dictionary which auto fills itself instead of raising key errors.

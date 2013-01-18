@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
-from django.template import TextNode, VariableNode, NodeList, Variable
+from django.template import VariableNode, Variable
 from django.template.loader import get_template
 from django.template.loader_tags import BlockNode, ExtendsNode
-from sekizai.templatetags.sekizai_tags import RenderBlock
 
 
 def is_variable_extend_node(node):
@@ -63,6 +62,7 @@ def _extend_nodelist(extend_node):
     return found
 
 def _scan_namespaces(nodelist, current_block=None, ignore_blocks=None):
+    from sekizai.templatetags.sekizai_tags import RenderBlock
     if ignore_blocks is None:
         ignore_blocks = []
     found = []
@@ -99,4 +99,38 @@ def validate_template(template, namespaces):
         if namespace not in found:
             return False
     return True
+
+def get_varname():
+    return getattr(settings, 'SEKIZAI_VARNAME', 'SEKIZAI_CONTENT_HOLDER')
+
+
+class Watcher(object):
+    """
+    Watches a context for changes to the sekizai data, so it can be replayed later.
+    This is useful for caching.
+
+    NOTE: This class assumes you ONLY ADD, NEVER REMOVE data from the context!
+    """
+    def __init__(self, context):
+        self.context = context
+        self.frozen = dict((key, list(value)) for key, value in self.data.items())
+
+    @property
+    def data(self):
+        return self.context.get(get_varname(), {})
+
+    def get_changes(self):
+        sfrozen = set(self.frozen)
+        sdata = set(self.data)
+        new_keys = sfrozen ^ sdata
+        changes = {}
+        for key in new_keys:
+            changes[key] = list(self.data[key])
+        shared_keys = sfrozen & sdata
+        for key in shared_keys:
+            old_set = set(self.frozen[key])
+            new_values = [item for item in self.data[key] if item not in old_set]
+            changes[key] = new_values
+        return changes
+
 

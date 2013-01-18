@@ -4,6 +4,7 @@ from classytags.parser import Parser
 from django import template
 from django.conf import settings
 from django.utils.importlib import import_module
+from sekizai.helpers import get_varname
 
 register = template.Library()
 
@@ -19,7 +20,7 @@ def validate_context(context):
     Raises a TemplateSyntaxError if the context is invalid and we're in debug
     mode.
     """
-    if getattr(settings, 'SEKIZAI_VARNAME', 'SEKIZAI_CONTENT_HOLDER') in context:
+    if get_varname() in context:
         return True
     if not settings.TEMPLATE_DEBUG:
         return False
@@ -73,7 +74,7 @@ class RenderBlock(Tag):
         if not validate_context(context):
             return nodelist.render(context)
         rendered_contents = nodelist.render(context)
-        varname = getattr(settings, 'SEKIZAI_VARNAME', 'SEKIZAI_CONTENT_HOLDER')
+        varname = get_varname()
         data = context[varname][name].render()
         if postprocessor:
             func = import_processor(postprocessor)
@@ -91,7 +92,7 @@ class AddData(SekizaiTag):
     )
     
     def render_tag(self, context, key, value):
-        varname = getattr(settings, 'SEKIZAI_VARNAME', 'SEKIZAI_CONTENT_HOLDER')
+        varname = get_varname()
         context[varname][key].append(value)
         return ''
 register.tag(AddData)
@@ -112,7 +113,7 @@ class WithData(SekizaiTag):
     
     def render_tag(self, context, name, variable, inner_nodelist, nodelist):
         rendered_contents = nodelist.render(context)
-        varname = getattr(settings, 'SEKIZAI_VARNAME', 'SEKIZAI_CONTENT_HOLDER')
+        varname = get_varname()
         data = context[varname][name]
         context.push()
         context[variable] = data
@@ -132,7 +133,7 @@ class Addtoblock(SekizaiTag):
     
     def render_tag(self, context, name, nodelist):
         rendered_contents = nodelist.render(context)
-        varname = getattr(settings, 'SEKIZAI_VARNAME', 'SEKIZAI_CONTENT_HOLDER')
+        varname = get_varname()
         context[varname][name].append(rendered_contents)
         return ""
 register.tag(Addtoblock)

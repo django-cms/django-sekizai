@@ -4,7 +4,7 @@ from django import template
 from django.conf import settings
 from django.template.loader import render_to_string
 from sekizai.context import SekizaiContext
-from sekizai.helpers import validate_template, get_namespaces
+from sekizai.helpers import validate_template, get_namespaces, Watcher, get_varname
 from sekizai.templatetags.sekizai_tags import (validate_context, 
     import_processor)
 from unittest import TestCase
@@ -321,3 +321,20 @@ class HelperTests(TestCase):
             self.assertTrue(validate_template('basic.html', ['css']))
             self.assertTrue(validate_template('basic.html', []))
             self.assertTrue(validate_template('basic.html', ['notfound']))
+
+    def test_watcher_add_namespace(self):
+        context = SekizaiContext()
+        watcher = Watcher(context)
+        varname = get_varname()
+        context[varname]['key'].append('value')
+        changes = watcher.get_changes()
+        self.assertEqual(changes, {'key': ['value']})
+
+    def test_watcher_add_data(self):
+        context = SekizaiContext()
+        varname = get_varname()
+        context[varname]['key'].append('value')
+        watcher = Watcher(context)
+        context[varname]['key'].append('value2')
+        changes = watcher.get_changes()
+        self.assertEqual(changes, {'key': ['value2']})
