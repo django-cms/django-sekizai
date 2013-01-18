@@ -19,7 +19,7 @@ INSTALLED_APPS = [
 ]
 
 TEMPLATE_DIRS = [
-    os.path.join(os.path.dirname(__file__), 'test_templates'),
+    os.path.join(os.path.dirname(__file__), 'sekizai', 'test_templates'),
 ]
 
 TEMPLATE_CONTEXT_PROCESSORS = [
@@ -49,8 +49,10 @@ def runtests():
     failures = test_runner.run_tests(INSTALLED_APPS)
     return failures
 
+def main():
+    failures = runtests()
+    sys.exit(failures)
+
 
 if __name__ == "__main__":
-    failures = runtests()
-    if failures:
-        sys.exit(bool(failures))
+    main()
