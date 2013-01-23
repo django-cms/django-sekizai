@@ -80,7 +80,7 @@ class RenderBlock(Tag):
             func = import_processor(postprocessor)
             data = func(context, data, name)
         return '%s\n%s' % (data, rendered_contents)
-register.tag(RenderBlock)
+register.tag('render_block', RenderBlock)
 
 
 class AddData(SekizaiTag):
@@ -95,7 +95,7 @@ class AddData(SekizaiTag):
         varname = get_varname()
         context[varname][key].append(value)
         return ''
-register.tag(AddData)
+register.tag('add_data', AddData)
 
 
 class WithData(SekizaiTag):
@@ -120,7 +120,7 @@ class WithData(SekizaiTag):
         inner_contents = inner_nodelist.render(context)
         context.pop()
         return '%s\n%s' % (inner_contents, rendered_contents)
-register.tag(WithData)
+register.tag('with_data', WithData)
 
 
 class Addtoblock(SekizaiTag):
@@ -139,4 +139,4 @@ class Addtoblock(SekizaiTag):
         varname = get_varname()
         context[varname][name].append(rendered_contents)
         return ""
-register.tag(Addtoblock)
+register.tag('addtoblock', Addtoblock)
