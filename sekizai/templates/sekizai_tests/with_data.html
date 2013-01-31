@@ -1,0 +1,9 @@
+{% load sekizai_tags %}
+{% with_data "key" as mylist %}
+{% for obj in mylist %}
+{{ obj }}
+{% endfor %}
+{% end_with_data %}
+
+{% add_data "key" 1 %}
+{% add_data "key" 2 %}
