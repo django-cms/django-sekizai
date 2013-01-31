@@ -147,28 +147,28 @@ class SekizaiTestCase(TestCase):
         """
         bits = ['my css file', 'some content', 'more content', 
             'final content', 'my js file']
-        self._test('basic.html', bits)
+        self._test('sekizai_tests/basic.html', bits)
 
     def test_named_endaddtoblock(self):
         """
         Testing with named endaddblock
         """
         bits = ["mycontent"]
-        self._test('named_end.html', bits)
+        self._test('sekizai_tests/named_end.html', bits)
 
     def test_eat_content_before_render_block(self):
         """
         Testing that content get's eaten if no render_blocks is available
         """
         bits = ["mycontent"]
-        self._test("eat.html", bits)
+        self._test("sekizai_tests/eat.html", bits)
         
     def test_sekizai_context_required(self):
         """
         Test that the template tags properly fail if not used with either 
         SekizaiContext or the context processor.
         """
-        self.assertRaises(template.TemplateSyntaxError, self._render, 'basic.html', {}, template.Context)
+        self.assertRaises(template.TemplateSyntaxError, self._render, 'sekizai_tests/basic.html', {}, template.Context)
         
     def test_complex_template_inheritance(self):
         """
@@ -188,7 +188,7 @@ class SekizaiTestCase(TestCase):
             "inc js file",
             "body end"
         ]
-        self._test("inherit/extend.html", bits)
+        self._test("sekizai_tests/inherit/extend.html", bits)
         """
         Test that blocks (and block.super) work properly with sekizai
         """
@@ -208,50 +208,50 @@ class SekizaiTestCase(TestCase):
             "inc js file",
             "body end"
         ]
-        self._test("inherit/super_blocks.html", bits)
+        self._test("sekizai_tests/inherit/super_blocks.html", bits)
         
     def test_namespace_isolation(self):
         """
         Tests that namespace isolation works
         """
         bits = ["the same file", "the same file"]
-        self._test('namespaces.html', bits)
+        self._test('sekizai_tests/namespaces.html', bits)
         
     def test_variable_namespaces(self):
         """
         Tests variables and filtered variables as block names.
         """
         bits = ["file one", "file two"]
-        self._test('variables.html', bits, {'blockname': 'one'})
+        self._test('sekizai_tests/variables.html', bits, {'blockname': 'one'})
 
     def test_invalid_addtoblock(self):
         """
         Tests that template syntax errors are raised properly in templates
         rendered by sekizai tags
         """
-        self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failadd.html')
+        self.assertRaises(template.TemplateSyntaxError, self._render, 'sekizai_tests/errors/failadd.html')
     
     def test_invalid_renderblock(self):
-        self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failrender.html')
+        self.assertRaises(template.TemplateSyntaxError, self._render, 'sekizai_tests/errors/failrender.html')
     
     def test_invalid_include(self):
-        self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failinc.html')
+        self.assertRaises(template.TemplateSyntaxError, self._render, 'sekizai_tests/errors/failinc.html')
         
     def test_invalid_basetemplate(self):
-        self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failbase.html')
+        self.assertRaises(template.TemplateSyntaxError, self._render, 'sekizai_tests/errors/failbase.html')
         
     def test_invalid_basetemplate_two(self):
-        self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failbase2.html')
+        self.assertRaises(template.TemplateSyntaxError, self._render, 'sekizai_tests/errors/failbase2.html')
         
     def test_with_data(self):
         """
         Tests the with_data/add_data tags.
         """
         bits = ["1", "2"]
-        self._test('with_data.html', bits)
+        self._test('sekizai_tests/with_data.html', bits)
         
     def test_easy_inheritance(self):
-        self.assertEqual('content', self._render("easy_inherit.html").strip())
+        self.assertEqual('content', self._render("sekizai_tests/easy_inherit.html").strip())
         
     def test_validate_context(self):
         sekizai_ctx = SekizaiContext()
@@ -262,22 +262,22 @@ class SekizaiTestCase(TestCase):
             self.assertEqual(validate_context(django_ctx), False)
             self.assertEqual(validate_context(sekizai_ctx), True)
             bits = ['some content', 'more content', 'final content']
-            self._test('basic.html', bits, ctxclass=template.Context)
+            self._test('sekizai_tests/basic.html', bits, ctxclass=template.Context)
             
     def test_post_processor_null(self):
         bits = ['header', 'footer']
-        self._test('processors/null.html', bits)
+        self._test('sekizai_tests/processors/null.html', bits)
             
     def test_post_processor_namespace(self):
         bits = ['header', 'footer', 'js']
-        self._test('processors/namespace.html', bits)
+        self._test('sekizai_tests/processors/namespace.html', bits)
         
     def test_import_processor_failfast(self):
         self.assertRaises(TypeError, import_processor, 'invalidpath')
         
     def test_unique(self):
         bits = ['unique data']
-        self._test('unique.html', bits)
+        self._test('sekizai_tests/unique.html', bits)
 
     def test_strip(self):
         tpl = template.Template("""
@@ -292,45 +292,45 @@ class SekizaiTestCase(TestCase):
 
 class HelperTests(TestCase):
     def test_validate_template_js_css(self):
-        self.assertTrue(validate_template('basic.html', ['js', 'css']))
+        self.assertTrue(validate_template('sekizai_tests/basic.html', ['js', 'css']))
     
     def test_validate_template_js(self):
-        self.assertTrue(validate_template('basic.html', ['js']))
+        self.assertTrue(validate_template('sekizai_tests/basic.html', ['js']))
         
     def test_validate_template_css(self):
-        self.assertTrue(validate_template('basic.html', ['css']))
+        self.assertTrue(validate_template('sekizai_tests/basic.html', ['css']))
         
     def test_validate_template_empty(self):
-        self.assertTrue(validate_template('basic.html', []))
+        self.assertTrue(validate_template('sekizai_tests/basic.html', []))
         
     def test_validate_template_notfound(self):
-        self.assertFalse(validate_template('basic.html', ['notfound']))
+        self.assertFalse(validate_template('sekizai_tests/basic.html', ['notfound']))
 
     def test_get_namespaces_easy_inherit(self):
-        self.assertEqual(get_namespaces('easy_inherit.html'), ['css'])
+        self.assertEqual(get_namespaces('sekizai_tests/easy_inherit.html'), ['css'])
 
     def test_get_namespaces_chain_inherit(self):
-        self.assertEqual(get_namespaces('inherit/chain.html'), ['css', 'js'])
+        self.assertEqual(get_namespaces('sekizai_tests/inherit/chain.html'), ['css', 'js'])
 
     def test_get_namespaces_space_chain_inherit(self):
-        self.assertEqual(get_namespaces('inherit/spacechain.html'), ['css', 'js'])
+        self.assertEqual(get_namespaces('sekizai_tests/inherit/spacechain.html'), ['css', 'js'])
 
     def test_get_namespaces_var_inherit(self):
-        self.assertEqual(get_namespaces('inherit/varchain.html'), [])
+        self.assertEqual(get_namespaces('sekizai_tests/inherit/varchain.html'), [])
 
     def test_get_namespaces_sub_var_inherit(self):
-        self.assertEqual(get_namespaces('inherit/subvarchain.html'), [])
+        self.assertEqual(get_namespaces('sekizai_tests/inherit/subvarchain.html'), [])
 
     def test_get_namespaces_null_ext(self):
-        self.assertEqual(get_namespaces('inherit/nullext.html'), [])
+        self.assertEqual(get_namespaces('sekizai_tests/inherit/nullext.html'), [])
         
     def test_deactivate_validate_template(self):
         with SettingsOverride(SEKIZAI_IGNORE_VALIDATION=True):
-            self.assertTrue(validate_template('basic.html', ['js', 'css']))
-            self.assertTrue(validate_template('basic.html', ['js']))
-            self.assertTrue(validate_template('basic.html', ['css']))
-            self.assertTrue(validate_template('basic.html', []))
-            self.assertTrue(validate_template('basic.html', ['notfound']))
+            self.assertTrue(validate_template('sekizai_tests/basic.html', ['js', 'css']))
+            self.assertTrue(validate_template('sekizai_tests/basic.html', ['js']))
+            self.assertTrue(validate_template('sekizai_tests/basic.html', ['css']))
+            self.assertTrue(validate_template('sekizai_tests/basic.html', []))
+            self.assertTrue(validate_template('sekizai_tests/basic.html', ['notfound']))
 
     def test_watcher_add_namespace(self):
         context = SekizaiContext()
