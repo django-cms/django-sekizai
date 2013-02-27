@@ -55,7 +55,7 @@ Your template ("inc.html") might look like this::
     {% addtoblock "js" %}
     <script type="text/javascript">
     $(document).ready(function(){
-        $('#dynamic-conent-{{ userid }}').do_something();
+        $('#dynamic-content-{{ userid }}').do_something();
     }
     </script>
     {% endaddtoblock %}
@@ -104,17 +104,17 @@ And here's the rendered template::
     <script type="text/javascript" src="{{ MEDIA_URL }}js/libs/mylib.js"></script>
     <script type="text/javascript">
     $(document).ready(function(){
-        $('#dynamic-conent-1').do_something();
+        $('#dynamic-content-1').do_something();
     }
     </script>
     <script type="text/javascript">
     $(document).ready(function(){
-        $('#dynamic-conent-2').do_something();
+        $('#dynamic-content-2').do_something();
     }
     </script>
     <script type="text/javascript">
     $(document).ready(function(){
-        $('#dynamic-conent-3').do_something();
+        $('#dynamic-content-3').do_something();
     }
     </script>
     </body>
