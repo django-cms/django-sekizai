@@ -8,6 +8,7 @@ from sekizai.helpers import validate_template, get_namespaces, Watcher, get_varn
 from sekizai.templatetags.sekizai_tags import (validate_context, 
     import_processor)
 from unittest import TestCase
+import os
 
 try:
     unicode_compat = unicode
@@ -122,7 +123,30 @@ class BitDiff(object):
             return BitDiffResult(False, msg)
 
 
-class SekizaiTestCase(TestCase):
+class SekizaiBaseTestCase(TestCase):
+    """
+    Base test object for the sekizai tests to encapsulate some common logic.
+    """
+
+    def setUp(self):
+        """
+        Add 'test_templates' folder to TEMPLATE_DIRS when the test starts.
+        """
+
+        self.original_dirs = settings.TEMPLATE_DIRS
+        template_dirs_path = os.path.join(os.path.dirname(__file__), 'test_templates')
+        settings.TEMPLATE_DIRS = self.original_dirs + (template_dirs_path,)
+
+    def tearDown(self):
+        """
+        Restore the TEMPLATE_DIRS setting to its original value.
+        """
+
+        settings.TEMPLATE_DIRS = self.original_dirs
+
+
+class SekizaiTestCase(SekizaiBaseTestCase):
+
     def _render(self, tpl, ctx={}, ctxclass=SekizaiContext):
         return render_to_string(tpl, ctxclass(ctx))
     
@@ -291,6 +315,7 @@ class SekizaiTestCase(TestCase):
 
 
 class HelperTests(TestCase):
+
     def test_validate_template_js_css(self):
         self.assertTrue(validate_template('basic.html', ['js', 'css']))
     
