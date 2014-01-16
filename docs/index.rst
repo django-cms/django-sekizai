@@ -7,6 +7,13 @@
 Welcome to django-sekizai's documentation!
 ##########################################
 
+
+.. note::
+
+    If you get an error when using django-sekizai that starts with
+    **Invalid block tag:**, please read :ref:`restrictions`.
+
+
 *****
 About
 *****
@@ -110,18 +117,24 @@ Above example would roughly render like this::
     <body>
     </html>
 
-
-.. warning::
-
-    ``{% render_block %}`` tags **must not** be in an included template!
-
-    ``{% render_block %}`` tags **must not** be placed inside a template tag block (a template tag which has an
-    end tag, such as ``{% block %}...{% endblock %}`` or ``{% if %}...{% endif %}``)
-
 .. note::
 
     It's recommended to have all ``render_block`` tags in your base template, the one that gets extended by all your
     other templates.
+
+.. _restrictions:
+
+Restrictions
+------------
+
+.. warning::
+
+    ``{% render_block %}`` tags **must not** be placed inside a template tag block (a template tag which has an
+    end tag, such as ``{% block %}...{% endblock %}`` or ``{% if %}...{% endif %}``). 
+
+.. warning::
+
+    ``{% render_block %}`` tags **must not** be in an included template!
 
 .. warning::
 
