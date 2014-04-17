@@ -79,7 +79,7 @@ class RenderBlock(Tag):
         if postprocessor:
             func = import_processor(postprocessor)
             data = func(context, data, name)
-        return '%s\n%s' % (data, rendered_contents)
+        return u'%s\n%s' % (data.decode("utf-8"), rendered_contents)
 register.tag(RenderBlock)
 
 
