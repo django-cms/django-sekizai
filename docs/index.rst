@@ -138,7 +138,7 @@ Restrictions
 
 .. warning::
 
-    If the ``{% addtoblock %}`` tag is used in an **included** or **extending** template, the tags **must** be
+    If the ``{% addtoblock %}`` tag is used in an **extending** template, the tags **must** be
     placed within ``{% block %}...{% endblock %}`` tags.
 
 Handling data
