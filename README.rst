@@ -1,7 +1,4 @@
-Please refer to the documentation in the docs/ directory or on `RTFD`_ for help.
-
-.. _RFTD: http://django-sekizai.readthedocs.org/en/latest/
-  
+Please refer to the documentation in the docs/ directory or on `RTFD <http://django-sekizai.readthedocs.org/en/latest/>`_ for help.
 
 About this project:
 
