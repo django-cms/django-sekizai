@@ -1,5 +1,4 @@
-Please refer to the documentation in the docs/ directory for help.
-
+Please refer to the documentation in the docs/ directory or on `RTFD <http://django-sekizai.readthedocs.org/en/latest/>`_ for help.
 
 About this project:
 
