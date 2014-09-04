@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-import django
 
 urlpatterns = []
 
@@ -46,6 +45,7 @@ def runtests():
     from django.test.utils import get_runner
     TestRunner = get_runner(settings)
 
+    import django
     if django.VERSION >= (1, 7):
         django.setup()
 
