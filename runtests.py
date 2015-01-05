@@ -29,17 +29,23 @@ TEMPLATE_CONTEXT_PROCESSORS = [
 
 ROOT_URLCONF = 'runtests'
 
+
 def runtests():
+    from django import VERSION
     from django.conf import settings
     settings.configure(
-        INSTALLED_APPS = INSTALLED_APPS,
-        ROOT_URLCONF = ROOT_URLCONF,
-        DATABASES = DATABASES,
-        TEST_RUNNER = 'django.test.simple.DjangoTestSuiteRunner',
-        TEMPLATE_DIRS = TEMPLATE_DIRS,
-        TEMPLATE_CONTEXT_PROCESSORS = TEMPLATE_CONTEXT_PROCESSORS,
-        TEMPLATE_DEBUG = TEMPLATE_DEBUG
+        INSTALLED_APPS=INSTALLED_APPS,
+        ROOT_URLCONF=ROOT_URLCONF,
+        DATABASES=DATABASES,
+        TEST_RUNNER='django.test.simple.DjangoTestSuiteRunner',
+        TEMPLATE_DIRS=TEMPLATE_DIRS,
+        TEMPLATE_CONTEXT_PROCESSORS=TEMPLATE_CONTEXT_PROCESSORS,
+        TEMPLATE_DEBUG=TEMPLATE_DEBUG,
+        MIDDLEWARE_CLASSES=[],
     )
+    if VERSION[1] >= 7:
+        from django import setup
+        setup()
 
     # Run the test suite, including the extra validation tests.
     from django.test.utils import get_runner
@@ -48,6 +54,7 @@ def runtests():
     test_runner = TestRunner(verbosity=1, interactive=False, failfast=False)
     failures = test_runner.run_tests(INSTALLED_APPS)
     return failures
+
 
 def main():
     failures = runtests()

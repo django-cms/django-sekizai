@@ -268,6 +268,12 @@ located. If above code sample lives in the Python module
     ...
 
 
+It's also possible to pre-process data in ``{% addtoblock %}`` like this::
+
+    {% addtoblock "css" preprocessor "myapp.sekizai_processors.processor" %}
+
+
+
 *******
 Helpers
 *******

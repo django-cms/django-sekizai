@@ -9,9 +9,11 @@ def is_variable_extend_node(node):
     if hasattr(node, 'parent_name_expr') and node.parent_name_expr:
         return True
     if hasattr(node, 'parent_name') and hasattr(node.parent_name, 'filters'):
-        if node.parent_name.filters or isinstance(node.parent_name.var, Variable):
+        if (node.parent_name.filters or
+                isinstance(node.parent_name.var, Variable)):
             return True
     return False
+
 
 def _extend_blocks(extend_node, blocks):
     """
@@ -23,13 +25,14 @@ def _extend_blocks(extend_node, blocks):
     parent = extend_node.get_parent(None)
     # Search for new blocks
     for node in parent.nodelist.get_nodes_by_type(BlockNode):
-        if not node.name in blocks:
+        if node.name not in blocks:
             blocks[node.name] = node
         else:
             # set this node as the super node (for {{ block.super }})
             block = blocks[node.name]
             seen_supers = []
-            while hasattr(block.super, 'nodelist') and block.super not in seen_supers:
+            while (hasattr(block.super, 'nodelist') and
+                   block.super not in seen_supers):
                 seen_supers.append(block.super)
                 block = block.super
             block.super = node
@@ -37,6 +40,7 @@ def _extend_blocks(extend_node, blocks):
     for node in parent.nodelist.get_nodes_by_type(ExtendsNode):
         _extend_blocks(node, blocks)
         break
+
 
 def _extend_nodelist(extend_node):
     """
@@ -56,10 +60,19 @@ def _extend_nodelist(extend_node):
     parent_template = extend_node.get_parent({})
     # if this is the topmost template, check for namespaces outside of blocks
     if not parent_template.nodelist.get_nodes_by_type(ExtendsNode):
-        found += _scan_namespaces(parent_template.nodelist, None, blocks.keys())
+        found += _scan_namespaces(
+            parent_template.nodelist,
+            None,
+            blocks.keys()
+        )
     else:
-        found += _scan_namespaces(parent_template.nodelist, extend_node, blocks.keys())
+        found += _scan_namespaces(
+            parent_template.nodelist,
+            extend_node,
+            blocks.keys()
+        )
     return found
+
 
 def _scan_namespaces(nodelist, current_block=None, ignore_blocks=None):
     from sekizai.templatetags.sekizai_tags import RenderBlock
@@ -80,12 +93,17 @@ def _scan_namespaces(nodelist, current_block=None, ignore_blocks=None):
         elif isinstance(node, VariableNode) and current_block:
             if node.filter_expression.token == 'block.super':
                 if hasattr(current_block.super, 'nodelist'):
-                    found += _scan_namespaces(current_block.super.nodelist, current_block.super)
+                    found += _scan_namespaces(
+                        current_block.super.nodelist,
+                        current_block.super
+                    )
     return found
+
 
 def get_namespaces(template):
     compiled_template = get_template(template)
     return _scan_namespaces(compiled_template.nodelist)
+
 
 def validate_template(template, namespaces):
     """
@@ -100,20 +118,23 @@ def validate_template(template, namespaces):
             return False
     return True
 
+
 def get_varname():
     return getattr(settings, 'SEKIZAI_VARNAME', 'SEKIZAI_CONTENT_HOLDER')
 
 
 class Watcher(object):
     """
-    Watches a context for changes to the sekizai data, so it can be replayed later.
-    This is useful for caching.
+    Watches a context for changes to the sekizai data, so it can be replayed
+    later. This is useful for caching.
 
     NOTE: This class assumes you ONLY ADD, NEVER REMOVE data from the context!
     """
     def __init__(self, context):
         self.context = context
-        self.frozen = dict((key, list(value)) for key, value in self.data.items())
+        self.frozen = dict(
+            (key, list(value)) for key, value in self.data.items()
+        )
 
     @property
     def data(self):
@@ -129,7 +150,9 @@ class Watcher(object):
         shared_keys = sfrozen & sdata
         for key in shared_keys:
             old_set = set(self.frozen[key])
-            new_values = [item for item in self.data[key] if item not in old_set]
+            new_values = [
+                item for item in self.data[key] if item not in old_set
+            ]
             changes[key] = new_values
         return changes
 

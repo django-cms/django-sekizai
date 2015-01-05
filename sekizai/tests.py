@@ -1,13 +1,18 @@
 from __future__ import with_statement
 from difflib import SequenceMatcher
+from unittest import TestCase
+
 from django import template
 from django.conf import settings
 from django.template.loader import render_to_string
+
 from sekizai.context import SekizaiContext
-from sekizai.helpers import validate_template, get_namespaces, Watcher, get_varname
-from sekizai.templatetags.sekizai_tags import (validate_context, 
-    import_processor)
-from unittest import TestCase
+from sekizai.helpers import get_namespaces
+from sekizai.helpers import get_varname
+from sekizai.helpers import validate_template
+from sekizai.helpers import Watcher
+from sekizai.templatetags.sekizai_tags import import_processor
+from sekizai.templatetags.sekizai_tags import validate_context
 
 try:
     unicode_compat = unicode
@@ -17,6 +22,7 @@ except NameError:
 
 def null_processor(context, data, namespace):
     return ''
+
 
 def namespace_processor(context, data, namespace):
     return namespace
@@ -87,8 +93,12 @@ class BitDiff(object):
         result = [repr(unicode_compat(bit)) for bit in result]
         if self.expected == result:
             return BitDiffResult(True, "success")
-        else: # pragma: no cover
-            longest = max([len(x) for x in self.expected] + [len(x) for x in result] + [len('Expected')])
+        else:  # pragma: no cover
+            longest = max(
+                [len(x) for x in self.expected] +
+                [len(x) for x in result] +
+                [len('Expected')]
+            )
             sm = SequenceMatcher()
             sm.set_seqs(self.expected, result)
             matches = sm.get_matching_blocks()
@@ -104,7 +114,9 @@ class BitDiff(object):
                 for i in range(unmatchedlen):
                     data.append((False, unmatcheda[i], unmatchedb[i]))
                 for i in range(match.size):
-                    data.append((True, self.expected[match.a + i], result[match.b + i]))
+                    data.append((
+                        True, self.expected[match.a + i], result[match.b + i]
+                    ))
                 lasta = match.a + match.size
                 lastb = match.b + match.size
             padlen = (longest - len('Expected'))
@@ -123,18 +135,24 @@ class BitDiff(object):
 
 
 class SekizaiTestCase(TestCase):
-    def _render(self, tpl, ctx={}, ctxclass=SekizaiContext):
+    def _render(self, tpl, ctx=None, ctxclass=SekizaiContext):
+        ctx = ctx or {}
         return render_to_string(tpl, ctxclass(ctx))
     
-    def _get_bits(self, tpl, ctx={}, ctxclass=SekizaiContext):
+    def _get_bits(self, tpl, ctx=None, ctxclass=SekizaiContext):
+        ctx = ctx or {}
         rendered = self._render(tpl, ctx, ctxclass)
-        bits = [bit for bit in [bit.strip('\n') for bit in rendered.split('\n')] if bit]
+        bits = [
+            bit for bit in [bit.strip('\n')
+                            for bit in rendered.split('\n')] if bit
+        ]
         return bits, rendered
         
-    def _test(self, tpl, res, ctx={}, ctxclass=SekizaiContext):
+    def _test(self, tpl, res, ctx=None, ctxclass=SekizaiContext):
         """
         Helper method to render template and compare it's bits
         """
+        ctx = ctx or {}
         bits, rendered = self._get_bits(tpl, ctx, ctxclass)
         differ = BitDiff(res)
         result = differ.test(bits)
@@ -145,8 +163,10 @@ class SekizaiTestCase(TestCase):
         """
         Basic dual block testing
         """
-        bits = ['my css file', 'some content', 'more content', 
-            'final content', 'my js file']
+        bits = [
+            'my css file', 'some content', 'more content', 'final content',
+            'my js file'
+        ]
         self._test('basic.html', bits)
 
     def test_named_endaddtoblock(self):
@@ -168,7 +188,10 @@ class SekizaiTestCase(TestCase):
         Test that the template tags properly fail if not used with either 
         SekizaiContext or the context processor.
         """
-        self.assertRaises(template.TemplateSyntaxError, self._render, 'basic.html', {}, template.Context)
+        self.assertRaises(
+            template.TemplateSyntaxError,
+            self._render, 'basic.html', {}, template.Context
+        )
         
     def test_complex_template_inheritance(self):
         """
@@ -229,19 +252,34 @@ class SekizaiTestCase(TestCase):
         Tests that template syntax errors are raised properly in templates
         rendered by sekizai tags
         """
-        self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failadd.html')
+        self.assertRaises(
+            template.TemplateSyntaxError,
+            self._render, 'errors/failadd.html'
+        )
     
     def test_invalid_renderblock(self):
-        self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failrender.html')
+        self.assertRaises(
+            template.TemplateSyntaxError,
+            self._render, 'errors/failrender.html'
+        )
     
     def test_invalid_include(self):
-        self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failinc.html')
+        self.assertRaises(
+            template.TemplateSyntaxError,
+            self._render, 'errors/failinc.html'
+        )
         
     def test_invalid_basetemplate(self):
-        self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failbase.html')
+        self.assertRaises(
+            template.TemplateSyntaxError,
+            self._render, 'errors/failbase.html'
+        )
         
     def test_invalid_basetemplate_two(self):
-        self.assertRaises(template.TemplateSyntaxError, self._render, 'errors/failbase2.html')
+        self.assertRaises(
+            template.TemplateSyntaxError,
+            self._render, 'errors/failbase2.html'
+        )
         
     def test_with_data(self):
         """
@@ -256,7 +294,10 @@ class SekizaiTestCase(TestCase):
     def test_validate_context(self):
         sekizai_ctx = SekizaiContext()
         django_ctx = template.Context()
-        self.assertRaises(template.TemplateSyntaxError, validate_context, django_ctx)
+        self.assertRaises(
+            template.TemplateSyntaxError,
+            validate_context, django_ctx
+        )
         self.assertEqual(validate_context(sekizai_ctx), True)
         with SettingsOverride(TEMPLATE_DEBUG=False):
             self.assertEqual(validate_context(django_ctx), False)
@@ -289,6 +330,14 @@ class SekizaiTestCase(TestCase):
         output = tpl.render(context)
         self.assertEqual(output.count('test'), 1, output)
 
+    def test_addtoblock_processor_null(self):
+        bits = ['header', 'footer']
+        self._test('processors/addtoblock_null.html', bits)
+
+    def test_addtoblock_processor_namespace(self):
+        bits = ['header', 'footer', 'js']
+        self._test('processors/addtoblock_namespace.html', bits)
+
 
 class HelperTests(TestCase):
     def test_validate_template_js_css(self):
@@ -313,7 +362,10 @@ class HelperTests(TestCase):
         self.assertEqual(get_namespaces('inherit/chain.html'), ['css', 'js'])
 
     def test_get_namespaces_space_chain_inherit(self):
-        self.assertEqual(get_namespaces('inherit/spacechain.html'), ['css', 'js'])
+        self.assertEqual(
+            get_namespaces('inherit/spacechain.html'),
+            ['css', 'js']
+        )
 
     def test_get_namespaces_var_inherit(self):
         self.assertEqual(get_namespaces('inherit/varchain.html'), [])

@@ -4,9 +4,11 @@ from classytags.parser import Parser
 from django import template
 from django.conf import settings
 from django.utils.importlib import import_module
+
 from sekizai.helpers import get_varname
 
 register = template.Library()
+
 
 def validate_context(context):
     """
@@ -29,6 +31,7 @@ def validate_context(context):
         "context processor or use 'sekizai.context.SekizaiContext' to "
         "render your templates."
     )
+
 
 def import_processor(import_path):
     if '.' not in import_path:
@@ -129,13 +132,18 @@ class Addtoblock(SekizaiTag):
     options = Options(
         Argument('name'),
         Flag('strip', default=False, true_values=['strip']),
+        'preprocessor',
+        Argument('preprocessor', required=False, default=None, resolve=False),
         parser_class=AddtoblockParser,
     )
     
-    def render_tag(self, context, name, strip, nodelist):
+    def render_tag(self, context, name, strip, preprocessor, nodelist):
         rendered_contents = nodelist.render(context)
         if strip:
             rendered_contents = rendered_contents.strip()
+        if preprocessor:
+            func = import_processor(preprocessor)
+            rendered_contents = func(context, rendered_contents, name)
         varname = get_varname()
         context[varname][name].append(rendered_contents)
         return ""
