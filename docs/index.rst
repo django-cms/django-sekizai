@@ -72,7 +72,7 @@ Handling code snippets
 
 Sekizai uses ``render_block`` and ``addtoblock`` to handle unique code snippets.
 Define your blocks using ``{% render_block <name> %}`` and add data to that
-block using ``{% addtoblock <name> [strip] %}...{% endaddotblock %}``. If the
+block using ``{% addtoblock <name> [strip] %}...{% endaddtoblock %}``. If the
 strip flag is set, leading and trailing whitespace will be removed.
 
 Example Template::
@@ -138,7 +138,7 @@ Restrictions
 
 .. warning::
 
-    If the ``{% addtoblock %}`` tag is used in an **included** or **extending** template, the tags **must** be
+    If the ``{% addtoblock %}`` tag is used in an **extending** template, the tags **must** be
     placed within ``{% block %}...{% endblock %}`` tags.
 
 Handling data
