@@ -11,7 +11,6 @@ from compressor.exceptions import TemplateDoesNotExist, TemplateSyntaxError
 
 
 class Command(BaseCommand):
-    args = '<poll_id poll_id ...>'
     help = "Compile SASS into CSS outside of the request/response cycle"
 
     def __init__(self):
