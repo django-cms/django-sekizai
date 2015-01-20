@@ -104,4 +104,4 @@ class SCSSProcessor(object):
         self._hash_cache[filename] = hashsum
         return hashsum
 
-compile_scss = SCSSProcessor()
+compilescss = SCSSProcessor()
