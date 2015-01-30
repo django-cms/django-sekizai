@@ -265,13 +265,15 @@ located. If above code sample lives in the Python module
 
 .. code-block:: html
 
-    {% render_block "js" postprocessor "myapp.sekizai_processors.spaceless_post_processor" %}
+   ... 
+   {% render_block "js" postprocessor "myapp.sekizai_processors.spaceless_post_processor" %}
+   ...
 
 It's also possible to pre-process data in ``{% addtoblock %}`` like this
 
 .. code-block:: html
 
-    {% addtoblock "css" preprocessor "myapp.sekizai_processors.processor" %}
+   {% addtoblock "css" preprocessor "myapp.sekizai_processors.processor" %}
 
 Control Pre- and Postprocessors
 -------------------------------
