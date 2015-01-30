@@ -41,6 +41,18 @@ def import_processor(import_path):
     return getattr(module, object_name)
 
 
+def import_mapped_processors():
+    preprocessors, postprocessors = {}, {}
+    sekizai_processors = getattr(settings, 'SEKIZAI_PROCESSORS', {})
+    for name, processor in sekizai_processors.get('pre', {}).items():
+        preprocessors[name] = import_processor(processor)
+    for name, processor in sekizai_processors.get('post', {}).items():
+        postprocessors[name] = import_processor(processor)
+    return preprocessors, postprocessors
+
+_mapped_preprocessors, _mapped_postprocessors = import_mapped_processors()
+
+
 class SekizaiParser(Parser):
     def parse_blocks(self):
         super(SekizaiParser, self).parse_blocks()
@@ -65,14 +77,14 @@ class SekizaiTag(Tag):
 
 class RenderBlock(Tag):
     name = 'render_block'
-    
+
     options = Options(
         Argument('name'),
         'postprocessor',
         Argument('postprocessor', required=False, default=None, resolve=False),
         parser_class=SekizaiParser,
     )
-        
+
     def render_tag(self, context, name, postprocessor, nodelist):
         if not validate_context(context):
             return nodelist.render(context)
@@ -82,6 +94,8 @@ class RenderBlock(Tag):
         if postprocessor:
             func = import_processor(postprocessor)
             data = func(context, data, name)
+        elif postprocessor is None and name in _mapped_postprocessors:
+            data = _mapped_postprocessors[name](context, data, name)
         return '%s\n%s' % (data, rendered_contents)
 register.tag(RenderBlock)
 
@@ -128,7 +142,7 @@ register.tag(WithData)
 
 class Addtoblock(SekizaiTag):
     name = 'addtoblock'
-    
+
     options = Options(
         Argument('name'),
         Flag('strip', default=False, true_values=['strip']),
@@ -136,7 +150,7 @@ class Addtoblock(SekizaiTag):
         Argument('preprocessor', required=False, default=None, resolve=False),
         parser_class=AddtoblockParser,
     )
-    
+
     def render_tag(self, context, name, strip, preprocessor, nodelist):
         rendered_contents = nodelist.render(context)
         if strip:
@@ -144,6 +158,8 @@ class Addtoblock(SekizaiTag):
         if preprocessor:
             func = import_processor(preprocessor)
             rendered_contents = func(context, rendered_contents, name)
+        elif preprocessor is None and name in _mapped_preprocessors:
+            rendered_contents = _mapped_preprocessors[name](context, rendered_contents, name)
         varname = get_varname()
         context[varname][name].append(rendered_contents)
         return ""

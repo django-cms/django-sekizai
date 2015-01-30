@@ -272,6 +272,22 @@ It's also possible to pre-process data in ``{% addtoblock %}`` like this::
 
     {% addtoblock "css" preprocessor "myapp.sekizai_processors.processor" %}
 
+To avoid the repetitive tasks of writing ``postprocessor "..."`` and/or ``preprocessor "..."`` in
+your templatetags, you can define them globally. To your ``settings.py`` add::
+
+    SEKIZAI_PROCESSORS = {
+        'pre': {
+            'css': 'myapp.sekizai_processors.preprocessor',
+        },
+        'post': {
+            'css': 'myapp.sekizai_processors.postprocessor',
+        },
+    }
+
+to map these Sekizai processors for all pre- and postprocessors using the namespace ``"css"``.
+It is still possible to override these global settings, by adding ``preprocessor "..."`` to the
+specific templatetag. By using an empty string, say ``{% addtoblock preprocessor "" %}``,
+the preset preprocessor can even be deactivated for that specific templatetag.
 
 
 *******
