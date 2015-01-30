@@ -261,16 +261,20 @@ would be:
 
 To use this post processor you have to tell ``render_block`` where it's
 located. If above code sample lives in the Python module
-``myapp.sekizai_processors`` you could use it like this::
+``myapp.sekizai_processors`` you could use it like this
 
-    ...
+.. code-block:: html
+
     {% render_block "js" postprocessor "myapp.sekizai_processors.spaceless_post_processor" %}
-    ...
 
+It's also possible to pre-process data in ``{% addtoblock %}`` like this
 
-It's also possible to pre-process data in ``{% addtoblock %}`` like this::
+.. code-block:: html
 
     {% addtoblock "css" preprocessor "myapp.sekizai_processors.processor" %}
+
+Control Pre- and Postprocessors
+-------------------------------
 
 To avoid the repetitive tasks of writing ``postprocessor "..."`` and/or ``preprocessor "..."`` in
 your templatetags, you can define them globally. To your ``settings.py`` add::
@@ -286,7 +290,7 @@ your templatetags, you can define them globally. To your ``settings.py`` add::
 
 to map these Sekizai processors for all pre- and postprocessors using the namespace ``"css"``.
 It is still possible to override these global settings, by adding ``preprocessor "..."`` to the
-specific templatetag. By using an empty string, say ``{% addtoblock preprocessor "" %}``,
+specific templatetag. By using an empty string, say ``{% addtoblock "css" preprocessor "" %}``,
 the preset preprocessor can even be deactivated for that specific templatetag.
 
 
