@@ -277,7 +277,9 @@ Control Pre- and Postprocessors
 -------------------------------
 
 To avoid the repetitive tasks of writing ``postprocessor "..."`` and/or ``preprocessor "..."`` in
-your templatetags, you can define them globally. To your ``settings.py`` add::
+your templatetags, you can define them globally. To your ``settings.py`` add
+
+.. code-block:: python
 
     SEKIZAI_PROCESSORS = {
         'pre': {
