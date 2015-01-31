@@ -288,7 +288,6 @@ your templatetags, you can define them globally. To your ``settings.py`` add
         'css': 'myapp.sekizai_processors.preprocessor',
         ...
     }
-    # and / or
     SEKIZAI_POSTPROCESSORS = {
         ...
         'css': 'myapp.sekizai_processors.postprocessor',
@@ -296,11 +295,9 @@ your templatetags, you can define them globally. To your ``settings.py`` add
     }
 
 to map these Sekizai processors for all pre- and postprocessors using the namespace ``"css"``.
-
 It is still possible to override these global settings, by adding ``preprocessor "..."`` to a
-specific templatetag. By using the special keyword ``noprocessor``, for example
-``{% addtoblock "css" noprocessor %}``, the preset preprocessor will be deactivated for that
-specific templatetag.
+specific templatetag. By using an empty string, say ``{% addtoblock "css" preprocessor "" %}``,
+the preset preprocessor can even be deactivated for that specific templatetag.
 
 
 *******
