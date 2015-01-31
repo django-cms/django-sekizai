@@ -41,16 +41,14 @@ def import_processor(import_path):
     return getattr(module, object_name)
 
 
-def import_mapped_processors():
-    preprocessors, postprocessors = {}, {}
-    sekizai_processors = getattr(settings, 'SEKIZAI_PROCESSORS', {})
-    for name, processor in sekizai_processors.get('pre', {}).items():
-        preprocessors[name] = import_processor(processor)
-    for name, processor in sekizai_processors.get('post', {}).items():
-        postprocessors[name] = import_processor(processor)
-    return preprocessors, postprocessors
+def import_mapped_processors(sekizai_processors):
+    mapped_processors = {}
+    for name, processor in sekizai_processors.items():
+        mapped_processors[name] = import_processor(processor)
+    return mapped_processors
 
-_mapped_preprocessors, _mapped_postprocessors = import_mapped_processors()
+_mapped_preprocessors = import_mapped_processors(getattr(settings, 'SEKIZAI_PREPROCESSORS', {}))
+_mapped_postprocessors = import_mapped_processors(getattr(settings, 'SEKIZAI_POSTPROCESSORS', {}))
 
 
 class SekizaiParser(Parser):
