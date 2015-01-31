@@ -338,6 +338,24 @@ class SekizaiTestCase(TestCase):
         bits = ['header', 'footer', 'js']
         self._test('processors/addtoblock_namespace.html', bits)
 
+    def test_addtoblock_preprocessor_preset(self):
+        from sekizai.templatetags import sekizai_tags
+        mapped_preprocessors = sekizai_tags._mapped_preprocessors
+        sekizai_tags._mapped_preprocessors = sekizai_tags.import_mapped_processors({'myblock': 'sekizai.tests.namespace_processor'})
+        self._test('named_end.html', ['myblock'])
+        self._test('processors/addtoblock-noprocessor.html', ['mycontent'])
+        sekizai_tags._mapped_preprocessors = mapped_preprocessors
+        self._test('named_end.html', ['mycontent'])
+
+    def test_addtoblock_postprocessor_preset(self):
+        from sekizai.templatetags import sekizai_tags
+        mapped_postprocessors = sekizai_tags._mapped_postprocessors
+        sekizai_tags._mapped_postprocessors = sekizai_tags.import_mapped_processors({'myblock': 'sekizai.tests.namespace_processor'})
+        self._test('named_end.html', ['myblock'])
+        self._test('processors/addtoblock-noprocessor.html', ['mycontent'])
+        sekizai_tags._mapped_postprocessors = mapped_postprocessors
+        self._test('named_end.html', ['mycontent'])
+
 
 class HelperTests(TestCase):
     def test_validate_template_js_css(self):
