@@ -1,4 +1,4 @@
-from classytags.arguments import Argument, Flag
+from classytags.arguments import Argument, ChoiceArgument, Flag
 from classytags.core import Tag, Options
 from classytags.parser import Parser
 from django import template
@@ -78,22 +78,24 @@ class RenderBlock(Tag):
 
     options = Options(
         Argument('name'),
-        'postprocessor',
+        ChoiceArgument('proctype', choices=['postprocessor', 'noprocessor'], required=False),
         Argument('postprocessor', required=False, default=None, resolve=False),
         parser_class=SekizaiParser,
     )
 
-    def render_tag(self, context, name, postprocessor, nodelist):
+    def render_tag(self, context, name, proctype, postprocessor, nodelist):
         if not validate_context(context):
             return nodelist.render(context)
         rendered_contents = nodelist.render(context)
         varname = get_varname()
         data = context[varname][name].render()
-        if postprocessor:
-            func = import_processor(postprocessor)
-            data = func(context, data, name)
-        elif postprocessor is None and name in _mapped_postprocessors:
-            data = _mapped_postprocessors[name](context, data, name)
+        if proctype == 'postprocessor':
+            if postprocessor:
+                func = import_processor(postprocessor)
+                data = func(context, data, name)
+        elif proctype != 'noprocessor':
+            if name in _mapped_postprocessors:
+                data = _mapped_postprocessors[name](context, data, name)
         return '%s\n%s' % (data, rendered_contents)
 register.tag(RenderBlock)
 
@@ -144,20 +146,22 @@ class Addtoblock(SekizaiTag):
     options = Options(
         Argument('name'),
         Flag('strip', default=False, true_values=['strip']),
-        'preprocessor',
+        ChoiceArgument('proctype', choices=['preprocessor', 'noprocessor'], required=False),
         Argument('preprocessor', required=False, default=None, resolve=False),
         parser_class=AddtoblockParser,
     )
 
-    def render_tag(self, context, name, strip, preprocessor, nodelist):
+    def render_tag(self, context, name, strip, proctype, preprocessor, nodelist):
         rendered_contents = nodelist.render(context)
         if strip:
             rendered_contents = rendered_contents.strip()
-        if preprocessor:
-            func = import_processor(preprocessor)
-            rendered_contents = func(context, rendered_contents, name)
-        elif preprocessor is None and name in _mapped_preprocessors:
-            rendered_contents = _mapped_preprocessors[name](context, rendered_contents, name)
+        if proctype == 'preprocessor':
+            if preprocessor:
+                func = import_processor(preprocessor)
+                rendered_contents = func(context, rendered_contents, name)
+        elif proctype != 'noprocessor':
+            if name in _mapped_preprocessors:
+                rendered_contents = _mapped_preprocessors[name](context, rendered_contents, name)
         varname = get_varname()
         context[varname][name].append(rendered_contents)
         return ""
