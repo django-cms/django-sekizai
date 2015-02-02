@@ -144,19 +144,23 @@ class Addtoblock(SekizaiTag):
     options = Options(
         Argument('name'),
         Flag('strip', default=False, true_values=['strip']),
-        'preprocessor',
-        Argument('preprocessor', required=False, default=None, resolve=False),
+        Flag('preprocessor', default=False, true_values=['preprocessor']),
+        Flag('noprocessor', default=False, true_values=['noprocessor']),
+        Argument('procfunc', required=False, default=None, resolve=False),
         parser_class=AddtoblockParser,
     )
 
-    def render_tag(self, context, name, strip, preprocessor, nodelist):
+    def render_tag(self, context, name, strip, preprocessor, noprocessor, procfunc, nodelist):
         rendered_contents = nodelist.render(context)
         if strip:
             rendered_contents = rendered_contents.strip()
         if preprocessor:
-            func = import_processor(preprocessor)
-            rendered_contents = func(context, rendered_contents, name)
-        elif preprocessor is None and name in _mapped_preprocessors:
+            if noprocessor:
+                raise template.TemplateSyntaxError("Can not combine 'preprocessor' and 'noprocessor' inside the same templatetag: addtoblock.")
+            if preprocessor:
+                func = import_processor(procfunc)
+                rendered_contents = func(context, rendered_contents, name)
+        elif not noprocessor and name in _mapped_preprocessors:
             rendered_contents = _mapped_preprocessors[name](context, rendered_contents, name)
         varname = get_varname()
         context[varname][name].append(rendered_contents)

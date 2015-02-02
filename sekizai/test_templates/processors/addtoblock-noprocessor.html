@@ -1,7 +1,7 @@
 {% load sekizai_tags %}
 
-{% addtoblock "myblock" preprocessor "" %}
+{% addtoblock "myblock" noprocessor %}
 mycontent
 {% endaddtoblock %}
 
-{% render_block "myblock" postprocessor "" %}
+{% render_block "myblock" %}
