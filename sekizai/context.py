@@ -1,6 +1,7 @@
 from django.template import Context
 from sekizai.context_processors import sekizai
 
+
 class SekizaiContext(Context):
     """
     An alternative context to be used instead of RequestContext in places where

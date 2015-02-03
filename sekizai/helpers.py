@@ -17,7 +17,8 @@ def is_variable_extend_node(node):
 
 def _extend_blocks(extend_node, blocks):
     """
-    Extends the dictionary `blocks` with *new* blocks in the parent node (recursive)
+    Extends the dictionary `blocks` with *new* blocks in the parent node
+    (recursive)
     """
     # we don't support variable extensions
     if is_variable_extend_node(extend_node):
@@ -155,5 +156,3 @@ class Watcher(object):
             ]
             changes[key] = new_values
         return changes
-
-

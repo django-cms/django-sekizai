@@ -13,12 +13,12 @@ register = template.Library()
 def validate_context(context):
     """
     Validates a given context.
-    
+
     Returns True if the context is valid.
-    
+
     Returns False if the context is invalid but the error should be silently
     ignored.
-    
+
     Raises a TemplateSyntaxError if the context is invalid and we're in debug
     mode.
     """
@@ -65,14 +65,14 @@ class SekizaiTag(Tag):
 
 class RenderBlock(Tag):
     name = 'render_block'
-    
+
     options = Options(
         Argument('name'),
         'postprocessor',
         Argument('postprocessor', required=False, default=None, resolve=False),
         parser_class=SekizaiParser,
     )
-        
+
     def render_tag(self, context, name, postprocessor, nodelist):
         if not validate_context(context):
             return nodelist.render(context)
@@ -88,12 +88,12 @@ register.tag(RenderBlock)
 
 class AddData(SekizaiTag):
     name = 'add_data'
-    
+
     options = Options(
         Argument('key'),
         Argument('value'),
     )
-    
+
     def render_tag(self, context, key, value):
         varname = get_varname()
         context[varname][key].append(value)
@@ -103,17 +103,17 @@ register.tag(AddData)
 
 class WithData(SekizaiTag):
     name = 'with_data'
-    
+
     options = Options(
         Argument('name'),
-        'as', 
+        'as',
         Argument('variable', resolve=False),
         blocks=[
             ('end_with_data', 'inner_nodelist'),
         ],
         parser_class=SekizaiParser,
     )
-    
+
     def render_tag(self, context, name, variable, inner_nodelist, nodelist):
         rendered_contents = nodelist.render(context)
         varname = get_varname()
@@ -128,7 +128,7 @@ register.tag(WithData)
 
 class Addtoblock(SekizaiTag):
     name = 'addtoblock'
-    
+
     options = Options(
         Argument('name'),
         Flag('strip', default=False, true_values=['strip']),
@@ -136,7 +136,7 @@ class Addtoblock(SekizaiTag):
         Argument('preprocessor', required=False, default=None, resolve=False),
         parser_class=AddtoblockParser,
     )
-    
+
     def render_tag(self, context, name, strip, preprocessor, nodelist):
         rendered_contents = nodelist.render(context)
         if strip:
