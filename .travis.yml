@@ -5,17 +5,35 @@ python:
  - 3.3
  - 3.4
 env:
- - DJANGO='>=1.2,<1.3'
- - DJANGO='>=1.3,<1.4'
- - DJANGO='>=1.4,<1.5'
- - DJANGO='>=1.5,<1.6'
- - DJANGO='>=1.6,<1.7'
- - DJANGO='>=1.7,<1.8'
- - DJANGO='>=1.8,<1.9 --pre'
+ - DJANGO='django>=1.2,<1.3'
+ - DJANGO='django>=1.3,<1.4'
+ - DJANGO='django>=1.4,<1.5'
+ - DJANGO='django>=1.5,<1.6'
+ - DJANGO='django>=1.6,<1.7'
+ - DJANGO='django>=1.7,<1.8'
+ - DJANGO='django>=1.8,<1.9 --pre'
 install:
- - pip install django==$DJANGO --use-mirrors 
- - pip install django-classy-tags --use-mirrors
- - pip install pep8 --use-mirrors
+ - pip install $DJANGO
+ - pip install django-classy-tags
+ - pip install pep8
 script: python runtests.py
 notifications:
   email: false
+matrix:
+  exclude:
+    - python: 2.6
+      env: DJANGO='django>=1.7,<1.8'
+    - python: 2.6
+      env: DJANGO='django>=1.8,<1.9 --pre'
+    - python: 3.3
+      env: DJANGO='django>=1.2,<1.3'
+    - python: 3.3
+      env: DJANGO='django>=1.3,<1.4'
+    - python: 3.3
+      env: DJANGO='django>=1.4,<1.5'
+    - python: 3.4
+      env: DJANGO='django>=1.2,<1.3'
+    - python: 3.4
+      env: DJANGO='django>=1.3,<1.4'
+    - python: 3.4
+      env: DJANGO='django>=1.4,<1.5'
