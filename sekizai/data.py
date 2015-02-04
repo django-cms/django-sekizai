@@ -12,7 +12,7 @@ class SekizaiList(list):
         """
         if obj not in self:
             super(SekizaiList, self).append(obj)
-        
+
     def render(self, between='\n'):
         """
         When the data get's rendered, run the postprocess filters.

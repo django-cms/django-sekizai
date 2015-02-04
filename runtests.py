@@ -33,11 +33,15 @@ ROOT_URLCONF = 'runtests'
 def runtests():
     from django import VERSION
     from django.conf import settings
+    if VERSION[0] == 1 and VERSION[1] < 6:
+        runner = 'django.test.simple.DjangoTestSuiteRunner'
+    else:
+        runner = 'django.test.runner.DiscoverRunner'
     settings.configure(
         INSTALLED_APPS=INSTALLED_APPS,
         ROOT_URLCONF=ROOT_URLCONF,
         DATABASES=DATABASES,
-        TEST_RUNNER='django.test.simple.DjangoTestSuiteRunner',
+        TEST_RUNNER=runner,
         TEMPLATE_DIRS=TEMPLATE_DIRS,
         TEMPLATE_CONTEXT_PROCESSORS=TEMPLATE_CONTEXT_PROCESSORS,
         TEMPLATE_DEBUG=TEMPLATE_DEBUG,

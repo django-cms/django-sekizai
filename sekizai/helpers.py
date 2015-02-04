@@ -1,8 +1,27 @@
 # -*- coding: utf-8 -*-
+from collections import namedtuple
+
 from django.conf import settings
-from django.template import VariableNode, Variable
+from django.template.base import VariableNode, Variable, Template
 from django.template.loader import get_template
 from django.template.loader_tags import BlockNode, ExtendsNode
+
+try:
+    from django.template import engines
+except ImportError:
+    engines = None
+
+if engines is not None:
+    FAKE_CONTEXT = namedtuple('Context', 'engine')(engines.all()[0])
+else:
+    FAKE_CONTEXT = {}
+
+
+def _get_nodelist(tpl):
+    if isinstance(tpl, Template):
+        return tpl.nodelist
+    else:
+        return tpl.template.nodelist
 
 
 def is_variable_extend_node(node):
@@ -17,14 +36,15 @@ def is_variable_extend_node(node):
 
 def _extend_blocks(extend_node, blocks):
     """
-    Extends the dictionary `blocks` with *new* blocks in the parent node (recursive)
+    Extends the dictionary `blocks` with *new* blocks in the parent node
+    (recursive)
     """
     # we don't support variable extensions
     if is_variable_extend_node(extend_node):
         return
-    parent = extend_node.get_parent(None)
+    parent = extend_node.get_parent(FAKE_CONTEXT)
     # Search for new blocks
-    for node in parent.nodelist.get_nodes_by_type(BlockNode):
+    for node in _get_nodelist(parent).get_nodes_by_type(BlockNode):
         if node.name not in blocks:
             blocks[node.name] = node
         else:
@@ -37,7 +57,7 @@ def _extend_blocks(extend_node, blocks):
                 block = block.super
             block.super = node
     # search for further ExtendsNodes
-    for node in parent.nodelist.get_nodes_by_type(ExtendsNode):
+    for node in _get_nodelist(parent).get_nodes_by_type(ExtendsNode):
         _extend_blocks(node, blocks)
         break
 
@@ -55,29 +75,25 @@ def _extend_nodelist(extend_node):
     found = []
 
     for block in blocks.values():
-        found += _scan_namespaces(block.nodelist, block, blocks.keys())
+        found += _scan_namespaces(block.nodelist, block)
 
-    parent_template = extend_node.get_parent({})
+    parent_template = extend_node.get_parent(FAKE_CONTEXT)
     # if this is the topmost template, check for namespaces outside of blocks
-    if not parent_template.nodelist.get_nodes_by_type(ExtendsNode):
+    if not _get_nodelist(parent_template).get_nodes_by_type(ExtendsNode):
         found += _scan_namespaces(
-            parent_template.nodelist,
-            None,
-            blocks.keys()
+            _get_nodelist(parent_template),
+            None
         )
     else:
         found += _scan_namespaces(
-            parent_template.nodelist,
-            extend_node,
-            blocks.keys()
+            _get_nodelist(parent_template),
+            extend_node
         )
     return found
 
 
-def _scan_namespaces(nodelist, current_block=None, ignore_blocks=None):
+def _scan_namespaces(nodelist, current_block=None):
     from sekizai.templatetags.sekizai_tags import RenderBlock
-    if ignore_blocks is None:
-        ignore_blocks = []
     found = []
 
     for node in nodelist:
@@ -102,7 +118,7 @@ def _scan_namespaces(nodelist, current_block=None, ignore_blocks=None):
 
 def get_namespaces(template):
     compiled_template = get_template(template)
-    return _scan_namespaces(compiled_template.nodelist)
+    return _scan_namespaces(_get_nodelist(compiled_template))
 
 
 def validate_template(template, namespaces):
@@ -155,5 +171,3 @@ class Watcher(object):
             ]
             changes[key] = new_values
         return changes
-
-

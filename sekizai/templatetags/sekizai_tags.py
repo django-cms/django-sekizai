@@ -13,12 +13,12 @@ register = template.Library()
 def validate_context(context):
     """
     Validates a given context.
-    
+
     Returns True if the context is valid.
-    
+
     Returns False if the context is invalid but the error should be silently
     ignored.
-    
+
     Raises a TemplateSyntaxError if the context is invalid and we're in debug
     mode.
     """
@@ -102,12 +102,12 @@ register.tag(RenderBlock)
 
 class AddData(SekizaiTag):
     name = 'add_data'
-    
+
     options = Options(
         Argument('key'),
         Argument('value'),
     )
-    
+
     def render_tag(self, context, key, value):
         varname = get_varname()
         context[varname][key].append(value)
@@ -117,17 +117,17 @@ register.tag(AddData)
 
 class WithData(SekizaiTag):
     name = 'with_data'
-    
+
     options = Options(
         Argument('name'),
-        'as', 
+        'as',
         Argument('variable', resolve=False),
         blocks=[
             ('end_with_data', 'inner_nodelist'),
         ],
         parser_class=SekizaiParser,
     )
-    
+
     def render_tag(self, context, name, variable, inner_nodelist, nodelist):
         rendered_contents = nodelist.render(context)
         varname = get_varname()
