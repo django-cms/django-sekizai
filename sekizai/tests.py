@@ -13,6 +13,7 @@ from sekizai.helpers import validate_template
 from sekizai.helpers import Watcher
 from sekizai.templatetags.sekizai_tags import import_processor
 from sekizai.templatetags.sekizai_tags import validate_context
+from sekizai.templatetags import sekizai_tags
 
 try:
     unicode_compat = unicode
@@ -339,22 +340,18 @@ class SekizaiTestCase(TestCase):
         self._test('processors/addtoblock_namespace.html', bits)
 
     def test_addtoblock_preprocessor_preset(self):
-        from sekizai.templatetags import sekizai_tags
-        mapped_preprocessors = sekizai_tags._mapped_preprocessors
-        sekizai_tags._mapped_preprocessors = sekizai_tags.import_mapped_processors({'myblock': 'sekizai.tests.namespace_processor'})
-        self._test('named_end.html', ['myblock'])
+        sekizai_tags._mapped_preprocessors = sekizai_tags.import_mapped_processors({'mytag': 'sekizai.tests.namespace_processor'})
+        self._test('processors/addtoblock-mappedprocessor.html', ['mytag'])
         self._test('processors/addtoblock-noprocessor.html', ['mycontent'])
-        sekizai_tags._mapped_preprocessors = mapped_preprocessors
-        self._test('named_end.html', ['mycontent'])
+        sekizai_tags._mapped_preprocessors = {}  # reset the mappings
+        self._test('processors/addtoblock-mappedprocessor.html', ['mycontent'])
 
     def test_addtoblock_postprocessor_preset(self):
-        from sekizai.templatetags import sekizai_tags
-        mapped_postprocessors = sekizai_tags._mapped_postprocessors
-        sekizai_tags._mapped_postprocessors = sekizai_tags.import_mapped_processors({'myblock': 'sekizai.tests.namespace_processor'})
-        self._test('named_end.html', ['myblock'])
+        sekizai_tags._mapped_postprocessors = sekizai_tags.import_mapped_processors({'mytag': 'sekizai.tests.namespace_processor'})
+        self._test('processors/addtoblock-mappedprocessor.html', ['mytag'])
         self._test('processors/addtoblock-noprocessor.html', ['mycontent'])
-        sekizai_tags._mapped_postprocessors = mapped_postprocessors
-        self._test('named_end.html', ['mycontent'])
+        sekizai_tags._mapped_postprocessors = {}  # reset the mappings
+        self._test('processors/addtoblock-mappedprocessor.html', ['mycontent'])
 
 
 class HelperTests(TestCase):

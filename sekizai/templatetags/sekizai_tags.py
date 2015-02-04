@@ -78,21 +78,24 @@ class RenderBlock(Tag):
 
     options = Options(
         Argument('name'),
+        Flag('noprocessor', default=False, true_values=['noprocessor']),
         'postprocessor',
         Argument('postprocessor', required=False, default=None, resolve=False),
         parser_class=SekizaiParser,
     )
 
-    def render_tag(self, context, name, postprocessor, nodelist):
+    def render_tag(self, context, name, noprocessor, postprocessor, nodelist):
         if not validate_context(context):
             return nodelist.render(context)
         rendered_contents = nodelist.render(context)
         varname = get_varname()
         data = context[varname][name].render()
         if postprocessor:
+            if noprocessor:
+                raise template.TemplateSyntaxError("Can not combine 'noprocessor' and a postprocessor inside the same templatetag.")
             func = import_processor(postprocessor)
             data = func(context, data, name)
-        elif postprocessor is None and name in _mapped_postprocessors:
+        elif not noprocessor and name in _mapped_postprocessors:
             data = _mapped_postprocessors[name](context, data, name)
         return '%s\n%s' % (data, rendered_contents)
 register.tag(RenderBlock)
@@ -144,19 +147,22 @@ class Addtoblock(SekizaiTag):
     options = Options(
         Argument('name'),
         Flag('strip', default=False, true_values=['strip']),
+        Flag('noprocessor', default=False, true_values=['noprocessor']),
         'preprocessor',
         Argument('preprocessor', required=False, default=None, resolve=False),
         parser_class=AddtoblockParser,
     )
 
-    def render_tag(self, context, name, strip, preprocessor, nodelist):
+    def render_tag(self, context, name, strip, noprocessor, preprocessor, nodelist):
         rendered_contents = nodelist.render(context)
         if strip:
             rendered_contents = rendered_contents.strip()
         if preprocessor:
+            if noprocessor:
+                raise template.TemplateSyntaxError("Can not combine 'noprocessor' and a preprocessor inside the same templatetag.")
             func = import_processor(preprocessor)
             rendered_contents = func(context, rendered_contents, name)
-        elif preprocessor is None and name in _mapped_preprocessors:
+        elif not noprocessor and name in _mapped_preprocessors:
             rendered_contents = _mapped_preprocessors[name](context, rendered_contents, name)
         varname = get_varname()
         context[varname][name].append(rendered_contents)
