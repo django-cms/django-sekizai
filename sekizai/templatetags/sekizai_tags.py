@@ -41,6 +41,16 @@ def import_processor(import_path):
     return getattr(module, object_name)
 
 
+def import_mapped_processors(sekizai_processors):
+    mapped_processors = {}
+    for name, processor in sekizai_processors.items():
+        mapped_processors[name] = import_processor(processor)
+    return mapped_processors
+
+_mapped_preprocessors = import_mapped_processors(getattr(settings, 'SEKIZAI_PREPROCESSORS', {}))
+_mapped_postprocessors = import_mapped_processors(getattr(settings, 'SEKIZAI_POSTPROCESSORS', {}))
+
+
 class SekizaiParser(Parser):
     def parse_blocks(self):
         super(SekizaiParser, self).parse_blocks()
@@ -79,9 +89,13 @@ class RenderBlock(Tag):
         rendered_contents = nodelist.render(context)
         varname = get_varname()
         data = context[varname][name].render()
-        if postprocessor:
+        if postprocessor == 'none':
+            pass
+        elif postprocessor:
             func = import_processor(postprocessor)
             data = func(context, data, name)
+        elif name in _mapped_postprocessors:
+            data = _mapped_postprocessors[name](context, data, name)
         return '%s\n%s' % (data, rendered_contents)
 register.tag(RenderBlock)
 
@@ -141,9 +155,13 @@ class Addtoblock(SekizaiTag):
         rendered_contents = nodelist.render(context)
         if strip:
             rendered_contents = rendered_contents.strip()
-        if preprocessor:
+        if preprocessor == 'none':
+            pass
+        elif preprocessor:
             func = import_processor(preprocessor)
             rendered_contents = func(context, rendered_contents, name)
+        elif name in _mapped_preprocessors:
+            rendered_contents = _mapped_preprocessors[name](context, rendered_contents, name)
         varname = get_varname()
         context[varname][name].append(rendered_contents)
         return ""

@@ -1,0 +1,7 @@
+{% load sekizai_tags %}
+
+{% addtoblock "mytag" preprocessor none %}
+mycontent
+{% endaddtoblock %}
+
+{% render_block "mytag" postprocessor none %}
