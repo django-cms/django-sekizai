@@ -380,18 +380,18 @@ class SekizaiTestCase(TestCase):
         self._test('processors/addtoblock_namespace.html', bits)
 
     def test_addtoblock_preprocessor_preset(self):
-        sekizai_tags._mapped_preprocessors = \
-            sekizai_tags.import_mapped_processors({
-                    'mytag': 'sekizai.tests.namespace_processor'})
+        st = sekizai_tags
+        mymap = {'mytag': 'sekizai.tests.namespace_processor'}
+        st._mapped_preprocessors = st.import_mapped_processors(mymap)
         self._test('processors/addtoblock-mappedprocessor.html', ['mytag'])
         self._test('processors/addtoblock-noprocessor.html', ['mycontent'])
-        sekizai_tags._mapped_preprocessors = {}  # reset the mappings
+        st._mapped_preprocessors = {}  # reset the mappings
         self._test('processors/addtoblock-mappedprocessor.html', ['mycontent'])
 
     def test_addtoblock_postprocessor_preset(self):
-        sekizai_tags._mapped_postprocessors = \
-            sekizai_tags.import_mapped_processors({
-                    'mytag': 'sekizai.tests.namespace_processor'})
+        st = sekizai_tags
+        mymap = {'mytag': 'sekizai.tests.namespace_processor'}
+        st._mapped_postprocessors = st.import_mapped_processors(mymap)
         self._test('processors/addtoblock-mappedprocessor.html', ['mytag'])
         self._test('processors/addtoblock-noprocessor.html', ['mycontent'])
         sekizai_tags._mapped_postprocessors = {}  # reset the mappings

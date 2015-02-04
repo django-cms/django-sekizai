@@ -47,8 +47,10 @@ def import_mapped_processors(sekizai_processors):
         mapped_processors[name] = import_processor(processor)
     return mapped_processors
 
-_mapped_preprocessors = import_mapped_processors(getattr(settings, 'SEKIZAI_PREPROCESSORS', {}))
-_mapped_postprocessors = import_mapped_processors(getattr(settings, 'SEKIZAI_POSTPROCESSORS', {}))
+_mapped_preprocessors = import_mapped_processors(
+    getattr(settings, 'SEKIZAI_PREPROCESSORS', {}))
+_mapped_postprocessors = import_mapped_processors(
+    getattr(settings, 'SEKIZAI_POSTPROCESSORS', {}))
 
 
 class SekizaiParser(Parser):
@@ -161,7 +163,8 @@ class Addtoblock(SekizaiTag):
             func = import_processor(preprocessor)
             rendered_contents = func(context, rendered_contents, name)
         elif name in _mapped_preprocessors:
-            rendered_contents = _mapped_preprocessors[name](context, rendered_contents, name)
+            rendered_contents = \
+                _mapped_preprocessors[name](context, rendered_contents, name)
         varname = get_varname()
         context[varname][name].append(rendered_contents)
         return ""
