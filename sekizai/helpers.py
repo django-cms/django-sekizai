@@ -12,7 +12,8 @@ except ImportError:
     engines = None
 
 if engines is not None:
-    FAKE_CONTEXT = namedtuple('Context', 'template')(namedtuple('Template', 'engine')(engines.all()[0]))
+    _FAKE_TEMPLATE = (namedtuple('Template', 'engine')(engines.all()[0]))
+    FAKE_CONTEXT = namedtuple('Context', 'template')(_FAKE_TEMPLATE)
 else:
     FAKE_CONTEXT = {}
 
