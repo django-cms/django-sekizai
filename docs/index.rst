@@ -97,7 +97,7 @@ Example Template::
     {% endaddtoblock %}
     And even more content.
     {% render_block "js" %}
-    <body>
+    </body>
     </html>
 
 Above example would roughly render like this::
@@ -114,7 +114,7 @@ Above example would roughly render like this::
     <script type="text/javascript">
     alert("Hello django-sekizai");
     </script>
-    <body>
+    </body>
     </html>
 
 .. note::
@@ -166,7 +166,7 @@ Example::
     Maybe you want to throw in some css:
     {% add_data "css-data" "css/stylesheet.css" %}
     Some more content here.
-    <body>
+    </body>
     </html>
 
 Above example would roughly render like this::
@@ -180,7 +180,7 @@ Above example would roughly render like this::
     Maybe you want to throw in some css:
     Some more content here.
     And even more content.
-    <body>
+    </body>
     </html>
 
 .. warning::
