@@ -1,9 +1,13 @@
+try:
+    from importlib import import_module
+except ImportError:
+    from django.utils.importlib import import_module
+
 from classytags.arguments import Argument, Flag
 from classytags.core import Tag, Options
 from classytags.parser import Parser
 from django import template
 from django.conf import settings
-from django.utils.importlib import import_module
 
 from sekizai.helpers import get_varname
 
