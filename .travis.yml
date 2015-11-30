@@ -1,4 +1,5 @@
 language: python
+sudo: false
 python:
  - 2.6
  - 2.7
@@ -13,7 +14,7 @@ env:
  - DJANGO='django>=1.7,<1.8'
  - DJANGO='django>=1.8,<1.9'
 install:
- - pip install $DJANGO django-classy-tags pep8
+ - pip install $DJANGO django-classy-tags pep8 backport-collections
 script: python runtests.py
 notifications:
   email: false
