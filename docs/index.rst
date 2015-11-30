@@ -31,9 +31,11 @@ sekizai will ignore any duplicate content in a single block.
 Dependencies
 ************
 
-* Python 2.6, 2.7, 3.3 or higher.
-* Django 1.3 or higher.
+* Python 2.6, 2.7, 3.3, 3.4 or 3.5.
+* Django 1.3, 1.4, 1.5, 1.6, 1.7 or 1.8.
 * django-classy-tags 0.3.1 or higher.
+
+Python 2.6 requires ``backport_collections``.
 
 
 *****

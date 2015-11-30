@@ -1,22 +1,30 @@
+import sys
+
 from setuptools import setup, find_packages
 
 version = __import__('sekizai').__version__
 
+
+if sys.hexversion < 0x02070000:
+    EXTRA_INSTALL_REQUIRES = ['backport_collections']
+else:
+    EXTRA_INSTALL_REQUIRES = []
+
 setup(
-    name = 'django-sekizai',
-    version = version,
-    description = 'Django Sekizai',
-    author = 'Jonas Obrist',
-    author_email = 'ojiidotch@gmail.com',
-    url = 'http://github.com/ojii/django-sekizai',
-    packages = find_packages(),
+    name='django-sekizai',
+    version=version,
+    description='Django Sekizai',
+    author='Jonas Obrist',
+    author_email='ojiidotch@gmail.com',
+    url='http://github.com/ojii/django-sekizai',
+    packages=find_packages(),
     zip_safe=False,
     include_package_data=True,
-    install_requires = [
+    install_requires=[
         'django-classy-tags>=0.3.1',
-    ],
-    test_suite = 'runtests.main',
-    classifiers = [
+    ] + EXTRA_INSTALL_REQUIRES,
+    test_suite='runtests.main',
+    classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
