@@ -17,4 +17,5 @@ There are some issue/restrictions with this implementation due to how the
 django template language works, but if used properly it can be very useful and
 it is the media handling framework for the django CMS (since version 2.2).
 
-.. image:: https://secure.travis-ci.org/ojii/django-sekizai.png?branch=master
+.. image:: https://travis-ci.org/ojii/django-sekizai.svg?branch=master
+    :target: https://travis-ci.org/ojii/django-sekizai
