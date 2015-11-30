@@ -53,6 +53,9 @@ steps:
     * Put ``sekizai.context_processors.sekizai`` into your
       ``TEMPLATE_CONTEXT_PROCESSORS`` setting and use
       ``django.template.RequestContext`` when rendering your templates.
+    
+    or
+
     * Use ``sekizai.context.SekizaiContext`` when rendering your templates.
 
 
