@@ -164,6 +164,19 @@ class BitDiff(object):
 
 
 class SekizaiTestCase(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls._template_dirs = settings.TEMPLATE_DIRS
+        template_dir = os.path.join(
+            os.path.dirname(__file__),
+            'test_templates'
+        )
+        settings.TEMPLATE_DIRS = list(cls._template_dirs) + [template_dir]
+
+    @classmethod
+    def tearDownClass(cls):
+        settings.TEMPLATE_DIRS = cls._template_dirs
+
     def _render(self, tpl, ctx=None, ctxclass=SekizaiContext):
         ctx = ctx or {}
         return render_to_string(tpl, ctxclass(ctx))
