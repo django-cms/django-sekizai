@@ -82,7 +82,7 @@ class RenderBlock(Tag):
             return nodelist.render(context)
         rendered_contents = nodelist.render(context)
         varname = get_varname()
-        data = context[varname][name].render()
+        data = '\n'.join(context[varname][name])
         if postprocessor:
             func = import_processor(postprocessor)
             data = func(context, data, name)
