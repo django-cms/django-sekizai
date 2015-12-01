@@ -34,7 +34,7 @@ def get_context():
         context.template = Template('')
         return context
     else:
-        return {}
+        return Context()
 
 
 def _extend_blocks(extend_node, blocks):
