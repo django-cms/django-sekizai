@@ -15,7 +15,7 @@ register = template.Library()
 
 
 def validate_context(context):
-    """'
+    """
     Validates a given context.
 
     Returns True if the context is valid.
