@@ -27,6 +27,7 @@ def is_variable_extend_node(node):
             return True
     return False
 
+
 def get_context():
     if engines is not None:
         context = Context()

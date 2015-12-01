@@ -13,6 +13,7 @@ env:
  - DJANGO='django>=1.6,<1.7'
  - DJANGO='django>=1.7,<1.8'
  - DJANGO='django>=1.8,<1.9'
+ - DJANGO='django==1.9rc2'
 install:
  - pip install $DJANGO django-classy-tags pep8 backport-collections
 script: python runtests.py
@@ -24,6 +25,8 @@ matrix:
       env: DJANGO='django>=1.7,<1.8'
     - python: 2.6
       env: DJANGO='django>=1.8,<1.9'
+    - python: 2.6
+      env: DJANGO='django==1.9rc2'
     - python: 3.3
       env: DJANGO='django>=1.3,<1.4'
     - python: 3.3
