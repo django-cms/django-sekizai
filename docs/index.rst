@@ -422,3 +422,23 @@ And here's the rendered template::
     </script>
     </body>
     </html>
+
+
+************
+Contributing
+************
+
+Pull requests are gladly accepted on GitHub: https://github.com/ojii/django-sekizai
+
+It will help if you can provide tests for any feature or bug fix, and
+run the existing tests.
+
+To run the tests in a single environment, install the Django version you want
+to test, and required dependencies, and do::
+
+    python runtests.py
+
+To run tests against all supported environments, do::
+
+    pip install tox
+    tox
