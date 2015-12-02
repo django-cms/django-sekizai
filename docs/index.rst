@@ -32,7 +32,7 @@ Dependencies
 ************
 
 * Python 2.6, 2.7, 3.3, 3.4 or 3.5.
-* Django 1.3, 1.4, 1.5, 1.6, 1.7 or 1.8.
+* Django 1.3, 1.4, 1.5, 1.6, 1.7, 1.8 or 1.9.
 * django-classy-tags 0.3.1 or higher.
 
 Python 2.6 requires ``backport_collections``.
@@ -422,3 +422,23 @@ And here's the rendered template::
     </script>
     </body>
     </html>
+
+
+************
+Contributing
+************
+
+Pull requests are gladly accepted on GitHub: https://github.com/ojii/django-sekizai
+
+It will help if you can provide tests for any feature or bug fix, and
+run the existing tests.
+
+To run the tests in a single environment, install the Django version you want
+to test, and required dependencies, and do::
+
+    python runtests.py
+
+To run tests against all supported environments, do::
+
+    pip install tox
+    tox
