@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-from collections import namedtuple
 
 from django.conf import settings
-from django.template.base import VariableNode, Variable, Template
+from django.template.base import VariableNode, Variable, Context, Template
 from django.template.loader import get_template
 from django.template.loader_tags import BlockNode, ExtendsNode
 
@@ -10,12 +9,6 @@ try:
     from django.template import engines
 except ImportError:
     engines = None
-
-if engines is not None:
-    _FAKE_TEMPLATE = (namedtuple('Template', 'engine')(engines.all()[0]))
-    FAKE_CONTEXT = namedtuple('Context', 'template')(_FAKE_TEMPLATE)
-else:
-    FAKE_CONTEXT = {}
 
 
 def _get_nodelist(tpl):
@@ -35,6 +28,15 @@ def is_variable_extend_node(node):
     return False
 
 
+def get_context():
+    if engines is not None:
+        context = Context()
+        context.template = Template('')
+        return context
+    else:
+        return Context()
+
+
 def _extend_blocks(extend_node, blocks):
     """
     Extends the dictionary `blocks` with *new* blocks in the parent node
@@ -43,7 +45,7 @@ def _extend_blocks(extend_node, blocks):
     # we don't support variable extensions
     if is_variable_extend_node(extend_node):
         return
-    parent = extend_node.get_parent(FAKE_CONTEXT)
+    parent = extend_node.get_parent(get_context())
     # Search for new blocks
     for node in _get_nodelist(parent).get_nodes_by_type(BlockNode):
         if node.name not in blocks:
@@ -78,7 +80,7 @@ def _extend_nodelist(extend_node):
     for block in blocks.values():
         found += _scan_namespaces(block.nodelist, block)
 
-    parent_template = extend_node.get_parent(FAKE_CONTEXT)
+    parent_template = extend_node.get_parent(get_context())
     # if this is the topmost template, check for namespaces outside of blocks
     if not _get_nodelist(parent_template).get_nodes_by_type(ExtendsNode):
         found += _scan_namespaces(
