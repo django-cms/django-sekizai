@@ -422,3 +422,15 @@ And here's the rendered template::
     </script>
     </body>
     </html>
+
+
+*********
+Changelog
+*********
+
+0.9.0
+=====
+
+* Added Changelog
+* Added support for Django 1.9
+* Added support for Python 3.5
