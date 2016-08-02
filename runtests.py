@@ -29,6 +29,19 @@ TEMPLATE_CONTEXT_PROCESSORS = [
 
 ROOT_URLCONF = 'runtests'
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [ os.path.join(os.path.dirname(__file__), 'sekizai', 'test_templates'), ],
+        'OPTIONS': {
+            'context_processors': [
+                'sekizai.context_processors.sekizai',
+            ],
+            'debug': True,
+        },
+    },
+]
+
 
 def runtests():
     from django import VERSION
@@ -46,6 +59,7 @@ def runtests():
         TEMPLATE_CONTEXT_PROCESSORS=TEMPLATE_CONTEXT_PROCESSORS,
         TEMPLATE_DEBUG=TEMPLATE_DEBUG,
         MIDDLEWARE_CLASSES=[],
+        TEMPLATES=TEMPLATES,
     )
     if VERSION[1] >= 7:
         from django import setup
