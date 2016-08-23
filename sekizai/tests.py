@@ -167,10 +167,9 @@ class BitDiff(object):
 def update_template_debug(debug=True):
     """
     Helper method for updating the template debug option based on
-    the django version.
+    the django version. Use the results of this function as the context.
 
-    :param debug:
-    :return:
+    :return: SettingsOverride object
     """
     if django.VERSION[0] == 1 and django.VERSION[1] < 8:
         return SettingsOverride(TEMPLATE_DEBUG=debug)
