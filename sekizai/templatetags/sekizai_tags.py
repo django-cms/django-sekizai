@@ -26,9 +26,19 @@ def validate_context(context):
     Raises a TemplateSyntaxError if the context is invalid and we're in debug
     mode.
     """
+    try:
+        template_debug = context.template.engine.debug
+    except AttributeError:
+        try:
+            # Get the default engine debug value
+            template_debug = template.Engine.get_default().debug
+        except AttributeError:
+            # Django 1.9 and below fallback
+            template_debug = settings.TEMPLATE_DEBUG
+
     if get_varname() in context:
         return True
-    if not settings.TEMPLATE_DEBUG:
+    if not template_debug:
         return False
     raise template.TemplateSyntaxError(
         "You must enable the 'sekizai.context_processors.sekizai' template "

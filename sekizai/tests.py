@@ -6,6 +6,7 @@ import sys
 
 from django import template
 from django.conf import settings
+from django.template.engine import Engine
 from django.template.loader import render_to_string
 import pep8
 
@@ -352,7 +353,20 @@ class SekizaiTestCase(TestCase):
             validate_context, django_ctx
         )
         self.assertEqual(validate_context(sekizai_ctx), True)
-        with SettingsOverride(TEMPLATE_DEBUG=False):
+
+        # Create our overridden template settings with debug turned off.
+        templates_override = settings.TEMPLATES
+        templates_override[0]['OPTIONS'].update({
+            'debug': False
+        })
+
+        # Engine gets created based on template settings initial value so
+        # changing the settings after the fact won't update, so do it
+        # manually. Necessary when testing validate_context
+        # with render method and want debug off.
+        Engine.get_default().debug = False
+
+        with SettingsOverride(TEMPLATES=templates_override):
             self.assertEqual(validate_context(django_ctx), False)
             self.assertEqual(validate_context(sekizai_ctx), True)
             bits = ['some content', 'more content', 'final content']

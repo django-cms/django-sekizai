@@ -30,6 +30,18 @@ TEMPLATE_CONTEXT_PROCESSORS = [
 ROOT_URLCONF = 'runtests'
 
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': TEMPLATE_DIRS,
+        'OPTIONS': {
+            'context_processors': TEMPLATE_CONTEXT_PROCESSORS,
+            'debug': TEMPLATE_DEBUG
+        },
+    },
+]
+
+
 def runtests():
     from django import VERSION
     from django.conf import settings
@@ -46,6 +58,7 @@ def runtests():
         TEMPLATE_CONTEXT_PROCESSORS=TEMPLATE_CONTEXT_PROCESSORS,
         TEMPLATE_DEBUG=TEMPLATE_DEBUG,
         MIDDLEWARE_CLASSES=[],
+        TEMPLATES=TEMPLATES,
     )
     if VERSION[1] >= 7:
         from django import setup
