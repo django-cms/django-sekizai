@@ -4,9 +4,9 @@ import os
 from unittest import TestCase
 import sys
 
+import django
 from django import template
 from django.conf import settings
-from django.template.engine import Engine
 from django.template.loader import render_to_string
 import pep8
 
@@ -162,6 +162,32 @@ class BitDiff(object):
                 else:
                     msg += '\n%s%s | ! | %s' % (a, pad, b)
             return BitDiffResult(False, msg)
+
+
+def update_template_debug(debug=True):
+    """
+    Helper method for updating the template debug option based on
+    the django version.
+
+    :param debug:
+    :return:
+    """
+    if django.VERSION[0] == 1 and django.VERSION[1] < 8:
+        return SettingsOverride(TEMPLATE_DEBUG=debug)
+    else:
+        # Create our overridden template settings with debug turned off.
+        templates_override = settings.TEMPLATES
+        templates_override[0]['OPTIONS'].update({
+            'debug': debug
+        })
+
+        from django.template.engine import Engine
+        # Engine gets created based on template settings initial value so
+        # changing the settings after the fact won't update, so do it
+        # manually. Necessary when testing validate_context
+        # with render method and want debug off.
+        Engine.get_default().debug = debug
+        return SettingsOverride(TEMPLATES=templates_override)
 
 
 class SekizaiTestCase(TestCase):
@@ -354,19 +380,7 @@ class SekizaiTestCase(TestCase):
         )
         self.assertEqual(validate_context(sekizai_ctx), True)
 
-        # Create our overridden template settings with debug turned off.
-        templates_override = settings.TEMPLATES
-        templates_override[0]['OPTIONS'].update({
-            'debug': False
-        })
-
-        # Engine gets created based on template settings initial value so
-        # changing the settings after the fact won't update, so do it
-        # manually. Necessary when testing validate_context
-        # with render method and want debug off.
-        Engine.get_default().debug = False
-
-        with SettingsOverride(TEMPLATES=templates_override):
+        with update_template_debug(debug=False):
             self.assertEqual(validate_context(django_ctx), False)
             self.assertEqual(validate_context(sekizai_ctx), True)
             bits = ['some content', 'more content', 'final content']
