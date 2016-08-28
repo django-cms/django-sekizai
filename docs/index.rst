@@ -31,12 +31,9 @@ sekizai will ignore any duplicate content in a single block.
 Dependencies
 ************
 
-* Python 2.6, 2.7, 3.3, 3.4 or 3.5.
-* Django 1.3, 1.4, 1.5, 1.6, 1.7, 1.8 or 1.9.
+* Python 2.7, 3.3, 3.4 or 3.5.
+* Django 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9 or 1.10.
 * django-classy-tags 0.3.1 or higher.
-
-Python 2.6 requires ``backport_collections``.
-
 
 *****
 Usage
@@ -50,8 +47,13 @@ steps:
 
 * Put 'sekizai' into your ``INSTALLED_APPS`` setting.
 * Use one of the following:
-    * Put ``sekizai.context_processors.sekizai`` into your
+    * For Django versions before 1.10, add
+      ``sekizai.context_processors.sekizai`` to your
       ``TEMPLATE_CONTEXT_PROCESSORS`` setting and use
+      ``django.template.RequestContext`` when rendering your templates.
+
+      For Django versions after 1.10, add ``sekizai.context_processors.sekizai``
+      to your ``TEMPLATES['OPTIONS']['context_processors']`` setting and use
       ``django.template.RequestContext`` when rendering your templates.
     
     or
@@ -427,6 +429,12 @@ And here's the rendered template::
 *********
 Changelog
 *********
+
+0.10.0
+======
+
+* Added support for Django 1.10
+* Removed support for Python 2.6
 
 0.9.0
 =====

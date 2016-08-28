@@ -1,14 +1,7 @@
-import sys
-
 from setuptools import setup, find_packages
 
 version = __import__('sekizai').__version__
 
-
-if sys.hexversion < 0x02070000:
-    EXTRA_INSTALL_REQUIRES = ['backport_collections']
-else:
-    EXTRA_INSTALL_REQUIRES = []
 
 setup(
     name='django-sekizai',
@@ -22,7 +15,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'django-classy-tags>=0.3.1',
-    ] + EXTRA_INSTALL_REQUIRES,
+    ],
     test_suite='runtests.main',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -32,7 +25,6 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
