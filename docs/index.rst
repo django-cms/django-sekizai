@@ -148,6 +148,10 @@ Restrictions
     If the ``{% addtoblock %}`` tag is used in an **extending** template, the tags **must** be
     placed within ``{% block %}...{% endblock %}`` tags.
 
+.. warning::
+
+    ``{% addtoblock %}`` tags **must not** be used in a template included with ``only`` option!
+
 Handling data
 -------------
 
