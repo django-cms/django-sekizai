@@ -285,6 +285,34 @@ It's also possible to pre-process data in ``{% addtoblock %}`` like this::
 
 
 
+Preprocessing SASS
+==================
+
+**django-sekizai** is shipped with a built-in preprocessor to convert ``*.scss`` files into
+``*.css`` on the fly. By using this preprocessor, the Ruby projects ``compass`` and ``SASS`` can be
+removed. To do so simply add
+
+.. code-block:: html
+
+	{% addtoblock "css" preprocessor "sekizai.processors.sass_preprocessor.compilescss" %}<link href="{% static 'myapp/css/mystyle.scss' %}" rel="stylesheet" type="text/css" />{% endaddtoblock %}
+
+to your HTML templates.
+
+If you want to precompile all occurences of your files with that preprocessor, invoke
+
+.. code-block:: bash
+
+	./manage.py compilescss
+
+on the command line. This is useful for production environments, where SASS files can't be compiled
+on the fly.
+
+Using this feature requires two additional dependencies:
+
+* libsass 0.6 or higher.
+* django-compressor 1.4 or higher.
+
+
 *******
 Helpers
 *******
