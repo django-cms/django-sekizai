@@ -29,6 +29,19 @@ TEMPLATE_CONTEXT_PROCESSORS = [
 
 ROOT_URLCONF = 'runtests'
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [ os.path.join(os.path.dirname(__file__), 'sekizai', 'test_templates'), ],
+        'OPTIONS': {
+            'context_processors': [
+                'sekizai.context_processors.sekizai',
+            ],
+            'debug': True,
+        },
+    },
+]
+
 
 TEMPLATES = [
     {
