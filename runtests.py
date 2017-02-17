@@ -25,7 +25,7 @@ TEMPLATE_DIRS = [
 TEMPLATE_CONTEXT_PROCESSORS = [
     'sekizai.context_processors.sekizai',
 ]
-    
+
 
 ROOT_URLCONF = 'runtests'
 
@@ -67,6 +67,10 @@ def runtests():
     # Run the test suite, including the extra validation tests.
     from django.test.utils import get_runner
     TestRunner = get_runner(settings)
+
+    import django
+    if django.VERSION >= (1, 7):
+        django.setup()
 
     test_runner = TestRunner(verbosity=1, interactive=False, failfast=False)
     failures = test_runner.run_tests(INSTALLED_APPS)
