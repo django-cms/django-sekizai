@@ -8,7 +8,7 @@ import django
 from django import template
 from django.conf import settings
 from django.template.loader import render_to_string
-import pep8
+import pycodestyle
 
 from sekizai.context import SekizaiContext
 from sekizai.helpers import get_namespaces
@@ -229,7 +229,7 @@ class SekizaiTestCase(TestCase):
 
     def test_pep8(self):
         sekizai_dir = os.path.dirname(os.path.abspath(__file__))
-        pep8style = pep8.StyleGuide()
+        pep8style = pycodestyle.StyleGuide()
         with CaptureStdout() as stdout:
             result = pep8style.check_files([sekizai_dir])
             errors = stdout.getvalue()
