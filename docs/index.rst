@@ -31,8 +31,8 @@ sekizai will ignore any duplicate content in a single block.
 Dependencies
 ************
 
-* Python 2.7, 3.3, 3.4 or 3.5.
-* Django 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9 or 1.10.
+* Python 2.7, 3.3, 3.4, 3.5 or 3.6.
+* Django 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 1.10 or 1.11.
 * django-classy-tags 0.3.1 or higher.
 
 *****
@@ -58,7 +58,8 @@ steps:
     
     or
 
-    * Use ``sekizai.context.SekizaiContext`` when rendering your templates.
+    * For Django versions before 1.11, use ``sekizai.context.SekizaiContext``
+      when rendering your templates.
 
 
 Template Tag Reference
