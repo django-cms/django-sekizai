@@ -16,6 +16,9 @@ setup(
     install_requires=[
         'django-classy-tags>=0.3.1',
     ],
+    tests_require=[
+        'pycodestyle',
+    ],
     test_suite='runtests.main',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
