@@ -10,6 +10,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 import pycodestyle
 
+from sekizai import context_processors
 from sekizai.context import SekizaiContext
 from sekizai.helpers import get_namespaces
 from sekizai.helpers import get_varname
@@ -204,8 +205,10 @@ class SekizaiTestCase(TestCase):
         settings.TEMPLATE_DIRS = cls._template_dirs
 
     def _render(self, tpl, ctx=None, ctxclass=SekizaiContext):
-        ctx = ctx or {}
-        return render_to_string(tpl, ctxclass(ctx))
+        ctx = dict(ctx) if ctx else {}
+        if ctxclass == SekizaiContext:
+            ctx.update(context_processors.sekizai())
+        return render_to_string(tpl, dict(ctx))
 
     def _get_bits(self, tpl, ctx=None, ctxclass=SekizaiContext):
         ctx = ctx or {}
