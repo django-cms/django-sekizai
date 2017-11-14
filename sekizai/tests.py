@@ -208,7 +208,7 @@ class SekizaiTestCase(TestCase):
         ctx = dict(ctx) if ctx else {}
         if ctxclass == SekizaiContext:
             ctx.update(context_processors.sekizai())
-        return render_to_string(tpl, dict(ctx))
+        return render_to_string(tpl, ctx)
 
     def _get_bits(self, tpl, ctx=None, ctxclass=SekizaiContext):
         ctx = ctx or {}
