@@ -206,7 +206,7 @@ class SekizaiTestCase(TestCase):
 
     def _render(self, tpl, ctx=None, ctxclass=SekizaiContext):
         ctx = dict(ctx) if ctx else {}
-        if ctxclass == SekizaiContext:
+        if issubclass(ctxclass, SekizaiContext):
             ctx.update(context_processors.sekizai())
         return render_to_string(tpl, ctx)
 
