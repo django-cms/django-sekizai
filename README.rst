@@ -7,7 +7,7 @@ framework in django and the django-cms. Yes there is the Media class used in
 forms in django, but really that doesn't work that well. Usually the frontend
 guys want to decide on css and javascript files to be included and they don't
 want to have to edit Python files to change that neither did I want them to
-change my Python files. Therefor there was a need to allow you to edit contents
+change my Python files. Therefore there was a need to allow you to edit contents
 of templates which are before or after the point where you are now. Also I
 wanted duplicates to be removed. As a result I wrote django-sekizai, which does
 exactly that. It's similar to blocks, just instead of inheriting them, you

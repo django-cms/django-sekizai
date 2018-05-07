@@ -39,7 +39,7 @@ def namespace_processor(context, data, namespace):
 
 class SettingsOverride(object):
     """
-    Overrides Django settings within a context and resets them to their inital
+    Overrides Django settings within a context and resets them to their initial
     values on exit.
 
     Example:
@@ -257,7 +257,7 @@ class SekizaiTestCase(TestCase):
 
     def test_eat_content_before_render_block(self):
         """
-        Testing that content get's eaten if no render_blocks is available
+        Testing that content gets eaten if no render_blocks is available
         """
         bits = ["mycontent"]
         self._test("eat.html", bits)
