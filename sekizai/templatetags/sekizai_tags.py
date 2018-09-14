@@ -29,12 +29,8 @@ def validate_context(context):
     try:
         template_debug = context.template.engine.debug
     except AttributeError:
-        try:
-            # Get the default engine debug value
-            template_debug = template.Engine.get_default().debug
-        except AttributeError:
-            # Django 1.9 and below fallback
-            template_debug = settings.TEMPLATE_DEBUG
+        # Get the default engine debug value
+        template_debug = template.Engine.get_default().debug
 
     if get_varname() in context:
         return True

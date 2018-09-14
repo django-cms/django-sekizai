@@ -8,8 +8,10 @@ import django
 from django import template
 from django.conf import settings
 from django.template.loader import render_to_string
+from django.template.engine import Engine
 import pep8
 
+from sekizai import context_processors
 from sekizai.context import SekizaiContext
 from sekizai.helpers import get_namespaces
 from sekizai.helpers import get_varname
@@ -171,57 +173,40 @@ def update_template_debug(debug=True):
 
     :return: SettingsOverride object
     """
-    if django.VERSION[0] == 1 and django.VERSION[1] < 8:
-        return SettingsOverride(TEMPLATE_DEBUG=debug)
-    else:
-        # Create our overridden template settings with debug turned off.
-        templates_override = settings.TEMPLATES
-        templates_override[0]['OPTIONS'].update({
-            'debug': debug
-        })
-
-        from django.template.engine import Engine
-        # Engine gets created based on template settings initial value so
-        # changing the settings after the fact won't update, so do it
-        # manually. Necessary when testing validate_context
-        # with render method and want debug off.
-        Engine.get_default().debug = debug
-        return SettingsOverride(TEMPLATES=templates_override)
+    # Create our overridden template settings with debug turned off.
+    templates_override = settings.TEMPLATES
+    templates_override[0]['OPTIONS'].update({'debug': debug})
+    # Engine gets created based on template settings initial value so
+    # changing the settings after the fact won't update, so do it
+    # manually. Necessary when testing validate_context
+    # with render method and want debug off.
+    Engine.get_default().debug = debug
+    return SettingsOverride(TEMPLATES=templates_override)
 
 
 class SekizaiTestCase(TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls._template_dirs = settings.TEMPLATE_DIRS
-        template_dir = os.path.join(
-            os.path.dirname(__file__),
-            'test_templates'
-        )
-        settings.TEMPLATE_DIRS = list(cls._template_dirs) + [template_dir]
 
-    @classmethod
-    def tearDownClass(cls):
-        settings.TEMPLATE_DIRS = cls._template_dirs
+    def _render(self, tpl, ctx=None, sekizai_context=True):
+        ctx = dict(ctx) if ctx else {}
+        if sekizai_context:
+            ctx.update(context_processors.sekizai())
+        return render_to_string(tpl, ctx)
 
-    def _render(self, tpl, ctx=None, ctxclass=SekizaiContext):
+    def _get_bits(self, tpl, ctx=None, sekizai_context=True):
         ctx = ctx or {}
-        return render_to_string(tpl, ctxclass(ctx))
-
-    def _get_bits(self, tpl, ctx=None, ctxclass=SekizaiContext):
-        ctx = ctx or {}
-        rendered = self._render(tpl, ctx, ctxclass)
+        rendered = self._render(tpl, ctx, sekizai_context)
         bits = [
             bit for bit in [bit.strip('\n')
                             for bit in rendered.split('\n')] if bit
         ]
         return bits, rendered
 
-    def _test(self, tpl, res, ctx=None, ctxclass=SekizaiContext):
+    def _test(self, tpl, res, ctx=None, sekizai_context=True):
         """
         Helper method to render template and compare it's bits
         """
         ctx = ctx or {}
-        bits, rendered = self._get_bits(tpl, ctx, ctxclass)
+        bits, rendered = self._get_bits(tpl, ctx, sekizai_context)
         differ = BitDiff(res)
         result = differ.test(bits)
         self.assertTrue(result.status, result.message)
@@ -267,10 +252,8 @@ class SekizaiTestCase(TestCase):
         Test that the template tags properly fail if not used with either
         SekizaiContext or the context processor.
         """
-        self.assertRaises(
-            template.TemplateSyntaxError,
-            self._render, 'basic.html', {}, template.Context
-        )
+        with self.assertRaises(template.TemplateSyntaxError):
+            self._render('basic.html', {}, sekizai_context=False)
 
     def test_complex_template_inheritance(self):
         """
@@ -383,7 +366,7 @@ class SekizaiTestCase(TestCase):
             self.assertEqual(validate_context(django_ctx), False)
             self.assertEqual(validate_context(sekizai_ctx), True)
             bits = ['some content', 'more content', 'final content']
-            self._test('basic.html', bits, ctxclass=template.Context)
+            self._test('basic.html', bits, sekizai_context=False)
 
     def test_post_processor_null(self):
         bits = ['header', 'footer']

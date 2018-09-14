@@ -5,11 +5,6 @@ from django.template.base import VariableNode, Variable, Context, Template
 from django.template.loader import get_template
 from django.template.loader_tags import BlockNode, ExtendsNode
 
-try:
-    from django.template import engines
-except ImportError:
-    engines = None
-
 
 def _get_nodelist(tpl):
     if isinstance(tpl, Template):
@@ -29,12 +24,9 @@ def is_variable_extend_node(node):
 
 
 def get_context():
-    if engines is not None:
-        context = Context()
-        context.template = Template('')
-        return context
-    else:
-        return Context()
+    context = Context()
+    context.template = Template('')
+    return context
 
 
 def _extend_blocks(extend_node, blocks):
