@@ -1,4 +1,3 @@
-from __future__ import with_statement
 from difflib import SequenceMatcher
 import os
 from unittest import TestCase

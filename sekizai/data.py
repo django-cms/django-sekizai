@@ -1,7 +1,7 @@
 try:
+    from collections.abc import MutableSequence
+except ImportError:  # Python 2
     from collections import MutableSequence
-except ImportError:
-    from backport_collections import MutableSequence
 
 
 class UniqueSequence(MutableSequence):
