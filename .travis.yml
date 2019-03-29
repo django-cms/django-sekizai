@@ -6,6 +6,7 @@ python:
  - 3.4
  - 3.5
  - 3.6
+ - 3.7
 env:
  - DJANGO='django>=1.11,<2.0'
  - DJANGO='django>=2.0,<2.1'
