@@ -24,15 +24,14 @@ blocks get rendered and at different places in your templates append to those
 blocks. This is especially useful for css and javascript. Your sub-templates can
 now define css and Javascript files to be included, and the css will be nicely
 put at the top and the Javascript to the bottom, just like you should. Also
-sekizai will ignore any duplicate content in a single block. 
+sekizai will ignore any duplicate content in a single block.
 
 
 ************
 Dependencies
 ************
 
-* Python 2.7, 3.3, 3.4 or 3.5.
-* Django 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9 or 1.10.
+* Django 1.11, 2.0, 2.1, or 2.2.
 * django-classy-tags 0.3.1 or higher.
 
 *****
@@ -47,15 +46,10 @@ steps:
 
 * Put 'sekizai' into your ``INSTALLED_APPS`` setting.
 * Use one of the following:
-    * For Django versions before 1.10, add
-      ``sekizai.context_processors.sekizai`` to your
-      ``TEMPLATE_CONTEXT_PROCESSORS`` setting and use
+    * Add ``sekizai.context_processors.sekizai`` to your
+      ``TEMPLATES['OPTIONS']['context_processors']`` setting and use
       ``django.template.RequestContext`` when rendering your templates.
 
-      For Django versions after 1.10, add ``sekizai.context_processors.sekizai``
-      to your ``TEMPLATES['OPTIONS']['context_processors']`` setting and use
-      ``django.template.RequestContext`` when rendering your templates.
-    
     or
 
     * Use ``sekizai.context.SekizaiContext`` when rendering your templates.
@@ -137,7 +131,7 @@ Restrictions
 .. warning::
 
     ``{% render_block %}`` tags **must not** be placed inside a template tag block (a template tag which has an
-    end tag, such as ``{% block %}...{% endblock %}`` or ``{% if %}...{% endif %}``). 
+    end tag, such as ``{% block %}...{% endblock %}`` or ``{% if %}...{% endif %}``).
 
 .. warning::
 
@@ -433,6 +427,12 @@ And here's the rendered template::
 *********
 Changelog
 *********
+
+0.11.0
+======
+
+* Added support for Django 1.11, 2.0, 2.1, and 2.2
+* Removed support for Django < 1.11
 
 0.10.0
 ======
