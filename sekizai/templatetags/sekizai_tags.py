@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 from importlib import import_module
 
-from classytags.arguments import Argument, Flag
-from classytags.core import Tag, Options
-from classytags.parser import Parser
 from django import template
 from django.conf import settings
 
+from classytags.arguments import Argument, Flag
+from classytags.core import Options, Tag
+from classytags.parser import Parser
+
 from sekizai.helpers import get_varname
+
 
 register = template.Library()
 

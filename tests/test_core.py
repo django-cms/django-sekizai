@@ -1,23 +1,25 @@
-from difflib import SequenceMatcher
 import os
-from unittest import TestCase
 import sys
+from difflib import SequenceMatcher
+from unittest import TestCase
 
 import django
 from django import template
 from django.conf import settings
-from django.template.loader import render_to_string
 from django.template.engine import Engine
+from django.template.loader import render_to_string
+
 import pep8
 
 from sekizai import context_processors
 from sekizai.context import SekizaiContext
-from sekizai.helpers import get_namespaces
-from sekizai.helpers import get_varname
-from sekizai.helpers import validate_template
-from sekizai.helpers import Watcher
-from sekizai.templatetags.sekizai_tags import import_processor
-from sekizai.templatetags.sekizai_tags import validate_context
+from sekizai.helpers import (
+    Watcher, get_namespaces, get_varname, validate_template,
+)
+from sekizai.templatetags.sekizai_tags import (
+    import_processor, validate_context,
+)
+
 
 try:
     unicode_compat = unicode
