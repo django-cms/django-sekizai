@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from typing import Dict, List, Union
 
 from django.template.base import Template, NodeList, Node, Context

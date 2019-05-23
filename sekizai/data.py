@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 try:
     from collections.abc import MutableSequence
 except ImportError:  # Python 2
