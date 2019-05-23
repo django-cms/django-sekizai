@@ -1,7 +1,4 @@
-try:
-    from importlib import import_module
-except ImportError:
-    from django.utils.importlib import import_module
+from importlib import import_module
 
 from classytags.arguments import Argument, Flag
 from classytags.core import Tag, Options
