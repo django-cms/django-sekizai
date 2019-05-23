@@ -2,7 +2,6 @@
 from importlib import import_module
 
 from django import template
-from django.conf import settings
 
 from classytags.arguments import Argument, Flag
 from classytags.core import Options, Tag
@@ -93,6 +92,8 @@ class RenderBlock(Tag):
             func = import_processor(postprocessor)
             data = func(context, data, name)
         return '%s\n%s' % (data, rendered_contents)
+
+
 register.tag('render_block', RenderBlock)
 
 
@@ -108,6 +109,8 @@ class AddData(SekizaiTag):
         varname = get_varname()
         context[varname][key].append(value)
         return ''
+
+
 register.tag('add_data', AddData)
 
 
@@ -133,6 +136,8 @@ class WithData(SekizaiTag):
         inner_contents = inner_nodelist.render(context)
         context.pop()
         return '%s\n%s' % (inner_contents, rendered_contents)
+
+
 register.tag('with_data', WithData)
 
 
@@ -157,4 +162,6 @@ class Addtoblock(SekizaiTag):
         varname = get_varname()
         context[varname][name].append(rendered_contents)
         return ""
+
+
 register.tag('addtoblock', Addtoblock)

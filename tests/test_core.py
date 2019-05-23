@@ -3,7 +3,6 @@ import sys
 from difflib import SequenceMatcher
 from unittest import TestCase
 
-import django
 from django import template
 from django.conf import settings
 from django.template.engine import Engine
