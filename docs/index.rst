@@ -140,8 +140,8 @@ Restrictions
 .. warning::
 
     If the ``{% addtoblock %}`` tag is used in an **extending** template, the tags **must** be
-    placed within ``{% block %}...{% endblock %}`` tags. If this block extension, where `{% addtoblock %}`` 
-    lies, is actually overridden in a child template (i.e by a same-name block which doesn't call ``block.super``), 
+    placed within ``{% block %}...{% endblock %}`` tags. If this block extension, where ``{% addtoblock %}``
+    lies, is actually overridden in a child template (i.e by a same-name block which doesn't call ``block.super``),
     then this ``{% addtoblock %}`` will be ignored.
 
 .. warning::
@@ -424,3 +424,10 @@ And here's the rendered template::
     </script>
     </body>
     </html>
+
+
+*********
+Changelog
+*********
+
+See `CHANGELOG.rst <https://github.com/divio/django-sekizai/blob/master/CHANGELOG.rst>`_ for a full list.

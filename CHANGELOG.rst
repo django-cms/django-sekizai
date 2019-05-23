@@ -6,7 +6,10 @@ Changelog
 1.1.0 (unreleased)
 ==================
 
-* Aligned structure with other addons
+* Extended test matrix
+* Added isort and adapted imports
+* Adapted code base to align with other supported addons
+* Adapted ``README.rst`` instructions
 
 
 1.0.0 (2019-04-11)
