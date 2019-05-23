@@ -1,0 +1,4 @@
+# other requirements
+tox
+coverage
+pep8
