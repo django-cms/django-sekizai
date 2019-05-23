@@ -10,23 +10,21 @@ matrix:
       env: TOX_ENV='isort'
       # Django 1.11
     - python: 2.7
-      env: DJANGO='dj111' CMS='cms34'
+      env: DJANGO='dj111'
     - python: 3.4
-      env: DJANGO='dj111' CMS='cms35'
+      env: DJANGO='dj111'
     - python: 3.5
-      env: DJANGO='dj111' CMS='cms36'
+      env: DJANGO='dj111'
     - python: 3.6
-      env: DJANGO='dj111' CMS='cms37'
+      env: DJANGO='dj111'
     # Django 2.1
     - python: 3.6
-      env: DJANGO='dj21' CMS='cms36'
-    - python: 3.6
-      env: DJANGO='dj21' CMS='cms37'
+      env: DJANGO='dj21'
     # Django 2.2
     - python: 3.6
-      env: DJANGO='dj22' CMS='cms37'
+      env: DJANGO='dj22'
     - python: 3.7
-      env: DJANGO='dj22' CMS='cms37'
+      env: DJANGO='dj22'
       dist: xenial
       sudo: true
 
@@ -37,7 +35,7 @@ install:
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then export PY_VER=py35; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then export PY_VER=py36; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.7' ]]; then export PY_VER=py37; fi"
-  - "if [[ ${DJANGO}z != 'z' ]]; then export TOX_ENV=$PY_VER-$DJANGO-$CMS; fi"
+  - "if [[ ${DJANGO}z != 'z' ]]; then export TOX_ENV=$PY_VER; fi"
 
 script:
   - tox -e $TOX_ENV
