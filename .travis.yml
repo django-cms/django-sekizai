@@ -1,31 +1,43 @@
-dist: xenial
 language: python
+
+dist: xenial
 sudo: false
-python:
- - 2.7
- - 3.4
- - 3.5
- - 3.6
- - 3.7
-env:
- - DJANGO='django>=1.11,<2.0'
- - DJANGO='django>=2.0,<2.1'
- - DJANGO='django>=2.1,<2.2'
- - DJANGO='django>=2.2a1,<3.0'
-install:
- - pip install $DJANGO django-classy-tags pep8 backport-collections
-script: python runtests.py
-notifications:
-  email: false
+
 matrix:
-  exclude:
+  include:
+    - python: 3.5
+      env: TOX_ENV='flake8'
+    - python: 3.5
+      env: TOX_ENV='isort'
+      # Django 1.11
     - python: 2.7
-      env: DJANGO='django>=2.0,<2.1'
-    - python: 2.7
-      env: DJANGO='django>=2.1,<2.2'
-    - python: 2.7
-      env: DJANGO='django>=2.2a1,<3.0'
+      env: DJANGO='dj111'
     - python: 3.4
-      env: DJANGO='django>=2.1,<2.2'
-    - python: 3.4
-      env: DJANGO='django>=2.2a1,<3.0'
+      env: DJANGO='dj111'
+    - python: 3.5
+      env: DJANGO='dj111'
+    - python: 3.6
+      env: DJANGO='dj111'
+    # Django 2.1
+    - python: 3.6
+      env: DJANGO='dj21'
+    # Django 2.2
+    - python: 3.6
+      env: DJANGO='dj22'
+    - python: 3.7
+      env: DJANGO='dj22'
+
+install:
+  - pip install coverage isort tox pep8
+  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then export PY_VER=py27; fi"
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then export PY_VER=py34; fi"
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then export PY_VER=py35; fi"
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then export PY_VER=py36; fi"
+  - "if [[ $TRAVIS_PYTHON_VERSION == '3.7' ]]; then export PY_VER=py37; fi"
+  - "if [[ ${DJANGO}z != 'z' ]]; then export TOX_ENV=$PY_VER; fi"
+
+script:
+  - tox -e $TOX_ENV
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

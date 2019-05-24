@@ -1,39 +1,54 @@
-from setuptools import setup, find_packages
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from setuptools import find_packages, setup
 
-version = __import__('sekizai').__version__
+from sekizai import __version__
+
+
+REQUIREMENTS = [
+    'django>=1.11',
+    'django-classy-tags>=0.9.0',
+]
+
+
+CLASSIFIERS = [
+    'Development Status :: 5 - Production/Stable',
+    'Environment :: Web Environment',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: BSD License',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 2',
+    'Programming Language :: Python :: 2.7',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.4',
+    'Programming Language :: Python :: 3.5',
+    'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.7',
+    'Framework :: Django',
+    'Framework :: Django :: 1.11',
+    'Framework :: Django :: 2.1',
+    'Framework :: Django :: 2.2',
+    'Topic :: Internet :: WWW/HTTP',
+    'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+    'Topic :: Software Development',
+    'Topic :: Software Development :: Libraries',
+]
 
 
 setup(
     name='django-sekizai',
-    version=version,
-    description='Django Sekizai',
+    version=__version__,
     author='Jonas Obrist',
     author_email='ojiidotch@gmail.com',
     url='http://github.com/ojii/django-sekizai',
-    packages=find_packages(),
-    zip_safe=False,
+    license='BSD',
+    description='Django Sekizai',
+    long_description=open('README.rst').read(),
+    packages=find_packages(exclude=['tests']),
     include_package_data=True,
-    install_requires=[
-        'django>=1.11',
-        'django-classy-tags>=0.3.1',
-    ],
-    test_suite='runtests.main',
-    classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Environment :: Web Environment',
-        'Framework :: Django',
-        'Framework :: Django :: 1.11',
-        'Framework :: Django :: 2.0',
-        'Framework :: Django :: 2.1',
-        'Framework :: Django :: 2.2',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: BSD License',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-    ]
+    zip_safe=False,
+    install_requires=REQUIREMENTS,
+    classifiers=CLASSIFIERS,
+    test_suite='tests.settings.run',
 )

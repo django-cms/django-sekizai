@@ -2,6 +2,7 @@
 import os
 import sys
 
+
 urlpatterns = []
 
 DATABASES = {
@@ -13,14 +14,17 @@ DATABASES = {
 
 INSTALLED_APPS = [
     'sekizai',
+    'tests',
 ]
 
-ROOT_URLCONF = 'runtests'
+ROOT_URLCONF = 'tests.settings'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(os.path.dirname(__file__), 'sekizai', 'test_templates')],
+        'DIRS': [
+            os.path.join(os.path.dirname(__file__), 'templates')
+        ],
         'OPTIONS': {
             'context_processors': ['sekizai.context_processors.sekizai'],
             'debug': True,
@@ -50,10 +54,10 @@ def runtests():
     return failures
 
 
-def main():
+def run():
     failures = runtests()
     sys.exit(failures)
 
 
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    run()

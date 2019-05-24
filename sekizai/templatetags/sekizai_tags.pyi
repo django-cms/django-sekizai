@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from types import ModuleType
 
 from django.template import Context

@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 from django.template import Context
+
 from sekizai.context_processors import sekizai
 
 
