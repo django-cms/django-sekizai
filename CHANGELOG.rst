@@ -13,6 +13,7 @@ Changelog
 * Adapted code base to align with other supported addons
 * Adapted ``README.rst`` instructions
 
+
 1.0.0 (2019-04-11)
 ==================
 
