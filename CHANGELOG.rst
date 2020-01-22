@@ -3,9 +3,11 @@ Changelog
 =========
 
 
-1.1.0 (unreleased)
+1.1.0 (2020-01-22)
 ==================
 
+* Added support for Django 3.0
+* Added support for Python 3.8
 * Extended test matrix
 * Added isort and adapted imports
 * Adapted code base to align with other supported addons
