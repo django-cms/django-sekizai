@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
-from django.template.base import Context, Template, Variable, VariableNode
+from django.template.base import Template, Variable, VariableNode
+from django.template.context import Context
 from django.template.loader import get_template
 from django.template.loader_tags import BlockNode, ExtendsNode
 
