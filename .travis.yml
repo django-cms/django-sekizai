@@ -4,6 +4,14 @@ dist: xenial
 sudo: false
 
 matrix:
+  allow_failures:
+    # Django master is allowed to fail
+    - python: 3.6
+      env: DJANGO='master'
+    - python: 3.7
+      env: DJANGO='master'
+    - python: 3.8
+      env: DJANGO='master'
   include:
     - python: 3.5
       env: TOX_ENV='flake8'
@@ -35,6 +43,13 @@ matrix:
       env: DJANGO='dj30'
     - python: 3.8
       env: DJANGO='dj30'
+    # Django 3.1
+    - python: 3.6
+      env: DJANGO='dj31'
+    - python: 3.7
+      env: DJANGO='dj31'
+    - python: 3.8
+      env: DJANGO='dj31'
 
 install:
   - pip install coverage isort tox pep8
