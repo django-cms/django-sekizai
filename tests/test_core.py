@@ -1,4 +1,3 @@
-import os
 import sys
 from difflib import SequenceMatcher
 from io import StringIO
