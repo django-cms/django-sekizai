@@ -8,7 +8,6 @@ from sekizai import __version__
 REQUIREMENTS = [
     'django>=2.2',
     'django-classy-tags>=0.9.0',
-    'six',
 ]
 
 
