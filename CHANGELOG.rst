@@ -10,6 +10,7 @@ Changelog
 * Dropped support for Python 2.7 and Python 3.4
 * Dropped support for Django < 2.2
 * Replaced pep8 with flake8
+* Adapted documentation
 
 
 1.1.0 (2020-01-22)
