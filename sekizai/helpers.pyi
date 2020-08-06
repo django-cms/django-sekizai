@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from typing import Dict, List, Union
 
-from django.template.base import Context, Node, NodeList, Template
+from django.template.base import Node, NodeList, Template
+from django.template.context import Context
 
 
 def _get_nodelist(tpl: Template) -> NodeList: ...
