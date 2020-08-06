@@ -9,8 +9,6 @@ from django.conf import settings
 from django.template.engine import Engine
 from django.template.loader import render_to_string
 
-import pep8
-
 from sekizai import context_processors
 from sekizai.context import SekizaiContext
 from sekizai.helpers import (
@@ -201,17 +199,6 @@ class SekizaiTestCase(TestCase):
         result = differ.test(bits)
         self.assertTrue(result.status, result.message)
         return rendered
-
-    def test_pep8(self):
-        sekizai_dir = os.path.dirname(os.path.abspath(__file__))
-        pep8style = pep8.StyleGuide()
-        with CaptureStdout() as stdout:
-            result = pep8style.check_files([sekizai_dir])
-            errors = stdout.getvalue()
-        self.assertEqual(
-            result.total_errors, 0,
-            "Code not PEP8 compliant:\n{0}".format(errors)
-        )
 
     def test_basic_dual_block(self):
         """
