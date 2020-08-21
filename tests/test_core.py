@@ -26,7 +26,7 @@ def namespace_processor(context, data, namespace):
     return namespace
 
 
-class SettingsOverride(object):
+class SettingsOverride:
     """
     Overrides Django settings within a context and resets them to their initial
     values on exit.
@@ -56,7 +56,7 @@ class SettingsOverride(object):
                 setattr(settings, key, value)
 
 
-class CaptureStdout(object):
+class CaptureStdout:
     """
     Overrides sys.stdout with a StringIO stream.
     """
@@ -92,14 +92,14 @@ def _backwards_compat_match(thing):  # pragma: no cover
     return thing
 
 
-class BitDiffResult(object):
+class BitDiffResult:
 
     def __init__(self, status, message):
         self.status = status
         self.message = message
 
 
-class BitDiff(object):
+class BitDiff:
 
     """
     Visual aid for failing tests
