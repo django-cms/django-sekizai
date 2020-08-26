@@ -1,14 +1,12 @@
-import os
 import sys
 from difflib import SequenceMatcher
+from io import StringIO
 from unittest import TestCase
 
 from django import template
 from django.conf import settings
 from django.template.engine import Engine
 from django.template.loader import render_to_string
-
-import pep8
 
 from sekizai import context_processors
 from sekizai.context import SekizaiContext
@@ -20,17 +18,6 @@ from sekizai.templatetags.sekizai_tags import (
 )
 
 
-try:
-    unicode_compat = unicode
-except NameError:
-    unicode_compat = str
-
-try:
-    from io import StringIO
-except ImportError:
-    from StringIO import StringIO
-
-
 def null_processor(context, data, namespace):
     return ''
 
@@ -39,7 +26,7 @@ def namespace_processor(context, data, namespace):
     return namespace
 
 
-class SettingsOverride(object):
+class SettingsOverride:
     """
     Overrides Django settings within a context and resets them to their initial
     values on exit.
@@ -69,7 +56,7 @@ class SettingsOverride(object):
                 setattr(settings, key, value)
 
 
-class CaptureStdout(object):
+class CaptureStdout:
     """
     Overrides sys.stdout with a StringIO stream.
     """
@@ -105,24 +92,24 @@ def _backwards_compat_match(thing):  # pragma: no cover
     return thing
 
 
-class BitDiffResult(object):
+class BitDiffResult:
 
     def __init__(self, status, message):
         self.status = status
         self.message = message
 
 
-class BitDiff(object):
+class BitDiff:
 
     """
     Visual aid for failing tests
     """
 
     def __init__(self, expected):
-        self.expected = [repr(unicode_compat(bit)) for bit in expected]
+        self.expected = [repr(str(bit)) for bit in expected]
 
     def test(self, result):
-        result = [repr(unicode_compat(bit)) for bit in result]
+        result = [repr(str(bit)) for bit in result]
         if self.expected == result:
             return BitDiffResult(True, "success")
         else:  # pragma: no cover
@@ -211,17 +198,6 @@ class SekizaiTestCase(TestCase):
         result = differ.test(bits)
         self.assertTrue(result.status, result.message)
         return rendered
-
-    def test_pep8(self):
-        sekizai_dir = os.path.dirname(os.path.abspath(__file__))
-        pep8style = pep8.StyleGuide()
-        with CaptureStdout() as stdout:
-            result = pep8style.check_files([sekizai_dir])
-            errors = stdout.getvalue()
-        self.assertEqual(
-            result.total_errors, 0,
-            "Code not PEP8 compliant:\n{0}".format(errors)
-        )
 
     def test_basic_dual_block(self):
         """

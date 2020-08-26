@@ -27,13 +27,6 @@ put at the top and the Javascript to the bottom, just like you should. Also
 sekizai will ignore any duplicate content in a single block.
 
 
-************
-Dependencies
-************
-
-* Django 1.11, 2.0, 2.1, or 2.2.
-* django-classy-tags 0.3.1 or higher.
-
 *****
 Usage
 *****
@@ -45,14 +38,9 @@ In order to get started with django-sekizai, you'll need to do the following
 steps:
 
 * Put 'sekizai' into your ``INSTALLED_APPS`` setting.
-* Use one of the following:
-    * Add ``sekizai.context_processors.sekizai`` to your
-      ``TEMPLATES['OPTIONS']['context_processors']`` setting and use
-      ``django.template.RequestContext`` when rendering your templates.
-
-    or
-
-    * Use ``sekizai.context.SekizaiContext`` when rendering your templates.
+* Add ``sekizai.context_processors.sekizai`` to your
+    ``TEMPLATES['OPTIONS']['context_processors']`` setting and use
+    ``django.template.RequestContext`` when rendering your templates.
 
 
 Template Tag Reference

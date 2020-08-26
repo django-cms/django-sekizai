@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
-try:
-    from collections.abc import MutableSequence
-except ImportError:  # Python 2
-    from collections import MutableSequence
+from collections.abc import MutableSequence
 
 
 class UniqueSequence(MutableSequence):

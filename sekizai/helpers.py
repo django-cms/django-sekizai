@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
 from django.conf import settings
-from django.template.base import Context, Template, Variable, VariableNode
+from django.template.base import Template, Variable, VariableNode
+from django.template.context import Context
 from django.template.loader import get_template
 from django.template.loader_tags import BlockNode, ExtendsNode
 
@@ -133,7 +133,7 @@ def get_varname():
     return getattr(settings, 'SEKIZAI_VARNAME', 'SEKIZAI_CONTENT_HOLDER')
 
 
-class Watcher(object):
+class Watcher:
     """
     Watches a context for changes to the sekizai data, so it can be replayed
     later. This is useful for caching.

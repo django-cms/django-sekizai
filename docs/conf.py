@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # django-sekizai documentation build configuration file, created by
 # sphinx-quickstart on Tue Jun 29 23:12:20 2010.

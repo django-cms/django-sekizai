@@ -1,4 +1,4 @@
 # other requirements
 tox
 coverage
-pep8
+flake8

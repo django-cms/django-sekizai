@@ -1,7 +1,6 @@
 language: python
 
 dist: xenial
-sudo: false
 
 matrix:
   include:
@@ -9,37 +8,24 @@ matrix:
       env: TOX_ENV='flake8'
     - python: 3.5
       env: TOX_ENV='isort'
-      # Django 1.11
-    - python: 2.7
-      env: DJANGO='dj111'
-    - python: 3.4
-      env: DJANGO='dj111'
+    # Django 2.2, run all supported versions for LTS releases
     - python: 3.5
-      env: DJANGO='dj111'
-    - python: 3.6
-      env: DJANGO='dj111'
-    # Django 2.1
-    - python: 3.6
-      env: DJANGO='dj21'
-    # Django 2.2
+      env: DJANGO='dj22'
     - python: 3.6
       env: DJANGO='dj22'
     - python: 3.7
       env: DJANGO='dj22'
     - python: 3.8
       env: DJANGO='dj22'
-    # Django 3.0
+    # Django 3.0, always run the lowest supported version
     - python: 3.6
       env: DJANGO='dj30'
-    - python: 3.7
-      env: DJANGO='dj30'
-    - python: 3.8
-      env: DJANGO='dj30'
+    # Django 3.1, always run the lowest supported version
+    - python: 3.6
+      env: DJANGO='dj31'
 
 install:
-  - pip install coverage isort tox pep8
-  - "if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then export PY_VER=py27; fi"
-  - "if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then export PY_VER=py34; fi"
+  - pip install coverage isort tox
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then export PY_VER=py35; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then export PY_VER=py36; fi"
   - "if [[ $TRAVIS_PYTHON_VERSION == '3.7' ]]; then export PY_VER=py37; fi"
