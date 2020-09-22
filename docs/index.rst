@@ -70,6 +70,7 @@ Example Template::
 
     <html>
     <head>
+    {% block css %}{% endblock css %}
     {% render_block "css" %}
     </head>
     <body>
@@ -85,6 +86,7 @@ Example Template::
     </script>
     {% endaddtoblock %}
     And even more content.
+    {% block js %}{% endblock js %}
     {% render_block "js" %}
     </body>
     </html>
