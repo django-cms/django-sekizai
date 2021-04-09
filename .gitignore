@@ -16,5 +16,6 @@ __pycache__/
 build/
 dist/
 env/
+.venv/
 
 local.sqlite

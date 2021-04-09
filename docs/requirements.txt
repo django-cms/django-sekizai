@@ -1,0 +1,8 @@
+django<3.2
+MarkupSafe
+Pygments
+restructuredtext_lint
+sphinx
+sphinxcontrib-spelling
+sphinx-autobuild
+sphinxcontrib-inlinesyntaxhighlight

@@ -38,8 +38,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'django-sekizai'
-copyright = u'2010, Jonas Obrist'
+project = 'django-sekizai'
+copyright = '2010, Jonas Obrist'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -173,8 +173,8 @@ htmlhelp_basename = 'django-sekizaidoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'django-sekizai.tex', u'django-sekizai Documentation',
-   u'Jonas Obrist', 'manual'),
+  ('index', 'django-sekizai.tex', 'django-sekizai Documentation',
+   'Jonas Obrist', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
