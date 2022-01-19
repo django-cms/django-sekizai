@@ -16,17 +16,29 @@ There are some issue/restrictions with this implementation due to how the
 django template language works, but if used properly it can be very useful and
 it is the media handling framework for the django CMS (since version 2.2).
 
+.. note:: 
+        
+        This project is endorsed by the `django CMS Association <https://www.django-cms.org/en/about-us/>`_.
+        That means that it is officially accepted by the dCA as being in line with our roadmap vision and development/plugin policy. 
+        Join us on `Slack <https://www.django-cms.org/slack/>`_.
 
-Contributing
-============
 
-This is a an open-source project. We'll be delighted to receive your
+*******************************************
+Contribute to this project and win rewards
+*******************************************
+
+Because this is a an open-source project, we welcome everyone to
+`get involved in the project <https://www.django-cms.org/en/contribute/>`_ and
+`receive a reward <https://www.django-cms.org/en/bounty-program/>`_ for their contribution. 
+Become part of a fantastic community and help us make django CMS the best CMS in the world.   
+
+We'll be delighted to receive your
 feedback in the form of issues and pull requests. Before submitting your
 pull request, please review our `contribution guidelines
 <http://docs.django-cms.org/en/latest/contributing/index.html>`_.
 
 We're grateful to all contributors who have helped create and maintain this package.
-Contributors are listed at the `contributors <https://github.com/divio/django-sekizai/graphs/contributors>`_
+Contributors are listed at the `contributors <https://github.com/django-cms/django-sekizai/graphs/contributors>`_
 section.
 
 
