@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 from setuptools import find_packages, setup
 
-from sekizai import __version__
-
 
 REQUIREMENTS = [
     'django>=2.2',
@@ -36,7 +34,7 @@ CLASSIFIERS = [
 
 setup(
     name='django-sekizai',
-    version=__version__,
+    version='2.0.0',
     author='Jonas Obrist',
     author_email='ojiidotch@gmail.com',
     maintainer='Django CMS Association and contributors',

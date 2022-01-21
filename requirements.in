@@ -1,0 +1,5 @@
+bump2version
+Django>2.2
+django-classy-tags>=1
+pip-tools
+wheel
