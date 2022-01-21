@@ -10,12 +10,8 @@ from django.template.loader import render_to_string
 
 from sekizai import context_processors
 from sekizai.context import SekizaiContext
-from sekizai.helpers import (
-    Watcher, get_namespaces, get_varname, validate_template,
-)
-from sekizai.templatetags.sekizai_tags import (
-    import_processor, validate_context,
-)
+from sekizai.helpers import Watcher, get_namespaces, get_varname, validate_template
+from sekizai.templatetags.sekizai_tags import import_processor, validate_context
 
 
 def null_processor(context, data, namespace):
@@ -143,13 +139,13 @@ class BitDiff:
             line1 = '-' * padlen
             line2 = '-' * (longest - len('Result'))
             msg = '\nExpected%s |   | Result' % padding
-            msg += '\n--------%s-|---|-------%s' % (line1, line2)
+            msg += f'\n--------{line1}-|---|-------{line2}'
             for success, a, b in data:
                 pad = ' ' * (longest - len(a))
                 if success:
-                    msg += '\n%s%s |   | %s' % (a, pad, b)
+                    msg += f'\n{a}{pad} |   | {b}'
                 else:
-                    msg += '\n%s%s | ! | %s' % (a, pad, b)
+                    msg += f'\n{a}{pad} | ! | {b}'
             return BitDiffResult(False, msg)
 
 
