@@ -1,8 +1,9 @@
 name: Publish Python 🐍 distributions 📦 to TestPyPI
 
 on:
-  pull_request:
-    types: [reopened, opened, synchronize, edited]
+  push:
+    branches:
+      - master
 
 jobs:
   build-n-publish:
