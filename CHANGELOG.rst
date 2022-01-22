@@ -5,6 +5,9 @@ Changelog
 unreleased
 ==========
 
+3.0.0 2022-01-22
+================
+
 * Added support for Django 3.2
 * Drop support for python 3.5 and 3.6
 
