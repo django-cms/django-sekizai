@@ -2,10 +2,11 @@
 Changelog
 =========
 
-2.1.0 (2021-08-17)
-==================
+unreleased
+==========
 
 * Added support for Django 3.2
+* Drop support for python 3.5 and 3.6
 
 2.0.0 (2020-08-26)
 ==================
