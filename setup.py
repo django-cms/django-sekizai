@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from pathlib import Path
+
 from setuptools import find_packages, setup
 
 
@@ -36,7 +37,7 @@ long_description = (this_directory / "README.rst").read_text()
 
 setup(
     name='django-sekizai',
-    version='2.0.0',
+    version='3.0.0',
     author='Jonas Obrist',
     author_email='ojiidotch@gmail.com',
     maintainer='Django CMS Association and contributors',
