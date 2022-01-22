@@ -51,7 +51,7 @@ def import_processor(import_path):
 
 class SekizaiParser(Parser):
     def parse_blocks(self):
-        super(SekizaiParser, self).parse_blocks()
+        super().parse_blocks()
         self.blocks['nodelist'] = self.parser.parse()
 
 
@@ -67,7 +67,7 @@ class AddtoblockParser(Parser):
 class SekizaiTag(Tag):
     def render(self, context):
         if validate_context(context):
-            return super(SekizaiTag, self).render(context)
+            return super().render(context)
         return ''
 
 
@@ -90,7 +90,7 @@ class RenderBlock(Tag):
         if postprocessor:
             func = import_processor(postprocessor)
             data = func(context, data, name)
-        return '%s\n%s' % (data, rendered_contents)
+        return f'{data}\n{rendered_contents}'
 
 
 register.tag('render_block', RenderBlock)
@@ -134,7 +134,7 @@ class WithData(SekizaiTag):
         context[variable] = data
         inner_contents = inner_nodelist.render(context)
         context.pop()
-        return '%s\n%s' % (inner_contents, rendered_contents)
+        return f'{inner_contents}\n{rendered_contents}'
 
 
 register.tag('with_data', WithData)

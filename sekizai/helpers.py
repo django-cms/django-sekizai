@@ -142,9 +142,9 @@ class Watcher:
     """
     def __init__(self, context):
         self.context = context
-        self.frozen = dict(
-            (key, list(value)) for key, value in self.data.items()
-        )
+        self.frozen = {
+            key: list(value) for key, value in self.data.items()
+        }
 
     @property
     def data(self):
