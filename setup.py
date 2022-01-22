@@ -46,7 +46,7 @@ setup(
     description='Django Sekizai',
     long_description=long_description,
     long_description_content_type='text/x-rst',
-    packages=find_packages(),
+    packages=find_packages(exclude=['tests']),
     python_requires='>=3.7',
     include_package_data=True,
     zip_safe=False,
