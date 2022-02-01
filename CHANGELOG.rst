@@ -5,6 +5,11 @@ Changelog
 unreleased
 ==========
 
+3.0.1 2022-02-01
+================
+
+* Fix for tests in sdist tarball [#115]
+
 3.0.0 2022-01-22
 ================
 
