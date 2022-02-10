@@ -1,4 +1,4 @@
-django<3.3
+django<4.1
 MarkupSafe
 Pygments
 restructuredtext_lint
