@@ -420,4 +420,4 @@ And here's the rendered template::
 Changelog
 *********
 
-See `CHANGELOG.rst <https://github.com/divio/django-sekizai/blob/master/CHANGELOG.rst>`_ for a full list.
+See `CHANGELOG.rst <https://github.com/django-cms/django-sekizai/blob/master/CHANGELOG.rst>`_ for a full list.
