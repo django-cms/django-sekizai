@@ -69,43 +69,51 @@ Example Template::
     {% load sekizai_tags %}
 
     <html>
+    
     <head>
-    {% block css %}{% endblock %}
-    {% render_block "css" %}
+        {% block css %}{% endblock %}
+        {% render_block "css" %}
     </head>
+    
     <body>
-    Your content comes here.
-    Maybe you want to throw in some css:
-    {% addtoblock "css" %}
-    <link href="/media/css/stylesheet.css" media="screen" rel="stylesheet" type="text/css" />
-    {% endaddtoblock %}
-    Some more content here.
-    {% addtoblock "js" %}
-    <script type="text/javascript">
-    alert("Hello django-sekizai");
-    </script>
-    {% endaddtoblock %}
-    And even more content.
-    {% block js %}{% endblock %}
-    {% render_block "js" %}
+        Your content comes here.
+        Maybe you want to throw in some css:
+        {% addtoblock "css" %}
+        <link href="/media/css/stylesheet.css" media="screen" rel="stylesheet" type="text/css" />
+        {% endaddtoblock %}
+        Some more content here.
+        {% addtoblock "js" %}
+
+        <script type="text/javascript">
+            alert("Hello django-sekizai");
+        </script>
+        {% endaddtoblock %}
+        
+        And even more content.
+        {% block js %}{% endblock %}
+        {% render_block "js" %}
     </body>
+    
     </html>
 
 Above example would roughly render like this::
 
     <html>
+    
     <head>
-    <link href="/media/css/stylesheet.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="/media/css/stylesheet.css" media="screen" rel="stylesheet" type="text/css" />
     </head>
+    
     <body>
-    Your content comes here.
-    Maybe you want to throw in some css:
-    Some more content here.
-    And even more content.
-    <script type="text/javascript">
-    alert("Hello django-sekizai");
-    </script>
+        Your content comes here.
+        Maybe you want to throw in some css:
+        Some more content here.
+        And even more content.
+        <script type="text/javascript">
+            alert("Hello django-sekizai");
+        </script>
     </body>
+    
     </html>
 
 .. note::
@@ -151,33 +159,39 @@ Example::
     {% load sekizai_tags %}
 
     <html>
+    
     <head>
-    {% with_data "css-data" as stylesheets %}
-    {% for stylesheet in stylesheets %}
+        {% with_data "css-data" as stylesheets %}
+        {% for stylesheet in stylesheets %}
         <link href="{{ MEDIA_URL }}{{ stylesheet }}" media="screen" rel="stylesheet" type="text/css" />
-    {% endfor %}
-    {% end_with_data %}
+        {% endfor %}
+        {% end_with_data %}
     </head>
+    
     <body>
-    Your content comes here.
-    Maybe you want to throw in some css:
-    {% add_data "css-data" "css/stylesheet.css" %}
-    Some more content here.
+        Your content comes here.
+        Maybe you want to throw in some css:
+        {% add_data "css-data" "css/stylesheet.css" %}
+        Some more content here.
     </body>
+    
     </html>
 
 Above example would roughly render like this::
 
     <html>
+    
     <head>
-    <link href="/media/css/stylesheet.css" media="screen" rel="stylesheet" type="text/css" />
+        <link href="/media/css/stylesheet.css" media="screen" rel="stylesheet" type="text/css" />
     </head>
+    
     <body>
-    Your content comes here.
-    Maybe you want to throw in some css:
-    Some more content here.
-    And even more content.
+        Your content comes here.
+        Maybe you want to throw in some css:
+        Some more content here.
+        And even more content.
     </body>
+    
     </html>
 
 .. warning::
