@@ -4,10 +4,6 @@
 #
 #    pip-compile
 #
---trusted-host pypi.python.org
---trusted-host pypi.org
---trusted-host files.pythonhosted.org
-
 asgiref==3.4.1
     # via django
 bump2version==1.0.1
@@ -18,7 +14,7 @@ click==8.0.3
     # via pip-tools
 distlib==0.3.4
     # via virtualenv
-django==4.0.1
+django==4.0.4
     # via
     #   -r requirements.in
     #   django-classy-tags
