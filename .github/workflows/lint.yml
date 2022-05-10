@@ -35,4 +35,4 @@ jobs:
         uses: liskin/gh-problem-matcher-wrap@v1
         with:
           linters: isort
-          run: isort -c -rc -df sekizai
+          run: isort --check --diff sekizai
