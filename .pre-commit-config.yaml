@@ -9,7 +9,7 @@ repos:
         args: ["--py37-plus"]
 
   - repo: https://github.com/adamchainz/django-upgrade
-    rev: '1.6.1'
+    rev: '1.7.0'
     hooks:
       - id: django-upgrade
         args: [--target-version, "2.2"]
