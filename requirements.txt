@@ -14,7 +14,7 @@ click==8.0.3
     # via pip-tools
 distlib==0.3.4
     # via virtualenv
-django==4.0.4
+django==4.0.6
     # via
     #   -r requirements.in
     #   django-classy-tags
