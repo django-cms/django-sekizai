@@ -24,6 +24,7 @@ CLASSIFIERS = [
     'Framework :: Django',
     'Framework :: Django :: 3.2',
     'Framework :: Django :: 4.0',
+    'Framework :: Django :: 4.1',
     'Topic :: Internet :: WWW/HTTP',
     'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     'Topic :: Software Development',
