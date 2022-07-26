@@ -5,8 +5,8 @@ from setuptools import find_packages, setup
 
 
 REQUIREMENTS = [
-    'django>=2.2',
-    'django-classy-tags>=1',
+    'django>=3.2',
+    'django-classy-tags>=3.0',
 ]
 
 
@@ -18,14 +18,13 @@ CLASSIFIERS = [
     'Operating System :: OS Independent',
     'Programming Language :: Python',
     'Programming Language :: Python :: 3 :: Only',
-    'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
     'Framework :: Django',
-    'Framework :: Django :: 2.2',
-    'Framework :: Django :: 3.1',
     'Framework :: Django :: 3.2',
+    'Framework :: Django :: 4.0',
+    'Framework :: Django :: 4.1',
     'Topic :: Internet :: WWW/HTTP',
     'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     'Topic :: Software Development',
@@ -48,7 +47,7 @@ setup(
     long_description=long_description,
     long_description_content_type='text/x-rst',
     packages=find_packages(exclude=['tests']),
-    python_requires='>=3.7',
+    python_requires='>=3.8',
     include_package_data=True,
     zip_safe=False,
     install_requires=REQUIREMENTS,
