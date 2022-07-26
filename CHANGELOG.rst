@@ -5,7 +5,7 @@ Changelog
 unreleased
 ==========
 
-* Django 4 added to test suite
+* Django 4 support added
 * Dropped python 3.7, django 2.2 and 3.1
 
 3.0.1 2022-02-01
