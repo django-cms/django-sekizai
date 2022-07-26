@@ -8,12 +8,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ 3.7, 3.8, 3.9, "3.10"]
-        requirements-file: [
-            django-2.2.txt,
-            django-3.1.txt,
-            django-3.2.txt
-        ]
+        python-version: ['3.8', '3.9', '3.10']
+        django-version: ['3.2', '4.0', '4.1rc1']
         os: [
           ubuntu-20.04,
         ]
@@ -27,7 +23,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r tests/requirements/${{ matrix.requirements-file }}
+        pip install django==${{ matrix.django-version }} coverage
         python setup.py install
 
     - name: Run coverage
