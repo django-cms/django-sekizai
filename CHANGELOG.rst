@@ -5,6 +5,9 @@ Changelog
 unreleased
 ==========
 
+4.0.0 2022-07-26
+================
+
 * Django 4 support added
 * Dropped python 3.7, django 2.2 and 3.1
 

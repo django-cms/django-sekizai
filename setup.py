@@ -36,7 +36,7 @@ long_description = (this_directory / "README.rst").read_text()
 
 setup(
     name='django-sekizai',
-    version='3.0.1',
+    version='4.0.0',
     author='Jonas Obrist',
     author_email='ojiidotch@gmail.com',
     maintainer='Django CMS Association and contributors',
