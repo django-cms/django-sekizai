@@ -1,6 +1,6 @@
 bump2version
 Django>3.2
-django-classy-tags>=1
+django-classy-tags>=3.0
 pip-tools
 pre-commit
 wheel
