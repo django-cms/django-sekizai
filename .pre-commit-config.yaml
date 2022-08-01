@@ -1,5 +1,11 @@
 ci:
-  autofix_prs: false
+    autofix_commit_msg: |
+        ci: auto fixes from pre-commit hooks
+
+        for more information, see https://pre-commit.ci
+    autofix_prs: false
+    autoupdate_commit_msg: 'ci: pre-commit autoupdate'
+    autoupdate_schedule: monthly
 
 repos:
   - repo: https://github.com/asottile/pyupgrade
