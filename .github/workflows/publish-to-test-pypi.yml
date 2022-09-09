@@ -1,4 +1,4 @@
-name: Publish Python 🐍 distributions 📦 to TestPyPI
+name: Publish 🐍 📦 to TestPyPI
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-n-publish:
-    name: Build and publish Python 🐍 distributions 📦 to TestPyPI
+    name: Build and publish 🐍 📦 to TestPyPI
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
@@ -31,8 +31,8 @@ jobs:
         --outdir dist/
         .
 
-    - name: Publish distribution 📦 to Test PyPI
-      uses: pypa/gh-action-pypi-publish@master
+    - name: Publish 📦 to Test PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: __token__
         password: ${{ secrets.TEST_PYPI_API_TOKEN }}
