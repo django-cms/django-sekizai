@@ -1,4 +1,4 @@
-name: Publish Python 🐍 distributions 📦 to pypi
+name: Publish 🐍 📦 to pypi
 
 on:
   release:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-n-publish:
-    name: Build and publish Python 🐍 distributions 📦 to pypi
+    name: Build and publish 🐍 📦 to pypi
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
@@ -31,9 +31,9 @@ jobs:
         --outdir dist/
         .
 
-    - name: Publish distribution 📦 to PyPI
+    - name: Publish 📦 to PyPI
       if: startsWith(github.ref, 'refs/tags')
-      uses: pypa/gh-action-pypi-publish@master
+      uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
