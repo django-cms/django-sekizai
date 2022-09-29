@@ -89,9 +89,8 @@ def _extend_nodelist(extend_node):
 def _scan_namespaces(nodelist, current_block=None):
     from sekizai.templatetags.sekizai_tags import RenderBlock, WithData
     found = []
-    print("SCAN")
+
     for node in nodelist:
-        print(node, type(node))
         # check if this is RenderBlock node
         if isinstance(node, (RenderBlock, WithData)):
             # resolve it's name against a dummy context
