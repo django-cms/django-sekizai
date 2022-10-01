@@ -5,6 +5,9 @@ Changelog
 unreleased
 ==========
 
+* Fix bug which let checks fail on templates using 
+  the with_data template tag. 
+
 4.0.0 2022-07-26
 ================
 
