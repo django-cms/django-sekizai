@@ -379,6 +379,9 @@ class HelperTests(TestCase):
     def test_validate_template_js_css(self):
         self.assertTrue(validate_template('basic.html', ['js', 'css']))
 
+    def test_validate_template_with_data(self):
+        self.assertTrue(validate_template('with_data_basic.html', ['js', 'css']))
+
     def test_validate_template_js(self):
         self.assertTrue(validate_template('basic.html', ['js']))
 

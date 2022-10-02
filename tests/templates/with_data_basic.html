@@ -1,0 +1,25 @@
+{% load sekizai_tags %}<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% block title %}{% block pagetitle %}{% endblock pagetitle %}{% endblock title %}</title>
+    {% with_data "google-fonts" as fonts %}{% if fonts %}
+    <link href="https://fonts.googleapis.com/css?family={{ fonts|join:',' }}" rel="stylesheet">
+    {% endif %}{% end_with_data %}
+    <!-- Compressed CSS -->
+    {% render_block "css" %}
+    <!-- Live CSS -->
+    {% block live_css %}{% endblock live_css %}
+    {% block head %}{% endblock head %}
+  </head>
+
+  <body>
+  <h1>Test page.</h1>
+  {% block breadcrumb %}{% endblock %}
+  {% block content %}
+    <p>This page intentionally left blank.</p>
+  {% endblock content %}
+  {% render_block "js" %}
+  {% block live_js %}{% endblock live_js %}
+  </body>
+</html>
+
