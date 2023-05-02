@@ -5,8 +5,9 @@ Changelog
 unreleased
 ==========
 
-* Fix bug which let checks fail on templates using 
-  the with_data template tag. 
+* Added django 4.2 and main to the test suite
+* Fix bug which let checks fail on templates using
+  the with_data template tag.
 
 4.0.0 2022-07-26
 ================
