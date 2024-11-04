@@ -9,19 +9,19 @@ ci:
 
 repos:
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.16.0
+    rev: v3.19.0
     hooks:
       - id: pyupgrade
         args: ["--py38-plus"]
 
   - repo: https://github.com/adamchainz/django-upgrade
-    rev: '1.19.0'
+    rev: '1.22.1'
     hooks:
       - id: django-upgrade
         args: [--target-version, "3.2"]
 
   - repo: https://github.com/PyCQA/flake8
-    rev: 7.1.0
+    rev: 7.1.1
     hooks:
       - id: flake8
 
@@ -31,7 +31,7 @@ repos:
       - id: yesqa
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v5.0.0
     hooks:
       - id: check-merge-conflict
       - id: mixed-line-ending
