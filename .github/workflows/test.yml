@@ -9,9 +9,9 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ['3.8', '3.9', '3.10']
-        django-version: ['3.2', '4.0', '4.1']
+        django-version: ['3.2', '4.2', '5.0', '5.1']
         os: [
-          ubuntu-20.04,
+          ubuntu-latest,
         ]
 
     steps:
@@ -27,7 +27,7 @@ jobs:
         python setup.py install
 
     - name: Run coverage
-      run: coverage run setup.py test
+      run: coverage run tests/settings.py
 
     - name: Upload Coverage to Codecov
       uses: codecov/codecov-action@v1
@@ -43,7 +43,7 @@ jobs:
           'https://github.com/django/django/archive/main.tar.gz'
         ]
         os: [
-          ubuntu-20.04,
+          ubuntu-latest,
         ]
 
     steps:
@@ -60,7 +60,7 @@ jobs:
           python setup.py install
 
       - name: Run coverage
-        run: coverage run setup.py test
+        run: coverage run tests/settings.py
         continue-on-error: true
 
       - name: Upload Coverage to Codecov
