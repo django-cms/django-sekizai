@@ -59,4 +59,6 @@ def run():
 
 
 if __name__ == '__main__':
+    # Add current directory to python path - works if this script is called python tests/settings,.py
+    sys.path.insert(0, '.')
     run()
