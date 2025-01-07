@@ -42,12 +42,14 @@ pyparsing==3.0.9
     # via packaging
 pyyaml==6.0
     # via pre-commit
-sqlparse==0.4.4
+sqlparse==0.5.0
     # via django
 toml==0.10.2
     # via pre-commit
 tomli==2.0.1
-    # via pep517
+    # via
+    #   build
+    #   pep517
 virtualenv==20.16.0
     # via pre-commit
 wheel==0.38.1
