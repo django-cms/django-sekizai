@@ -2,7 +2,7 @@
 Django Sekizai
 ==============
 
-|pypi| |build| |coverage|
+|pypi| |coverage|
 
 Sekizai means "blocks" in Japanese, and that's what this app provides. A fresh
 look at blocks. With django-sekizai you can define placeholders where your
@@ -67,9 +67,7 @@ You can run tests by executing::
 
 .. |pypi| image:: https://badge.fury.io/py/django-sekizai.svg
     :target: http://badge.fury.io/py/django-sekizai
-.. |build| image:: https://travis-ci.org/divio/django-sekizai.svg?branch=master
-    :target: https://travis-ci.org/divio/django-sekizai
-.. |coverage| image:: https://codecov.io/gh/divio/django-sekizai/branch/master/graph/badge.svg
+.. |coverage| image:: https://codecov.io/gh/django-cms/django-sekizai/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/divio/django-sekizai
 
 .. |python| image:: https://img.shields.io/badge/python-3.9+-blue.svg
