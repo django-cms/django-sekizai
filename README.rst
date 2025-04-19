@@ -72,5 +72,5 @@ You can run tests by executing::
 
 .. |python| image:: https://img.shields.io/badge/python-3.9+-blue.svg
     :target: https://pypi.org/project/django-sekizai/
-.. |django| image:: https://img.shields.io/badge/django-4.2,%205.0,%205.1-blue.svg
+.. |django| image:: https://img.shields.io/badge/django-4.2--5.2-blue.svg
     :target: https://www.djangoproject.com/
