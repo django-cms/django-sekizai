@@ -33,7 +33,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install django~=${{ matrix.django-version }} coverage
         pip install -r tests/requirements/base.txt
-        python setup.py install
+        pip install .
 
     - name: Run coverage
       run: coverage run tests/settings.py
@@ -67,7 +67,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install ${{ matrix.django-version }} coverage
           pip install -r tests/requirements/base.txt
-          python setup.py install
+          pip install .
 
       - name: Run coverage
         run: coverage run tests/settings.py

@@ -68,7 +68,7 @@ You can run tests by executing::
 .. |pypi| image:: https://badge.fury.io/py/django-sekizai.svg
     :target: http://badge.fury.io/py/django-sekizai
 .. |coverage| image:: https://codecov.io/gh/django-cms/django-sekizai/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/divio/django-sekizai
+    :target: https://codecov.io/gh/django-cms/django-sekizai
 
 .. |python| image:: https://img.shields.io/badge/python-3.9+-blue.svg
     :target: https://pypi.org/project/django-sekizai/
