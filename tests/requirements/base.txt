@@ -1,5 +1,4 @@
 # other requirements
 tox
 coverage
-flake8
 setuptools
