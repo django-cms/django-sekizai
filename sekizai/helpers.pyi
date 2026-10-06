@@ -3,7 +3,6 @@ from typing import Dict, List, Union
 from django.template.base import Node, NodeList, Template
 from django.template.context import Context
 
-
 def _get_nodelist(tpl: Template) -> NodeList: ...
 
 def is_variable_extend_node(node: Node) -> bool: ...
